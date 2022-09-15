@@ -1,0 +1,20 @@
+{
+    "username": "user",
+    "state": "out",
+    "type": "text",
+    "poise": 
+    {
+        "comedic": 0,
+        "inform": 0,
+        "news": 0,
+        "memes": 0,
+        "finance": 0,
+        "self-help": 0,
+        "animals": 0,
+        "nature": 0,
+        "satire": 0,
+        "conflictual": 0,
+        "health": 0,
+        "culinary": 0
+    }
+}
