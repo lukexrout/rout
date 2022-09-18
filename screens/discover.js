@@ -194,7 +194,7 @@ export default function Discover({ navigation }) {
 
 
 			const searchInput = i.toLowerCase()
-			axios.post('http://192.168.1.86:3000/search', { _user: searchInput, count: count})
+			axios.post('http://localhost:3000/search', { _user: searchInput, count: count})
 			.then((res) => {
 				setResults(res.data)
 			})
@@ -208,7 +208,7 @@ export default function Discover({ navigation }) {
 	const loadUsers = () => {
 
 		const searchInput = search.toLowerCase()
-		axios.post('http://192.168.1.86:3000/search', { _user: 'u', count: count + 5})
+		axios.post('http://localhost:3000/search', { _user: 'u', count: count + 5})
 		.then((res) => {
 			const data = res.data
 			const addArr = []

@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
         marginRight: window.width / 12,
     },
     stat_num_container: {
-        backgroundColor: '#717171',
+        backgroundColor: '#616161',
         borderRadius: window.width / 70,
     },
     stat_num: {
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
         borderRadius: window.width / 70,
         height: window.width / 11,
         width: window.width / 2.2,
-        backgroundColor: '#717171',
+        backgroundColor: '#6A6A6A',
     },
     tab_text: {
         position: 'absolute',

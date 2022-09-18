@@ -30,7 +30,7 @@ export default function App() {
 
 	useEffect(() => {
 		AsyncStorage.getItem('state', (err, res) => {
-			if (res === undefined || res === 'out') {
+			if (res === undefined || res === 'out' || res === null) {
 				AsyncStorage.setItem('state', 'out')
 				// console.log(res)
 				setState('out')

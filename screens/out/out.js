@@ -145,8 +145,7 @@ export default function Out({ navigation, route }) {
 
                 </View>
                 <View style={[styles.terms_container, {}]}>
-                    <Text style={styles.terms_text}>violence, gore, and inhumanity</Text>
-                    <Text style={styles.terms_text}>will not be tolerated.</Text>
+                    <Text style={styles.terms_text}>inhumanity will not be tolerated.</Text>
                 </View>
             </KeyboardAvoidingView>
             
@@ -178,8 +177,8 @@ const styles = StyleSheet.create({
     },
     out_container: {
         width: window.width / 1.2,
-        height: window.width / 1.2,
-        borderRadius: window.width / 30,
+        height: window.height / 3.4,
+        borderRadius: window.width / 17,
         shadowColor: 'black',
         shadowOffset: {height: 0},
         shadowOpacity: 0.3,
@@ -187,32 +186,34 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         // bottom: window.width / 2,
-        backgroundColor: '#707070'
+        backgroundColor: '#777777'
     },
     conditional_out: {
         justifyContent: 'center',
         alignItems: 'center',
     },
     welcome_container: {
-        bottom: window.width / 7,
+        bottom: window.width / 14,
         justifyContent: 'center',
         alignItems: 'center'
     },
     welcome_text: {
         fontFamily: 'Louis',
         fontSize: window.width / 12,
+        color: '#C2C2C2'
     },
     description_container: {
         top: window.width / 30
     },
     description_text: {
         fontFamily: 'Louis',
-        fontSize: window.width / 24
+        fontSize: window.width / 24,
+        color: '#C2C2C2'
     }, 
     
     
     button_container: {
-        top: window.width / 9
+        top: window.width / 17
     },  
     register_container: {
         width: window.width / 2,
@@ -228,7 +229,8 @@ const styles = StyleSheet.create({
     },
     register_text: {
         fontFamily: 'Louis',
-        fontSize: window.width / 20
+        fontSize: window.width / 20,
+        color: '#C2C2C2'
     },
     login_container: {
         zIndex: 2,
@@ -245,7 +247,8 @@ const styles = StyleSheet.create({
     },
     login_text: {
         fontFamily: 'Louis',
-        fontSize: window.width / 20
+        fontSize: window.width / 20,
+        color: '#C2C2C2'
     },
     conditional_login: {
         position: 'absolute',
@@ -255,14 +258,15 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     login_: {
-        bottom: window.width / 12,
+        bottom: window.width / 20,
     },
     login: {
         fontFamily: 'Louis',
-        fontSize: window.width / 12,
+        fontSize: window.width / 12.77,
+        color: '#C2C2C2'
     },
     login_input_container: {
-        top: window.width / 10
+        top: window.width / 70
     },  
     login_input: {
       fontSize: window.width / 21,
@@ -285,21 +289,22 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     login_button: {
-        top: window.width / 6.3,
+        top: window.width / 14,
         width: window.width / 3,
         height: window.width / 10,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: window.width / 40,
+        borderRadius: window.width / 70,
         shadowColor: '#333333',
         shadowOffset: {height: 0},
         shadowOpacity: 0.3,
         shadowRadius: window.width / 110,
-        backgroundColor: '#797979'
+        backgroundColor: '#888888'
     },
     login_button_text: {
         fontFamily: 'Louis',
-        fontSize: window.width / 20
+        fontSize: window.width / 20,
+        color: '#C2C2C2'
     },
     terms_container: {
         top: window.width / 21
@@ -308,6 +313,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Louis',
         fontSize: window.width / 24,
-        color: '#BBBBBB'
+        color: '#BBBBBB',
+        textDecorationLine: 'underline',
+        // textDecorationStyle: 'solid'
     },
 })

@@ -71,50 +71,64 @@ const Content = ({ source, id }) => {
 		<View>
 			{source.type === 'text' ?
 				
-			<View style={styles.text_post_container}>
-				<View style={styles.text_post_image_text}>
-					<View style={styles.text_post_image_container}>
-						<Image style={styles.text_post_profile_image} source={profile_img}/>
-					</View>
-					<View style={styles.text_post_user_text_container}>
-						<View style={styles.text_post_user_time_container}>
-							<View style={styles.text_post_username_container}>
-								<Text style={styles.text_post_username}>@schaffer_luke</Text>
+			<View style={styles.text_container}>
+				<View style={styles.text_row}>
+
+					<View style={styles.text_column}>
+
+						<View style={styles.text_top_container}>
+							<View style={styles.text_top_row}>
+								<View style={styles.text_user_image_container}>
+									<Image style={styles.text_user_image} source={profile_img} />
+								</View>
+								<View style={styles.text_username_container}>
+									<Text style={styles.text_username}>schafferluke</Text>
+								</View>
+								
 							</View>
-							<Text style={styles.text_post_time}>10s</Text>
+							<View style={styles.text_end_container}>
+
+
+								<View style={styles.text_time_container}>
+									<Text style={styles.text_time}>1h</Text>
+								</View>
+
+								<View style={styles.text_info_container}>
+									<Image style={styles.text_info} source={info_icon} />
+								</View>
+
+							</View>
 						</View>
-						<View style={styles.text_post_text_container}>
-							<Text style={styles.text_post_text}>{source.content}</Text>
+						<View style={styles.text_content_container}>
+							<Text style={styles.text_content}>{source.content}</Text>
 						</View>
-					</View>
-					<View style={styles.text_post_info_container}>
-						<Image source={info_icon} style={styles.text_post_info}/>
 					</View>
 				</View>
-				<View style={styles.text_post_buttons_container}>
-					<View style={styles.text_post_buttons_color}>
-						<View style={{alignItems: 'center'}}>
-							<Text style={styles.text_post_data}>1.3m</Text>
-							<Image source={arrow_up_white} style={styles.arrow}/>
-						</View>
-						<View style={styles.text_gap}/>
-						<Image source={rerout} style={styles.rerout}/>
-						<View style={styles.text_gap}/>
-						<View style={{alignItems: 'center'}}>
-							<Text style={styles.text_post_data}>300k</Text>
-							<Image source={comment_icon_white} style={styles.comment_icon}/>
-						</View>
-						<View style={styles.text_gap}/>
-						<Image source={bookmark_icon_white} style={styles.bookmark_icon}/>
-						<View style={styles.text_gap}/>
-						<View style={{alignItems: 'center'}}>
-							<Image source={arrow_down_white} style={styles.arrow}/>
-							<Text style={styles.text_post_data}>1.1m</Text>
-						</View>
+				<View style={styles.interact_container}>
+					<View style={styles.interact_icon}>
+						<Text style={styles.text_data}>107k</Text>
+						<Image style={styles.up_icon} source={arrow_up_white} />
+					</View>
+					<View style={styles.interact_icon}>
+						<Text style={styles.text_data}>1.4m</Text>
+						<Image style={styles.text_rerout} source={rerout} />
+					</View>
+					<View style={styles.interact_icon}>
+						<Text style={styles.text_data}>444k</Text>
+						<Image style={styles.text_comment} source={comment_icon_white} />
+					</View>
+					<View style={styles.interact_icon}>
+						<Text style={styles.text_data}>111k</Text>
+						<Image style={styles.text_save} source={bookmark_icon_white} />
+					</View>
+					<View style={styles.interact_icon}>
+						<Text style={styles.text_data}>1777</Text>
+						<Image style={styles.text_down} source={arrow_down_white} />
 					</View>
 				</View>
 
-			</View> :
+			</View>	
+			 :
 			<View style={{overflow: 'hidden'}}>
 				<Image source={{uri: source.uri}}  resizeMode='stretch' style={[styles.image_image_post, {height: imageHeight * imageRatio}]} />
 				
@@ -377,6 +391,139 @@ const styles = StyleSheet.create({
 		width: window.width,
 		height: window.height,
 	},
+
+
+
+	
+
+	text_container: {
+		// backgroundColor: 'white',
+	},
+	text_row: {
+		flexDirection: 'row'
+	},
+	text_column: {
+		flex: 1
+	},
+	text_top_container: {
+		// backgroundColor: 'white',
+	},
+	text_top_row: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		height: window.width / 7
+	},
+	text_user_image_container: {
+		marginLeft: window.width / 40
+	},
+	text_user_image: {
+		height: window.width / 10,
+		width: window.width / 10,
+		borderRadius: 50
+	},
+	text_username_container: {
+		left: window.width / 40
+	},
+	text_username: {
+		fontFamily: 'Louis',
+		fontSize: window.width / 23,
+		color: '#C2C2C2'
+	},
+	text_end_container: {
+		position: 'absolute',
+		flexDirection: 'row',
+		alignSelf: 'flex-end',
+		// right: window.width / 70
+	},
+	text_time_container: {
+		// position: 'absolute',
+		height: window.width / 7,
+		right: window.width / 70,
+		justifyContent: 'center'
+	},
+	text_time: {
+		fontFamily: 'Louis',
+		fontSize: window.width / 25,
+		color: '#A1A1A1'
+	},
+	text_info_container: {
+		// backgroundColor: 'white',
+		height: window.width / 7,
+		width: window.width / 14,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	text_info: {
+		height: 28,
+		width: 5.7
+	},
+	text_content_container: {
+
+	},
+	text_content: {
+		fontFamily: 'Louis',
+		fontSize: window.width / 27,
+		paddingLeft: window.width / 28,
+		paddingRight: window.width / 40,
+		paddingBottom: window.width / 20,
+		paddingTop: window.width / 70,
+		color: '#C2C2C2'
+	},
+	interact_container: {
+		height: window.height / 26,
+		flexDirection: 'row',
+		marginBottom: window.height / 55
+		// backgroundColor: 'white'
+	},
+	interact_icon: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		// backgroundColor: 'green'
+	},
+	text_data: {
+		fontFamily: 'Louis',
+		fontSize: window.width / 33,
+		color: '#C2C2C2',
+		marginBottom: window.height / 170
+	},
+	up_icon: {
+		width: 20,
+		height: 21
+	},
+	text_rerout: {
+		width: 26,
+		height: 21
+	},
+	text_comment: {
+		width: 27,
+		height: 21
+	},
+	text_save: {
+		width: 17,
+		height: 21,
+		// left: window.width / 70
+	},
+	text_down: {
+		width: 20,
+		height: 21
+	},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	text_post_container: {
 		width: '100%',
 		backgroundColor: '#555555',
@@ -442,16 +589,17 @@ const styles = StyleSheet.create({
 	},
 	text_post_info_container: {
 		position: 'absolute',
-		left: window.width - window.width / 5,
+		// alignSelf: 'flex-end',
+		left: window.width - window.width / 7,
 		width: window.width / 6,
 		height: window.width / 6,
-		top: window.width / 45,
+		top: window.width / 50,
 		alignItems: 'center'
 	},
 	text_post_info: {
 		position: 'absolute',
-		width: window.width / 13,
-		height: window.width / 55,
+		height: window.width / 15.5,
+		width: window.width / 65,
 	},
 	text_post_buttons_container: {
 		marginTop: window.width / 12,
@@ -569,7 +717,7 @@ const styles = StyleSheet.create({
 		borderRadius: 50,
 		justifyContent: 'center',
 		alignItems: 'center',
-		left: window.width - window.width / 5.8,
+		left: window.width - window.width / 7,
 		position: 'absolute'
 	},
 	image_info_icon_color: {
@@ -579,15 +727,12 @@ const styles = StyleSheet.create({
 		height: window.width / 14,
 		position: 'absolute',
 		borderRadius: 50,
-		opacity: .1,
+		opacity: 0,
 	},
 	image_info_icon: {
-		width: window.width / 13,
-		height: window.width / 55,
-		// opacity: 1,
-		// left: window.width / 3.5,
-		// top: window.width / 39
-		position: 'absolute'
+		position: 'absolute',
+		height: window.width / 15.5,
+		width: window.width / 65,
 	},	
 	image_buttons: {
 		position: 'absolute',
