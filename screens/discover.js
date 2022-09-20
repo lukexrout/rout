@@ -90,7 +90,7 @@ const DiscHead = () => {
 
 
 	return (
-		<View style={styles.disc_head}>
+		<SafeAreaView style={styles.disc_head}>
 			<View style={styles.disc_trending}>
 				<View style={styles.trending_container}>
 					<Text style={styles.trending_text}>trending</Text>
@@ -119,7 +119,7 @@ const DiscHead = () => {
 			<View style={styles.trend_post}>
 				<Text style={styles.trend_post_text}>trending posts</Text>
 			</View>
-		</View>
+		</SafeAreaView>
 	)
 }
 
@@ -302,8 +302,9 @@ const styles = StyleSheet.create({
 		zIndex: 2
 	},
 	search_press: {
+		// top: 7,
 		backgroundColor: '#C2C2C2',
-		height: window.width / 11,
+		height: window.height / 24,
 		width: window.width / 1.1,
 		justifyContent: 'center',
 		borderRadius: window.width / 70,
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
 	search: {
 		left: window.width / 40,
 		fontFamily: 'Louis',
-		fontSize: window.width / 21
+		fontSize: 17
 	},
 
 
@@ -334,15 +335,15 @@ const styles = StyleSheet.create({
 		height: window.height,
 	},
 	disc_head: {
-		height: window.height / 2.3,
+		// height: window.height / ,
 		width: window.width,
 		justifyContent: 'flex-end',
 		alignItems: 'center'
 	},
 	disc_trending: {
 		width: window.width / 1.1,
-		height: window.width / 2,
-		marginBottom: window.width / 28,
+		height: window.height / 4,
+		marginTop: window.height / 17,
 		borderRadius: window.width / 40,
 		backgroundColor: '#696969',
 		shadowColor: '#121212',
@@ -352,7 +353,7 @@ const styles = StyleSheet.create({
 	},
 	trending_container: { 
 		width: '100.2%',
-		height: window.width / 11,
+		height: window.height / 28,
 		backgroundColor: '#424242',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
 	},
 	trending_text: {
 		fontFamily: 'Louis',
-		fontSize: window.width / 21,
+		fontSize: 17,
 		color: '#C2C2C2'
 	},
 	trending_row: {
@@ -386,8 +387,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	outline_trend: {
-		width: window.width / 3,
-		height: window.width / 14,
+		width: 120,
+		height: 28,
 		borderRadius: window.width / 70,
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -396,7 +397,7 @@ const styles = StyleSheet.create({
 	text_trend: {
 		color: '#C2C2C2',
 		fontFamily: 'Louis',
-		fontSize: window.width / 22
+		fontSize: 17
 	},
 	list_trend: {
 		width: '100%',
@@ -411,12 +412,13 @@ const styles = StyleSheet.create({
 
 
 	trend_post: {
-		height: window.width / 11,
+		height: window.height / 28,
 		width: window.width / 1.04,
 		backgroundColor: '#424242',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginBottom: window.width / 28,
+		marginTop: window.height / 77,
+		marginBottom: window.height / 77,
 		borderRadius: window.width / 70,
 		shadowColor: '#121212',
         shadowOffset: {height: 0},
@@ -425,7 +427,7 @@ const styles = StyleSheet.create({
 	},
 	trend_post_text: {
 		fontFamily: 'Louis',
-		fontSize: window.width / 21,
+		fontSize: 17,
 		color: '#C2C2C2'
 	},
 

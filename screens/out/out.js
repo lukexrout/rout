@@ -22,7 +22,7 @@ export default function Out({ navigation, route }) {
 
     const nextPress = () => {
         
-        axios.post('http://localhost:3000/login', {username: userInput, password: passInput})
+        axios.post('http://192.168.1.86:3000/login', {username: userInput, password: passInput})
         .then((res) => {
             setUserInput('')
             setPassInput('')

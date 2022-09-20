@@ -262,18 +262,18 @@ export default function Profile({ navigation }) {
                 </SafeAreaView>
             
                 <FlatList
-                style={styles.list_container}
-                key={numColumns}
-                renderItem={state === 'content' ? content : interest}
-                data={data}
-                numColumns={numColumns}
-                contentContainerStyle={state === 'content' ? {alignItems: 'flex-start'} : {alignItems: 'center'}}
-                ListHeaderComponent={head}
-                ListHeaderComponentStyle={{backgroundColor: '#555555'}}
-                ListFooterComponent={foot}
-                keyExtractor={item => item.id}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
+                    style={styles.list_container}
+                    key={numColumns}
+                    renderItem={state === 'content' ? content : interest}
+                    data={data}
+                    numColumns={numColumns}
+                    contentContainerStyle={state === 'content' ? {alignItems: 'flex-start'} : {alignItems: 'center'}}
+                    ListHeaderComponent={head}
+                    ListHeaderComponentStyle={{backgroundColor: '#555555'}}
+                    ListFooterComponent={foot}
+                    keyExtractor={item => item.id}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
                 />
             </View> 
         </View>
@@ -300,8 +300,8 @@ const styles = StyleSheet.create({
         top: 0,
         alignSelf: 'flex-start',
         left: window.width / 21,
-        width: window.width / 6.5,
-        height: window.width / 6.5,
+        width: 65,
+        height: 65,
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#121212',
@@ -312,16 +312,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#C2C2C2'
     },
     create: {
-        width: window.width / 12,
-        height: window.width / 12,
+        width: 33,
+        height: 33,
     },
 
     
 
     list_container: {
-        // zIndex: 2,
         position: 'absolute',
-        // backgroundColor: 'white',
         width: window.width,
         backgroundColor: '#717171',
         height: window.height / 1
@@ -334,11 +332,11 @@ const styles = StyleSheet.create({
 
     },
     profile_container: {
-        height: window.height / 2.5,
+        height: window.height / 2.7,
         width: window.width,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'white'
+
     },
     rout_container: {
         position: 'absolute',
@@ -350,15 +348,15 @@ const styles = StyleSheet.create({
     },
     rout_text: {
         fontFamily: 'Louis',
-        fontSize: window.width / 10,
+        fontSize: 40,
         color: '#C2C2C2'
     },
     set_dm_container: {
         position: 'absolute',
-        height: window.width / 5.3,
-        width: window.width / 10,
+        height: 70,
+        width: 28,
         top: window.width / 30,
-        right: window.width / 30,
+        right: window.width / 21,
         alignSelf: 'flex-end',
         justifyContent: 'flex-end',
     },
@@ -368,16 +366,16 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     dm: {
-        width: window.width / 12,
-        height: window.width / 16,
-        left: window.width / 120
+        width: 32,
+        height: 24,
+        right: window.width / 270
     },
     set_container: {
         width: '100%',
     },
     set: {
         width: '100%',
-        height: window.width / 10
+        height: 36
     },
     info_container: {
         // top: window.width / 70,
@@ -395,7 +393,7 @@ const styles = StyleSheet.create({
     },
     user: {
         fontFamily: 'Louis',
-        fontSize: window.width / 17,
+        fontSize: 24,
         color: '#C2C2C2'
     },
     pic_container: {
@@ -429,7 +427,7 @@ const styles = StyleSheet.create({
     stat_text: {
         color: '#C2C2C2',
         fontFamily: 'Louis',
-        fontSize: window.width / 21,
+        fontSize: 17,
         marginTop: window.width / 70,
         marginBottom: window.width / 70,
         marginLeft: window.width / 12,
@@ -442,7 +440,7 @@ const styles = StyleSheet.create({
     stat_num: {
         color: '#C2C2C2',
         fontFamily: 'Louis',
-        fontSize: window.width / 24,
+        fontSize: 17,
         marginTop: window.width / 70,
         marginBottom: window.width / 70,
         marginLeft: window.width / 40,
@@ -451,13 +449,13 @@ const styles = StyleSheet.create({
     sep_stat: {
         width: '130%',
         height: window.width / 170,
-        marginTop: window.width / 20,
+        marginTop: window.height / 70,
         borderRadius: 50,
-        backgroundColor: '#494949'
+        backgroundColor: '#4F4F4F'
     },
     button_container: {
         flexDirection: 'row',
-        marginTop: window.width / 28,
+        marginTop: window.height / 70,
 
         // backgroundColor: 'white',
         justifyContent: 'center',
@@ -480,7 +478,7 @@ const styles = StyleSheet.create({
     },
     button_text: {
         fontFamily: 'Louis',
-        fontSize: window.width / 20,
+        fontSize: 17,
         marginVertical: window.width / 70,
         color: '#555555'
         
@@ -491,7 +489,7 @@ const styles = StyleSheet.create({
 
     tab_container: {
         width: window.width,
-        height: window.width / 7.7,
+        height: window.height / 20,
         backgroundColor: '#5F5F5F',
         justifyContent: 'center',
         alignItems: 'center',
@@ -516,7 +514,7 @@ const styles = StyleSheet.create({
     },
     tab_text_outline: {
         borderRadius: window.width / 70,
-        height: window.width / 11,
+        height: window.height / 28,
         width: window.width / 2.2,
         backgroundColor: '#6A6A6A',
     },
@@ -524,13 +522,13 @@ const styles = StyleSheet.create({
         position: 'absolute',
         fontFamily: 'Louis',
         // alignSelf: 'center',
-        fontSize: window.width / 20,
+        fontSize: 17,
         // marginVertical: window.width / 70,
         // marginHorizontal: window.width / 7,
         color: '#C2C2C2'
     },
     content_container: {
-        height: window.width / 3,
+        height: window.height / 4,
         width: window.width / 3,
         borderColor: 'black',
         borderWidth: window.width / 470,

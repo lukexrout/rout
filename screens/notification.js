@@ -54,11 +54,11 @@ function Noti({ navigation, user, text, time, type, source }) {
 export default function Notification({ navigation, route }) {
 
   const [nofications, setNotifications] = useState([
-    {id: 1, type: 'image', source: aws, time: '2s', user: 'user00', text: ' liked your post'},
+    {id: 1, type: 'image', source: aws, time: '2s', user: 'user00', text: ' upvoted your post'},
     {id: 2, type: 'text', source: null, time: '44s', user: 'schafferluke', text: ' commented on your post'},
     {id: 3, type: 'video', source: aws_2, time: '1m', user: 'user02', text: ' rerouted your post'},
-    {id: 4, type: 'text', source: null, time: '7m', user: 'user03', text: ' liked your post'},
-    {id: 5, type: 'text', source: null, time: '12m', user: 'user04', text: ' liked your post'},
+    {id: 4, type: 'text', source: null, time: '7m', user: 'user03', text: ' upvoted your post'},
+    {id: 5, type: 'text', source: null, time: '12m', user: 'user04', text: ' downvoted your post'},
     {id: 6, type: 'image', source: aws, time: '4h', user: 'user05', text: ' rerouted your post'},
     {id: 7, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
   ])
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     fontSize: window.width / 10
   },
   noti_container: {
-    height: window.width / 7,
+    height: window.height / 16,
     width: window.width / 1.07,
     borderRadius: window.width / 40,
     backgroundColor: '#717171',
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     // backgroundColor: 'white'
   },
   profile: {
-    height: window.width / 10,
-    width: window.width / 10,
+    height: 42,
+    width: 42,
     borderRadius: 50
   },
   text_container: {
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Louis',
-    fontSize: window.width / 25,
+    fontSize: 15,
     color: '#C2C2C2',
   },
   end_container: {
