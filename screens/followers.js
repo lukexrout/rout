@@ -1,24 +1,39 @@
-import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Pressable, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image } from 'react-native';
+import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
-const x_button = require('../assets/img/x_button02.png')
+const back = require('../assets/img/back.png')
 
 export default function Followers({ navigation, route }) {
 	
-	const location = route.params.location
+    const location = route.params.location
 
-    const goBack = () => {
-		navigation.navigate(location)
-	}
+    const navigate = (x) => {
+        navigation.navigate(x)
+    }
+
+    // everything in front of this
+
+    const [loaded] = useFonts({
+        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+    })
+
+    if (!loaded) {
+        return null;
+    }
 
     return (
         <View style={styles.container}>
-            <View style={styles.followers_header}>
-                <Pressable onPress={goBack} style={styles.x_button_container}>
-                        <Image source={x_button} style={styles.x_button}/>
-                </Pressable>
-                <Text style={styles.followers_title}>Followers</Text>
+            <View style={styles.head_safe}>
+                <SafeAreaView style={styles.back_safe}>
+                    <Pressable onPress={() => navigate(location)} style={styles.back_press}>
+                        <Image style={styles.back} source={back}/>
+                    </Pressable>
+                </SafeAreaView>
+                <SafeAreaView style={styles.followers_container}>
+                    <Text style={styles.followers}>followers</Text>
+                </SafeAreaView>
             </View>
         </View>
     )
@@ -28,31 +43,32 @@ const styles = StyleSheet.create({
     container: {
         height: window.height,
         width: window.width,
-        backgroundColor: '#424242'
+        backgroundColor: '#555555'
     },
-    followers_header: {
+    head_safe: {
+
+    },
+    followers_container: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignSelf: 'center'
     },
-    followers_title: {
-        position: 'absolute',
-        top: window.height / 17,
+    followers: {
         fontFamily: 'Louis',
-        fontSize: window.width / 15
+        fontSize: 30,
+        color: '#C2C2C2'
     },
-    x_button_container: {
-        zIndex: 1,
-        position: 'absolute',
-        // backgroundColor: '#333333',
-        left: window.width  / 18,
-        top: window.height / 18,
-        width: window.width / 13,
-        height: window.width / 13,
+    back_safe: {
+        position: 'absolute'
+    },
+    back_press: {
+        height: 40,
+        width: 70,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    x_button: {
-        width: window.width / 15,
-        height: window.width / 15
-    },
+    back: {
+        width: 12,
+        height: 21
+    }
+    
 })

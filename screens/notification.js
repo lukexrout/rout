@@ -15,8 +15,13 @@ const window = Dimensions.get('window')
 const NotiHead = () => {
   return (
     <SafeAreaView style={styles.notification_header_container}>
-      <Text style={styles.notification_header_text}>noti</Text>
+      <Text style={styles.notification_header_text}>rout</Text>
     </SafeAreaView>
+  )
+}
+const NotiFoot = () => {
+  return (
+    <View style={styles.noti_foot}/>
   )
 }
 
@@ -61,6 +66,20 @@ export default function Notification({ navigation, route }) {
     {id: 5, type: 'text', source: null, time: '12m', user: 'user04', text: ' downvoted your post'},
     {id: 6, type: 'image', source: aws, time: '4h', user: 'user05', text: ' rerouted your post'},
     {id: 7, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 8, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 9, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 10, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 11, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 12, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 13, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 14, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 15, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 16, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 17, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 18, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 19, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 20, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
+    {id: 21, type: 'image', source: aws_2, time: '2d', user: 'user06', text: ' shared your post'},
   ])
 
   const noti = ({ item }) => {
@@ -93,7 +112,10 @@ export default function Notification({ navigation, route }) {
         contentContainerStyle={styles.list_container}
         data={nofications}
         ListHeaderComponent={notiHead}
+        ListFooterComponent={NotiFoot}
         renderItem={noti}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         />
       
       
@@ -108,9 +130,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#555555',
   },
   list_container: {
+    // height: window.height,
     width: window.width,
     alignItems: 'center',
-    justifyContent: 'center'
   },
 
 
@@ -118,12 +140,16 @@ const styles = StyleSheet.create({
   notification_header_container: {
     alignItems: 'center',
     width: window.width,
+    height: 100,
     marginBottom: window.width / 21
   },
   notification_header_text: {
     color: '#C2C2C2',
     fontFamily: 'Louis',
-    fontSize: window.width / 10
+    fontSize: 40
+  },
+  noti_foot: {
+    height: window.height / 11
   },
   noti_container: {
     height: window.height / 16,

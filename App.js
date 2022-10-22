@@ -21,6 +21,11 @@ import Settings from './screens/settings';
 import User from './screens/_user'
 import Out from './screens/out/out'
 import Loading from './screens/out/loading'
+import Comments from './screens/comments';
+import Save from './screens/save';
+import Rerout from './screens/rerout';
+import Filter from './screens/filter';
+import Pick from './screens/pick';
 
 const Stack = createNativeStackNavigator();
 
@@ -50,8 +55,13 @@ export default function App() {
 					<Stack.Screen name='state' component={state === 'in' ? Bottom_Nav : state === null ? Loading : Out}/>
 					<Stack.Screen name='out' component={Out}/>
 					<Stack.Screen name='bottom_nav' component={Bottom_Nav}/>
-					<Stack.Screen name='create_post' component={CreatePost}/>
+					<Stack.Screen options={{animationTypeForReplace: 'pop'}} name='create_post' component={CreatePost}/>
+					<Stack.Screen name='pick' component={Pick}/>
 					<Stack.Screen name='create' component={Create}/>
+					<Stack.Screen name='filter' component={Filter}/>
+					<Stack.Screen name='rerout' component={Rerout}/>
+					<Stack.Screen name='comments' component={Comments}/>
+					<Stack.Screen name='save' component={Save}/>
 					<Stack.Screen name='settings' component={Settings}/>
 					<Stack.Screen name='direct_msg' component={DirectMsg}/>
 					<Stack.Screen name='active_chat' component={ActiveChat}/>

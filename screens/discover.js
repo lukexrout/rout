@@ -54,64 +54,102 @@ const Result = ({ navigation, username, length, id }) => {
 
 
 
+const Hash = ({ hash }) => {
 
+	return (
+		<View style={styles.hash_acc_outline}>
+			<Text style={styles.trend_text}>{hash}</Text>
+		</View>
+	)
+}
+
+const Acc = ({ acc }) => {
+
+	return (
+		<View style={styles.hash_acc_outline}>
+			<Text style={styles.trend_text}>{acc}</Text>
+		</View>
+	)
+}
 
 
 const DiscHead = () => {
 
-	const [hashTrend, setHashTrend] = useState([
+	const [hash, setHash] = useState([
 		{id: 1, hash: '#juice'},
 		{id: 2, hash: '#banana'},
 		{id: 3, hash: '#strawberry'},
 		{id: 4, hash: '#pineapple'},
 	])
-	const [accTrend, setAccTrend] = useState()
+	const [acc, setAcc] = useState([
+		{id: 1, acc: '@biden'},
+		{id: 2, acc: '@yo_mama'},
+		{id: 3, acc: '@trump'},
+		{id: 4, acc: '@elon'},
+	])
 
 
 
-	const Hash = () => {
+	const hash_ = ({ item }) => {
 
+		return(<Hash hash={item.hash} key={item.id}/>)
+		
+	}
 
-		return (
-			<View syle={styles.hash_container}>
+	const acc_ = ({ item }) => {
 
-			</View>
-		)
+		return(<Acc acc={item.acc} key={item.id}/>)
+		
 	}
 
 
 
 
-
-
-
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// for search, have a sectionList to where both hashtags and users show up at the same time
+	// use the top 5 of both catagories and have drop downs for both sections (provide post count for both)
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
 	return (
-		<SafeAreaView style={styles.disc_head}>
+		<View style={styles.disc_head}>
+			{/* <SafeAreaView style={styles.disc_head_safe}/> */}
 			<View style={styles.disc_trending}>
 				<View style={styles.trending_container}>
 					<Text style={styles.trending_text}>trending</Text>
 				</View>
-				<View style={styles.sep_line}/>
 				<View style={styles.trending_row}>
 					<View style={styles.trend_container}>
 						<View style={styles.outline_trend}>
 							<Text style={styles.text_trend}>hastags</Text>
 						</View>
-
+						<View style={styles.list_trend_container}>
 							<FlatList
+							listKey='hash'
 							style={styles.list_trend}
-							data={hashTrend}
-							renderItem={Hash}
+							data={hash}
+							renderItem={hash_}
 							scrollEnabled={false}
 							/>
+						</View>
+						
+							
 					</View>
+						<View style={styles.sep_line}/>
 					<View style={styles.trend_container}>
 						<View style={styles.outline_trend}>
 							<Text style={styles.text_trend}>accounts</Text>
+						</View>
+						<View style={styles.list_trend_container}>
+							<FlatList
+							listKey='acc'
+							style={styles.list_trend}
+							data={acc}
+							renderItem={acc_}
+							scrollEnabled={false}
+							/>
 						</View>
 					</View>
 				</View>
@@ -119,7 +157,7 @@ const DiscHead = () => {
 			<View style={styles.trend_post}>
 				<Text style={styles.trend_post_text}>trending posts</Text>
 			</View>
-		</SafeAreaView>
+		</View>
 	)
 }
 
@@ -240,50 +278,52 @@ export default function Discover({ navigation }) {
 	return (
 		<View style={styles.container}>			
 
-			<SafeAreaView style={styles.search_container}>
-				<Pressable onPress={searchPress} style={styles.search_press}>
-					<TextInput
-					ref={searchRef}
-					value={search}
-					placeholder='search'
-					placeholderTextColor={'#595959'}
-					selectionColor={'#696969'}
-					keyboardAppearance='dark'
-					onChangeText={i => initialLoad(i)}
-					style={styles.search}
+				<SafeAreaView style={styles.search_container}>
+					<Pressable onPress={searchPress} style={styles.search_press}>
+						<TextInput
+						ref={searchRef}
+						value={search}
+						placeholder='search'
+						placeholderTextColor={'#595959'}
+						selectionColor={'#696969'}
+						keyboardAppearance='dark'
+						onChangeText={i => initialLoad(i)}
+						style={styles.search}
+						/>
+					</Pressable>
+				</SafeAreaView>
+
+				<SafeAreaView/>
+
+				<Animated.View style={[styles.disc_safe, {top: topRef}]}>
+
+					<FlatList
+					style={styles.disc_list}
+					data={discover}
+					renderItem={disc}
+					ListHeaderComponent={discHead}
+					showsVerticalScrollIndicator={false}
+					showsHorizontalScrollIndicator={false}
 					/>
-				</Pressable>
-			</SafeAreaView>
-
-			<Animated.View style={[styles.disc_safe, {top: topRef}]}>
-
-				<FlatList
-				style={styles.disc_list}
-				data={discover}
-				renderItem={disc}
-				ListHeaderComponent={discHead}
-				showsVerticalScrollIndicator={false}
-				showsHorizontalScrollIndicator={false}
-				/>
-			</Animated.View>
+				</Animated.View>
 
 
-			{search !== '' ? 
-			<View style={[styles.result_safe]}>
-				<FlatList 
-				data={results}
-				ListHeaderComponent={headResult}
-				ListFooterComponent={footResult}
-				showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-				renderItem={continuousResult}
-				onMomentumScrollBegin={() => setMomentum(true)}
-				onEndReached={momentum === true ? loadUsers() : null}
-				onEndReachedThreshold={0}
-				/>
-			</View>
-			
-			 : <View/>}
+				{search !== '' ? 
+				<View style={[styles.result_safe]}>
+					<FlatList 
+					data={results}
+					ListHeaderComponent={headResult}
+					ListFooterComponent={footResult}
+					showsVerticalScrollIndicator={false}
+					showsHorizontalScrollIndicator={false}
+					renderItem={continuousResult}
+					onMomentumScrollBegin={() => setMomentum(true)}
+					onEndReached={momentum === true ? loadUsers() : null}
+					onEndReachedThreshold={0}
+					/>
+				</View>
+				
+				: <View/>}
 			
 		</View>
 	);
@@ -292,17 +332,16 @@ export default function Discover({ navigation }) {
 
 const styles = StyleSheet.create({
 	container: {
-		height: '100%',
-        width: '100%',
 		backgroundColor: '#555555',
-		alignItems: 'center',
+        height: window.width,
+        width: window.width,
 	},
 
 	search_container: {
 		zIndex: 2
 	},
 	search_press: {
-		// top: 7,
+		alignSelf: 'center',
 		backgroundColor: '#C2C2C2',
 		height: window.height / 24,
 		width: window.width / 1.1,
@@ -327,23 +366,32 @@ const styles = StyleSheet.create({
 
 
 	disc_safe: {
-		position: 'absolute',
-		alignItems: 'center',
+		// position: 'absolute',
+		height: window.height,
+		width: window.width,
 	},
 	disc_list: {
+		zIndex: 1,
 		position: 'absolute',
 		height: window.height,
+		width: window.width,
+		alignSelf: 'center',
+		backgroundColor: '#555555',
 	},
 	disc_head: {
-		// height: window.height / ,
+		marginTop: 10,
 		width: window.width,
-		justifyContent: 'flex-end',
-		alignItems: 'center'
+		alignItems: 'center',
+		backgroundColor: '#555555',
 	},
+	disc_head_safe: {
+
+	},
+	
 	disc_trending: {
+		// marginTop: 47,
 		width: window.width / 1.1,
-		height: window.height / 4,
-		marginTop: window.height / 17,
+		// height: 170,
 		borderRadius: window.width / 40,
 		backgroundColor: '#696969',
 		shadowColor: '#121212',
@@ -353,7 +401,7 @@ const styles = StyleSheet.create({
 	},
 	trending_container: { 
 		width: '100.2%',
-		height: window.height / 28,
+		height: 28,
 		backgroundColor: '#424242',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -368,21 +416,20 @@ const styles = StyleSheet.create({
 	},
 	trending_row: {
 		width: '100%',
-		top: window.width / 40,
+		marginVertical: 10,
 		justifyContent: 'center',
 		flexDirection: 'row'
 	},
 	sep_line: {
 		width: window.width / 170,
-		top: window.width / 9,
 		position: 'absolute',
 		alignSelf: 'center',
-		height: '74%',
+		height: '88%',
 		backgroundColor: '#616161'
 	},
 	trend_container: {
-		// backgroundColor: 'white',
-		height: window.width / 2.9,
+		// backgroundColor: 'white',/
+		// height: window.height / 2.9,
 		width: window.width / 2.2,
 		alignItems: 'center'
 	},
@@ -399,20 +446,32 @@ const styles = StyleSheet.create({
 		fontFamily: 'Louis',
 		fontSize: 17
 	},
-	list_trend: {
+	list_trend_container: {
 		width: '100%',
-		backgroundColor: 'white'
 	},
-	hash_container: {
-		height: window.width / 20,
-		width: '90%',
-		backgroundColor: 'white'
+	list_trend: {
+		
+	},
+	hash_acc_outline: {
+		height: 28,
+		width: '88%',
+		alignSelf: 'center',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: window.height / 70,
+		borderRadius: window.width / 70,
+		backgroundColor: '#6F6F6F'
+	},
+	trend_text: {
+		color: '#C2C2C2',
+		fontFamily: 'Louis',
+		fontSize: 16
 	},
 
 
 
 	trend_post: {
-		height: window.height / 28,
+		height: 28,
 		width: window.width / 1.04,
 		backgroundColor: '#424242',
 		justifyContent: 'center',
@@ -451,17 +510,18 @@ const styles = StyleSheet.create({
 
 
 	result_head: {
-		height: window.width / 4.4,
+		height: window.width / 4,
 	},
 	result_foot: {
-		height: window.width / 12
+		height: window.width / 4
 	},
 	result_safe: {
 		position: 'absolute',
-		height: window.height / 1.1,
+		height: window.height,
 		width: window.width,
 		justifyContent: 'center',
 		alignItems: 'center',
+		backgroundColor: '#555555',
 	},	
 	result_container: {
 		marginTop: window.width / 70,

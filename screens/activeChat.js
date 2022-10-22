@@ -43,25 +43,23 @@ export default function ActiveChat({ navigation, route }) {
     const inputRef = useRef()
 
     const [chat00, setChat00] = useState([
-        {id: 1, edit: false, position: null, content: {status: 'sender', message: 'Hello World'}}, 
-        {id: 2, edit: false, position: null, content: {status: 'reciever', message: 'Hello There'}},
-        {id: 3, edit: false, position: null, content: {status: 'reciever', message: 'I hope you are doing well!'}}, 
-        {id: 4, edit: false, position: null, content: {status: 'sender', message: 'I am doing great, thanks for asking... you should come over later for some dinner!'}}, 
-        {id: 5, edit: false, position: null, content: {status: 'reciever', message: 'Will do, no problem'}}, 
-        {id: 6, edit: false, position: null, content: {status: 'reciever', message: 'What time would you like me to come down?'}}, 
-        {id: 7, edit: false, position: null, content: {status: 'sender', message: '4:30pm should be perfect... couples game name is tonight :)'}}, 
+        {id: 17, edit: false, position: 'last', content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
+        {id: 16, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
+        {id: 15, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
+        {id: 14, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
+        {id: 13, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
+        {id: 12, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
+        {id: 11, edit: false, position: null, content: {status: 'reciever', message: 'Sounds perfect, and we dont really have allergies that we deal with... atleast that we know of XD'}}, 
+        {id: 10, edit: false, position: null, content: {status: 'sender', message: 'Do let me know of the allergies that you and your boo have :)'}}, 
         {id: 8, edit: false, position: null, content: {status: 'reciever', message: 'That is awesome. What will we be having for dinner?'}}, 
         {id: 9, edit: false, position: null, content: {status: 'sender', message: 'The wife is planning some home cooking!'}}, 
-        {id: 10, edit: false, position: null, content: {status: 'sender', message: 'Do let me know of the allergies that you and your boo have :)'}}, 
-        {id: 11, edit: false, position: null, content: {status: 'reciever', message: 'Sounds perfect, and we dont really have allergies that we deal with... atleast that we know of XD'}}, 
-        {id: 12, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
-        {id: 13, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
-        {id: 14, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
-        {id: 15, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
-        {id: 16, edit: false, position: null, content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
-        {id: 17, edit: false, position: 'last', content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
-
-    
+        {id: 7, edit: false, position: null, content: {status: 'sender', message: '4:30pm should be perfect... couples game name is tonight :)'}}, 
+        {id: 6, edit: false, position: null, content: {status: 'reciever', message: 'What time would you like me to come down?'}}, 
+        {id: 5, edit: false, position: null, content: {status: 'reciever', message: 'Will do, no problem'}}, 
+        {id: 4, edit: false, position: null, content: {status: 'sender', message: 'I am doing great, thanks for asking... you should come over later for some dinner!'}}, 
+        {id: 3, edit: false, position: null, content: {status: 'reciever', message: 'I hope you are doing well!'}}, 
+        {id: 2, edit: false, position: null, content: {status: 'reciever', message: 'Hello There'}},
+        {id: 1, edit: false, position: null, content: {status: 'sender', message: 'Hello World'}}, 
     ])
     const [chat01, setChat01] = useState([
         {id: 1, edit: false, position: null, content: {status: 'sender', message: 'Hello World'}}, 
@@ -123,7 +121,7 @@ export default function ActiveChat({ navigation, route }) {
 
         return(
             <View style={{
-            height: window.width / 3, 
+            height: window.height / 6, 
             backgroundColor: '#555555', 
             width: window.width}}/>
         )
@@ -133,7 +131,7 @@ export default function ActiveChat({ navigation, route }) {
 
         return(
             <View style={{
-            height: window.width / 5, 
+            height: window.height / 12, 
             backgroundColor: '#555555', 
             width: window.width}}/>
         )
@@ -146,7 +144,7 @@ export default function ActiveChat({ navigation, route }) {
         inputRef.current.focus()
     }
 
-    const dta = chat00.reverse()
+    
 
     // everything in front of this
 
@@ -174,37 +172,46 @@ export default function ActiveChat({ navigation, route }) {
                 
             </SafeAreaView>
             <View style={styles.chat_center_container}>
-                <KeyboardAvoidingView keyboardVerticalOffset={-50} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.chat_container}>
+                <KeyboardAvoidingView keyboardVerticalOffset={-55} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.chat_container}>
+
                     <FlatList
                     ref={scrollRef}
                     // onScroll={() => Keyboard.dismiss()}
                     renderItem={continuousChat}
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
-                    inverted={true}                    
+                    inverted={true}             
+                    onScrollToTop={() => console.log('hello')}
                     // onContentSizeChange={() => scrollRef.current.scrollToEnd({ animated: true })}
-                    data={dta}
+                    data={chat00}
                     keyboardDismissMode='none'
                     style={styles.chat_list_container}
                     ListHeaderComponent={Foot}
                     ListFooterComponent={Head}
                     />
                     <Pressable onPress={() => inputPress(scrollRef)} style={styles.input_container}>
-                        <TextInput
-                        ref={inputRef}
-                        // value={userInput}
-                        placeholder='message'
-                        placeholderTextColor={'#595959'}
-                        keyboardAppearance='dark'
-                        selectionColor={'#696969'}
-                        onChangeText={() => scrollRef.current.scrollToOffset({ animated: true, offset: 0 })}
-                        // ref={userRef}
-                        style={styles.input}
-                        // onChangeText={i => setUserInput(i)}
-                        />
-                        <Pressable style={styles.send_container}>
-                            <Image style={styles.send} source={send_icon} />
-                        </Pressable>
+                        <View style={styles.input_safe}>
+
+                            <TextInput
+                            ref={inputRef}
+                            // value={userInput}
+                            placeholder='message'
+                            placeholderTextColor={'#595959'}
+                            keyboardAppearance='dark'
+                            selectionColor={'#696969'}
+                            onChangeText={() => inputRef.current.scrollToOffset({ animated: true, offset: 0 })}
+                            // ref={userRef}
+                            style={styles.input}
+                            multiline={true}
+                            // onChangeText={i => setUserInput(i)}
+                            />
+                        </View>
+                        <View style={styles.send_safe}>
+
+                            <Pressable style={styles.send_container}>
+                                <Image style={styles.send} source={send_icon} />
+                            </Pressable>
+                        </View>
                         
                     </Pressable>
 
@@ -251,8 +258,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#424242'
     },
     back: {
-        height: window.width / 17,
-        width: window.width / 29,
+        width: 14,
+        height: 24,
         right: window.width / 170
     },
 
@@ -271,7 +278,7 @@ const styles = StyleSheet.create({
     },
     username_text: {
         fontFamily: 'Louis',
-        fontSize: window.width / 20,
+        fontSize: 21,
         marginLeft: window.width / 40,
         marginRight: window.width / 40,
         color: '#C2C2C2'
@@ -306,42 +313,53 @@ const styles = StyleSheet.create({
         borderRadius: window.width / 40
     },
     message_text: {
-        fontSize: window.width / 22,
+        fontSize: 17,
         fontFamily: 'Louis',
         marginVertical: window.width / 50,
         marginHorizontal: window.width / 30
     },
 
     input_container: {
-        borderRadius: window.width / 10,
+        // position: 'absolute',
+        borderRadius: 20,
         width: window.width / 1.1,
-        height: window.width / 11,
-        backgroundColor: '#777777',
-        bottom: window.width / 6,
+        // height: window.height / 27,
+        backgroundColor: '#999999',
+        bottom: window.height / 14,
         justifyContent: 'center'
 
     },
+    input_safe: {
+        paddingTop: 4,
+		paddingBottom: 8,
+    },
     input: {
+        width: window.width / 1.28,
         left: window.width / 30,
         fontFamily: 'Louis',
-        fontSize: window.width / 22
+        fontSize: 17
+    },
+    send_safe: {
+        position: 'absolute',
+        height: '100%',
+        width: '100%',
     },
     send_container: {
-        position: 'absolute',
         alignSelf: 'flex-end',
         alignItems: 'center',
         justifyContent: 'center',
-        height: window.width / 11.7,
-        width: window.width / 11.7,
-        borderRadius: 50,
-        right: window.width / 470,
-        backgroundColor: '#424242'
+        height: 31,
+        width: 31,
+        borderRadius: 20,
+        top: 3,
+        right: 3,
+        backgroundColor: '#5F5F5F'
 
 
     },
     send: {
-        height: window.width / 17,
-        width: window.width / 21.4
+        height: 19,
+        width: 16
     }
 
 

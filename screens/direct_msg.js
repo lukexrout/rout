@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // const Websocket = require('ws')
 const window = Dimensions.get('window')
-const go_back_icon = require('../assets/img/go_back_icon.png')
+const back = require('../assets/img/back.png')
 const profile_img = require('../assets/img/user_profile_template.png')
 
 const url = 'ws://localhost:8080'
@@ -39,11 +39,13 @@ const Chat = ({ source, navigation, route, user, time }) => {
                     <Text style={styles.user_message_username}>{source.username}</Text>
                     <Text style={styles.user_message_sample_message}>{source.message}</Text>
                 </View>
+            </View>
+            <View style={styles.user_message_time_text_container}>
+
                 <Text style={styles.user_message_time_text}>{time}</Text>
             </View>
 
         </Pressable>
-        <View style={styles.user_message_gap}/>
     </SafeAreaView>)
 }
 
@@ -129,12 +131,18 @@ export default function Direct_Msg({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <SafeAreaView style={styles.go_back_title_row}>
-                <Pressable onPress={goBack} style={styles.go_back_icon_container}>
-                        <Image source={go_back_icon} style={styles.go_back_icon}/>
+            <View style={styles.go_back_title_row}>
+                    <SafeAreaView style={styles.go_back_icon_container}>
+                <Pressable onPress={goBack} style={styles.go_back_icon_press}>
+                        
+                        <Image source={back} style={styles.back}/>
                 </Pressable>
-                <Text style={styles.message_title}>Messages</Text>
-            </SafeAreaView>
+                    </SafeAreaView>
+                <SafeAreaView style={styles.message_container}>
+
+                    <Text style={styles.message_title}>messages</Text>
+                </SafeAreaView>
+            </View>
             
             <FlatList 
             style={{width: window.width}}
@@ -156,33 +164,40 @@ const styles = StyleSheet.create({
     },
     
     go_back_title_row: {
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center',
+        width: window.width,
         zIndex: 2,
-        marginBottom: window.width / 30
-        // marginBottom: window.height - window.height / 15
+        marginBottom: window.height / 40
+    },
+    message_container: {
+
     },
     message_title: {
-        // position: 'absolute',
-        // top: window.height / 17,,
-        color: '#222222',
         fontFamily: 'Louis',
-        fontSize: window.width / 15
+        fontSize: 32,
+        color: '#C2C2C2'
     },
     go_back_icon_container: {
-        // zIndex: 2,
-        position: 'absolute',
-        left: window.width  / 25,
-        top: window.height / 18,
-        width: window.width / 13,
-        height: window.width / 13,
+        position: 'absolute',      
+        alignSelf: 'flex-start',
+        flexDirection: 'row',
+        left: window.width / 30,
+        // backgroundColor: 'blue',
+        height: '100%'
+    },
+    go_back_icon_press: {
+        width: 28,
+        height: 28,
+        // backgroundColor: 'white',
         alignItems: 'center',
+        alignSelf: 'flex-end',
         justifyContent: 'center',
     },
-    go_back_icon: {
-        position: 'absolute',
-        width: window.width / 27,
-        height: window.width / 15
+    
+    back: {
+        width: 12,
+        height: 21
     },
 
 
@@ -190,27 +205,24 @@ const styles = StyleSheet.create({
         width: window.width,
         justifyContent: 'center',
         alignItems: 'center',
-        // top: window.width / 25
-    },
-    user_message_gap: {
-        height: window.width / 60
+        marginBottom: 7
     },
     user_message_button: {
-        // position: 'absolute',
-        width: window.width / 1.03,
-        height: window.width / 5,
-        // top: window.width / 50,
+        width: window.width / 1.04,
+        height: window.height / 14,
         justifyContent: 'center',
         borderRadius: window.width / 30,
-        backgroundColor: '#424242'
+        backgroundColor: '#717171'
     },
     user_message_row: {
         flexDirection: 'row',
+        width: '100%',
+        alignSelf: 'center',
         left: window.width / 50
     },
     user_message_profile_image: {
-        width: window.width / 7,
-        height: window.width / 7,
+        width: 42,
+        height: 42,
         borderRadius: 50,
         
     },
@@ -219,22 +231,27 @@ const styles = StyleSheet.create({
 
     },
     user_message_username: {
-        fontSize: window.width / 20,
+        fontSize: 17,
         color: '#C2C2C2',
         fontFamily: 'Louis',
     },
     user_message_sample_message: {
-        color: '#909090',
+        color: '#171717',
         fontFamily: 'Louis',
-        top: window.width / 40,
+        top: 3,
         left: window.width / 100,
         width: window.width / 1.43,
-        fontSize: window.width / 22,
+        fontSize: 16,
 
+    },
+    user_message_time_text_container: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        top: 7,
+        right: 7
     },
     user_message_time_text: {
         color: '#171717',
-        // left: window.width / 5
     },
 
 

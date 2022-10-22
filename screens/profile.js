@@ -10,8 +10,11 @@ const window = Dimensions.get('window')
 
 const profile_img = require('../assets/img/user_profile_template.png')
 const plus_img = require('../assets/img/plus_sign.png')
-const set_icon = require('../assets/img/gear_icon_2.png')
+const set_icon = require('../assets/img/cog.png')
 const dm_icon = require('../assets/img/dm_icon_2.png')
+const save_icon = require('../assets/img/save_icon_profile.png')
+
+import MemoizedProfileHead from './profileHead.js'
 
 const Content = () => {
     return (
@@ -56,9 +59,10 @@ const Profile_ = ({ navigation }) => {
 
 
 export default function Profile({ navigation }) {
-	
-    
 
+    const contentOpacity = useRef(new Animated.Value(1)).current
+    const interestOpacity = useRef(new Animated.Value(0)).current
+	
     const [numColumns, setNumColumns] = useState(3)
     const [state, setState] = useState('content')
     const [username, setUsername] = useState()
@@ -87,10 +91,6 @@ export default function Profile({ navigation }) {
             location: 'profile'
         })
 	}
-
-    const contentOpacity = useRef(new Animated.Value(1)).current
-    const interestOpacity = useRef(new Animated.Value(0)).current
-
 
     const contentPress = () => {
         setState('content')
@@ -135,18 +135,11 @@ export default function Profile({ navigation }) {
     }
 
     const content = ({ item, index }) => {
-
-		return (
-            <Content/>
-        )
+		return (<Content/>)
     }
 
     const interest = ({ item }) => {
-
-
-        return (
-            <Interest interest={item.interest} cent={item.cent}/>
-        )
+        return (<Interest interest={item.interest} cent={item.cent}/>)
     }
 
     const head = () => {
@@ -156,30 +149,32 @@ export default function Profile({ navigation }) {
     
         return (
             <View style={styles.general_profile_container}>
-                <SafeAreaView>
-                    <View style={styles.profile_container}>
-        
-                        <View style={styles.rout_container}>
-                            <Text style={styles.rout_text}>rout</Text>
-                        </View>
-        
-        
-                        <View style={styles.set_dm_container}>
-                            <Pressable onPress={() => navigate('direct_msg')} style={styles.dm_container}>
-                                <Image style={styles.dm} source={dm_icon}/>
-                            </Pressable>
-                            <Pressable onPress={() => navigate('settings')} style={styles.set_container}>
-                                <Image style={styles.set} source={set_icon}/>
-                            </Pressable>
-                        </View>
-                        <View style={styles.info_container}>
+                <View style={styles.head_container}>
+                    <SafeAreaView style={styles.rout_container}>
+
+                        <Text style={styles.rout_text}>rout</Text>
+                    </SafeAreaView>
+                    
+                </View>
+                <View style={styles.profile_container}>
+                    <View style={styles.set_dm_container}>
+                        <Pressable onPress={() => navigate('direct_msg')} style={styles.dm_container}>
+                            <Image style={styles.dm} source={dm_icon}/>
+                        </Pressable>
+                        <Pressable onPress={() => navigate('settings')} style={styles.set_container}>
+                            <Image style={styles.set} source={set_icon}/>
+                        </Pressable>
+                        <Pressable onPress={() => navigate('save')} style={styles.save_container}>
+                            <Image style={styles.save} source={save_icon}/>
+                        </Pressable>
+                    </View>
+                    <View style={styles.info_container}>
                         <View style={styles.pic_container}>
                             <Image style={styles.pic} source={profile_img}/>
                         </View>
                         <View style={styles.user_container}>
                             <Text style={styles.user}>schafferluke</Text>
                         </View>
-                        
                         <View style={styles.stat_container}>
                             <View style={{flexDirection: 'row'}}>
                                 <Pressable onPress={() => navigate('followers')} style={styles.stat}>
@@ -200,40 +195,39 @@ export default function Profile({ navigation }) {
                                     </View>
                                 </Pressable>
                             </View>
-                            <View style={styles.sep_stat}/>
+                            
                         </View>
-        
+                        <View style={styles.sep_stat}/>
+                        <View style={styles.bio_container}>
+                            <Text style={styles.bio}>this is my bio currently. what do you think? I hope you like it considerably.</Text>
+                        </View>
+                        <View style={[styles.sep_stat, {width: 77}]}/>
                         <View style={styles.button_container}>
-                            <View style={styles.button_wallet}>
+                            <Pressable onPress={() => navigate('wallet')} style={styles.button_wallet}>
                                 <Text style={styles.button_text}>wallet</Text>
-                            </View>
+                            </Pressable>
                             <View style={{width: window.width / 11}}/>
-                            <View style={styles.button_edit}>
+                            <Pressable onPress={() => navigate('edit_profile')} style={styles.button_edit}>
                                 <Text style={styles.button_text}>edit profile</Text>
-        
-                            </View>
+                            </Pressable>
                         </View>
-        
+                        <View style={styles.tab_container}>
+                            <Pressable onPress={() => contentPress()} style={styles.tab_text_container}>
+                                <View style={styles.tab_text_center}>
+                                    <Animated.View style={[styles.tab_text_outline, {opacity: contentOpacity}]}/>
+                                    <Text style={styles.tab_text}>content</Text>
+                                </View>
+                            </Pressable>
+                            <View style={styles.sep_line}/>
+                            <Pressable onPress={() => interestPress()} style={styles.tab_text_container}>
+                                <View style={styles.tab_text_center}>
+                                    <Animated.View style={[styles.tab_text_outline, {opacity: interestOpacity}]}/>
+                                    <Text style={styles.tab_text}>interests</Text>
+                                </View>
+                            </Pressable>
+                        </View>
                     </View>
-        
-                    </View>
-                    <View style={styles.tab_container}>
-                        <Pressable onPress={() => contentPress()} style={styles.tab_text_container}>
-                            <View style={styles.tab_text_center}>
-                                <Animated.View style={[styles.tab_text_outline, {opacity: contentOpacity}]}/>
-                                <Text style={styles.tab_text}>content</Text>
-                            </View>
-                        </Pressable>
-        
-                        <View style={styles.sep_line}/>
-                        <Pressable onPress={() => interestPress()} style={styles.tab_text_container}>
-                            <View style={styles.tab_text_center}>
-                                <Animated.View style={[styles.tab_text_outline, {opacity: interestOpacity}]}/>
-                                <Text style={styles.tab_text}>interests</Text>
-                            </View>
-                        </Pressable>
-                    </View>
-                </SafeAreaView>
+                </View>
             </View>
         )
     }
@@ -266,7 +260,7 @@ export default function Profile({ navigation }) {
                     key={numColumns}
                     renderItem={state === 'content' ? content : interest}
                     data={data}
-                    numColumns={numColumns}
+                    numColumns={1}
                     contentContainerStyle={state === 'content' ? {alignItems: 'flex-start'} : {alignItems: 'center'}}
                     ListHeaderComponent={head}
                     ListHeaderComponentStyle={{backgroundColor: '#555555'}}
@@ -282,9 +276,9 @@ export default function Profile({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: '#717171',
+        justifyContent: 'center',
+		alignItems: 'center',
+        backgroundColor: '#555555',
     },
     
 
@@ -319,50 +313,63 @@ const styles = StyleSheet.create({
     
 
     list_container: {
-        position: 'absolute',
-        width: window.width,
-        backgroundColor: '#717171',
-        height: window.height / 1
+        zIndex: 1,
+		position: 'absolute',
+		backgroundColor: '#555555',
+		width: window.width,
+		height: window.height,
     },
 
 
     general_profile_container: {
+        // flexDirection: 'row',
         width: window.width,
-        alignItems: 'center',
+        // height: window.height / 2.08,
+        // alignItems: 'center',
 
     },
-    profile_container: {
-        height: window.height / 2.7,
+    head_container: {
+        // backgroundColor: 'white',
+        // flexDirection: 'row',
+        height: 110,
         width: window.width,
-        justifyContent: 'center',
-        alignItems: 'center',
-
+        // top: 0,
+        alignItems: 'center'
     },
     rout_container: {
-        position: 'absolute',
-        width: window.width,
-        top: 0,
-        // alignSelf: 'flex-start',
-        justifyContent: 'center',
-        alignItems: 'center'
+        alignSelf: 'center'
     },
     rout_text: {
         fontFamily: 'Louis',
         fontSize: 40,
         color: '#C2C2C2'
     },
+    profile_container: {
+        marginTop: 10,
+        // height: window.height / 2.8
+        width: window.width,
+        // justifyContent: 'center',
+        alignItems: 'center',
+
+    },
+    
     set_dm_container: {
         position: 'absolute',
-        height: 70,
+        // backgroundColor: 'white',
+        // height: 170,
         width: 28,
-        top: window.width / 30,
+        // marginTop:40,
+        top: -40,
         right: window.width / 21,
-        alignSelf: 'flex-end',
-        justifyContent: 'flex-end',
+        alignSelf: 'flex-start',
+        // justifyContent: 'flex-end',
     },
     dm_container: {
-        top: 0,
-        position: 'absolute',
+        // flex: 1,
+        // backgroundColor: 'white',
+        // top: 0,
+        // position: 'absolute',
+        justifyContent: 'center',
         width: '100%',
     },
     dm: {
@@ -371,15 +378,31 @@ const styles = StyleSheet.create({
         right: window.width / 270
     },
     set_container: {
+        marginVertical: 11,
+        // backgroundColor: 'blue',
+        // flex: 1,
+        justifyContent: 'center',
         width: '100%',
     },
     set: {
+        // backgroundColor: 'purple',
         width: '100%',
-        height: 36
+        height: 28
+    },
+    save_container: {
+        // backgroundColor: 'purple',
+        // flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    save: {
+        width: 20,
+        height: 27
     },
     info_container: {
         // top: window.width / 70,
-        marginTop: window.width / 8,
+        // marginTop: window.width / 8,
         width: window.width / 1.5,
         // backgroundColor: 'blue'
     },
@@ -409,7 +432,7 @@ const styles = StyleSheet.create({
     },
     stat_container: {
         width: '100%',
-        // flexDirection: 'row',
+        marginBottom: 17,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -447,15 +470,29 @@ const styles = StyleSheet.create({
         marginRight: window.width / 40,
     },
     sep_stat: {
-        width: '130%',
+        width: '70%',
         height: window.width / 170,
-        marginTop: window.height / 70,
+        alignSelf: 'center',
+        // marginTop: window.height / 70,
         borderRadius: 50,
-        backgroundColor: '#4F4F4F'
+        backgroundColor: '#616161'
+    },
+    bio_container: {
+        flex: 1,
+        width: '110%',
+        paddingVertical: 10,
+        alignSelf: 'center',
+        alignItems: 'center',
+    },
+    bio: {
+        fontFamily: 'Louis',
+        fontSize: 17,
+        color: '#C2C2C2',
+        textAlign: 'center'
     },
     button_container: {
         flexDirection: 'row',
-        marginTop: window.height / 70,
+        marginVertical: 17,
 
         // backgroundColor: 'white',
         justifyContent: 'center',
@@ -488,12 +525,14 @@ const styles = StyleSheet.create({
 
 
     tab_container: {
+        // position: 'absolute',
         width: window.width,
         height: window.height / 20,
         backgroundColor: '#5F5F5F',
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignSelf: 'center'
     },
     sep_line: {
         position: 'absolute',
@@ -528,15 +567,15 @@ const styles = StyleSheet.create({
         color: '#C2C2C2'
     },
     content_container: {
-        height: window.height / 4,
-        width: window.width / 3,
+        height: window.height / 4.9,
+        width: window.width,
         borderColor: 'black',
         borderWidth: window.width / 470,
         backgroundColor: 'white'
     },
     interest_container: {
         marginTop: window.width / 40,
-        height: window.width / 7,
+        height: window.height / 20,
         width: window.width / 1.04,
         backgroundColor: '#424242',
         borderRadius: window.width / 70,
@@ -552,10 +591,10 @@ const styles = StyleSheet.create({
     interest: {
         left: window.width / 17,
         fontFamily: 'Louis',
-        fontSize: window.width / 21
+        fontSize: 17
     },
     foot: {
-        height: window.height / 8
+        height: window.height / 11
     }
     
 })

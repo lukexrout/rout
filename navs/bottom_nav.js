@@ -101,10 +101,10 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		bottom: 0,
 		width: '100%',
-		height: window.height / 11,
+		height: window.height / 12.4,
 		backgroundColor: '#555555',
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10,
+		borderTopLeftRadius: 11,
+		borderTopRightRadius: 11,
 		justifyContent: 'flex-start',
 		alignItems: 'center',
 		borderTopWidth: 0,
@@ -120,25 +120,25 @@ const styles = StyleSheet.create({
 		top: window.height / 140
 	},
 	home_icon: {
-		width: window.width / 17,
-		height: window.width / 17
+		width: 22,
+		height: 22
 	},
 	discover_icon: {
 
-		width: window.width / 17,
-		height: window.width / 15.5
+		width: 22.5,
+		height: 22
 	},
 	// noti_icon: {
 	// 	width: window.width / 13,
 	// 	height: window.width / 15
 	// },
 	noti_icon: {
-		width: window.width / 17,
-		height: window.width / 17
+		width: 22.5,
+		height: 22
 	},
 	profile_icon: {
-		width: window.width / 17,
-		height: window.width / 15
+		width: 19.5,
+		height: 22
 	}
   });
   

@@ -9,10 +9,10 @@
 // export default function template({ navigation, route }) {
 	
 
-        // everything in front of this
+     //   // everything in front of this
 
 //     const [loaded] = useFonts({
-//         'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
+//         'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
 //     })
 
 //     if (!loaded) {

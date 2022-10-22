@@ -1,23 +1,25 @@
 import * as MediaLibrary from 'expo-media-library';
 import React, { useEffect, useState, useRef } from 'react';
 import { useFonts } from 'expo-font';
-import { Camera } from 'expo-camera'
+import { Camera, CameraType } from 'expo-camera'
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator'
+import { StatusBar } from 'expo-status-bar';
 import { Dimensions, Image, StyleSheet, Text, View, SafeAreaView, Pressable, FlatList, TextInput, KeyboardAvoidingView, Keyboard, Animated } from 'react-native';
 import mime from 'mime'
 import axios from 'axios'
 
-const go_back_icon = require('../assets/img/go_back_icon.png')
+const back = require('../assets/img/back.png')
 const arrow = require('../assets/img/arrow-up.png')
 const profile_img = require('../assets/img/user_profile_template.png')
 const send_icon = require('../assets/img/post_arrow_up.png')
-const x_button = require('../assets/img/x-button.png')
+const x = require('../assets/img/x.png')
 const lightniing_bolt = require('../assets/img/lightning_bolt_icon.png')
 const lightniing_bolt_filled = require('../assets/img/lightning_bolt_icon_filled.png')
 const change_icon = require('../assets/img/change_camera_icon.png')
 const x_icon = require('../assets/img/preview_x_icon.png')
 const edit_icon = require('../assets/img/preview_edit_icon.png')
 const white_arrow = require('../assets/img/white_post_arrow.png')
-
+const pick = require('../assets/img/pick.png')
 const vertical_fill = require('../assets/img/vertical_fill.jpeg')
 
 const window = Dimensions.get('window')
@@ -32,13 +34,18 @@ const Library = ({ item }) => (
 
 export default function CreatePost({ navigation, route }) {
 	
+	const typeSelectionAnimation = useRef(new Animated.Value(0)).current
+	const imageTypeAnimation = useRef(new Animated.Value(window.width / 23)).current
+	const textTypeAnimation = useRef(new Animated.Value(window.width / 17)).current
+	const videoTypeAnimation = useRef(new Animated.Value(window.width / 23)).current
+
     const [media, setMedia] = useState([])
 	const [flashIcon, setFlashIcon] = useState(lightniing_bolt)
 	const [show, setShow] = useState(false)
 	const [styleSide, setStyleSide] = useState('middle')
 	const [postType, setPostType] = useState('text')
 	const [keyboardShown, setKeyboardShown] = useState(window.width / 1.45)
-	const [type, setType] = useState(Camera.Constants.Type.front)
+	const [type, setType] = useState(CameraType.front)
 	const [flash, setFlash] = useState(Camera.Constants.FlashMode.off)
 	const [cameraStatus, setCameraStatus] = useState('front')
 	const [flashStatus, setFlashStatus] = useState('off')
@@ -46,6 +53,7 @@ export default function CreatePost({ navigation, route }) {
 	const [uploadURL, setUploadURL] = useState(null)
 	const [previewRatio, setPreviewRatio] = useState(null)
 	const [previewWidth, setPreviewWidth] = useState(null)
+	const [previewIndex, setPreviewIndex] = useState(1)
 
 	const photoRef = useRef()
 
@@ -53,6 +61,10 @@ export default function CreatePost({ navigation, route }) {
 
 	const goBack = () => {
 		navigation.navigate(location)
+	}
+
+	const navigate = (x) => {
+		navigation.navigate(x)
 	}
 
 	const media_grid = ({ item }) => {
@@ -100,15 +112,16 @@ export default function CreatePost({ navigation, route }) {
 	const closeMedia = () => {
 		setMedia([])
 		setShow(false)
+		setImagePreview(null)
+		setPreviewIndex(0)
 	}
 
 	const change_camera = () => {
-
 		if (cameraStatus === 'back') {
-			setType(Camera.Constants.Type.front)
+			setType(CameraType.front)
 			setCameraStatus('front')
 		} else if (cameraStatus === 'front') {
-			setType(Camera.Constants.Type.back)
+			setType(CameraType.back)
 			setCameraStatus('back')
 		}
 	}
@@ -122,18 +135,23 @@ export default function CreatePost({ navigation, route }) {
 			setFlash(Camera.Constants.FlashMode.off)
 			setFlashIcon(lightniing_bolt)
 			setFlashStatus('off')
-
 		}
 	}
 
 	const handlePreview = async () => {
 
-		const photo = await photoRef.current.takePictureAsync()
-		const uri = photo.base64
+		let photo = await photoRef.current.takePictureAsync({ skipProcessing: true })
 
-		setImagePreview(photo.uri)
-	
-		
+		if (cameraStatus === 'front') {
+
+			await manip(photo.uri)
+
+		} else {
+
+			setImagePreview(photo.uri)
+		}
+
+		setPreviewIndex(2)
 
 		Image.getSize(photo.uri, (width, height) => {
 			setPreviewRatio((window.height / 1.25) / height)
@@ -142,21 +160,32 @@ export default function CreatePost({ navigation, route }) {
 
 	}
 
-	const handleURL = async () => {
+	const manip = async (uri) => {
+		
+		const newUri = await manipulateAsync(
+			uri,
+			[{flip: FlipType.Horizontal}]
+		)
 
-		const obj = {
-			username: "schaffer_luke"
-		}
+		setImagePreview(newUri.uri)
 
-		const response = await fetch('https://804qbtsf9h.execute-api.us-east-1.amazonaws.com/rout_data/upload-url', {
-			method: 'POST',
-			body: JSON.stringify(obj)
-		})
-	
-		const json = await response.json();
-
-		return json
 	}
+
+	// const handleURL = async () => {
+
+	// 	const obj = {
+	// 		username: "schaffer_luke"
+	// 	}
+
+	// 	const response = await fetch('https://804qbtsf9h.execute-api.us-east-1.amazonaws.com/rout_data/upload-url', {
+	// 		method: 'POST',
+	// 		body: JSON.stringify(obj)
+	// 	})
+	
+	// 	const json = await response.json();
+
+	// 	return json
+	// }
 
 	// const handleUpload = async () => {
 
@@ -191,29 +220,11 @@ export default function CreatePost({ navigation, route }) {
 
 	}
 
-	const func00 = () => {
-
-		
-
-		axios.put(uploadURL, data, {
-			'Content-Type': 'multipart/form-data'
-		})
-	}
-
-	const typeSelectionAnimation = useRef(new Animated.Value(0)).current
-
-	const imageTypeAnimation = useRef(new Animated.Value(window.width / 23)).current
-	const textTypeAnimation = useRef(new Animated.Value(window.width / 17)).current
-	const videoTypeAnimation = useRef(new Animated.Value(window.width / 23)).current
-
 	const selectPostType = async (i) => {
 		if (i === 'image') {
 			setPostType('image')
 
 			// const permission = async () => {
-				
-
-			
 
 			if (styleSide === 'middle') {
 				setStyleSide('left')
@@ -357,9 +368,6 @@ export default function CreatePost({ navigation, route }) {
 		}
 	}
 
-	
-
-
 	//// Put everything in front of this ////
 
 	const [loaded] = useFonts({
@@ -391,22 +399,22 @@ export default function CreatePost({ navigation, route }) {
 			<SafeAreaView style={styles.type_selection}>
 				<SafeAreaView style={styles.back_icon_safeArea}>
 					<Pressable onPress={goBack} style={styles.back_icon_container}>
-						<Image source={go_back_icon} style={styles.back_icon}/>
+						<Image source={back} style={styles.back_icon}/>
 					</Pressable>
 				</SafeAreaView>
 				<Animated.View style={[styles.type_selection_animation_container, {left: typeSelectionAnimation}]}>
 					<Pressable onPress={() => selectPostType('image')} style={[styles.type_selection_text_line]}>
-						<Animated.Text style={[styles.type_selection_text, {fontSize: imageTypeAnimation}]}>Image</Animated.Text>
+						<Animated.Text style={[styles.type_selection_text, {fontSize: imageTypeAnimation}]}>image</Animated.Text>
 						<View style={styles.type_selection_underline}/>
 					</Pressable>
 					<View style={styles.type_selection_gap}/>
 					<Pressable onPress={() => selectPostType('text')} style={styles.type_selection_text_line}>
-						<Animated.Text style={[styles.type_selection_text, {fontSize: textTypeAnimation}]}>Text</Animated.Text>
+						<Animated.Text style={[styles.type_selection_text, {fontSize: textTypeAnimation}]}>text</Animated.Text>
 						<View style={styles.type_selection_underline}/>
 					</Pressable>
 					<View style={styles.type_selection_gap}/>
 					<Pressable onPress={() => selectPostType('video')} style={styles.type_selection_text_line}>
-						<Animated.Text style={[styles.type_selection_text, {fontSize: videoTypeAnimation}]}>Video</Animated.Text>
+						<Animated.Text style={[styles.type_selection_text, {fontSize: videoTypeAnimation}]}>video</Animated.Text>
 						<View style={styles.type_selection_underline}/>
 					</Pressable>
 				</Animated.View>
@@ -432,8 +440,8 @@ export default function CreatePost({ navigation, route }) {
 						</View>
 					</View>
 				</SafeAreaView>
-				<KeyboardAvoidingView keyboardVerticalOffset={0} behavior='position' style={styles.post_button_container}>
-					<View style={[styles.post_button_row_container, {top: keyboardShown}]}>
+				<KeyboardAvoidingView keyboardVerticalOffset={-20} behavior='position' style={styles.post_button_container}>
+					<View style={[styles.post_button_row_container, ]}>
 						<Pressable style={styles.post_button_post_container}>
 							<Text style={styles.post_button_post_text}>rout</Text>
 							<View style={{width: window.width / 50}}/>
@@ -443,70 +451,16 @@ export default function CreatePost({ navigation, route }) {
 				</KeyboardAvoidingView>
 			</View>
 			 : postType === 'image' ? 
-				<View style={styles.type_image_camera_container}>
+				<View style={[styles.type_image_camera_container, {zIndex: previewIndex}]}>
 					<Camera ref={photoRef} style={styles.type_image_camera} flashMode={flash} type={type}>
-						{ imagePreview !== null ? 
-
-							<View style={styles.type_image_preview_container}>
-								<View style={styles.type_image_preview_background}/>
-								<View style={styles.type_image_preview_button_container}>
-									<View style={styles.type_image_preview_image_container}>
-
-
-										<View style={styles.type_image_preview_x_icon_container}>
-											<Pressable onPress={() => setImagePreview(null)} style={styles.type_image_preview_x_icon_press}>
-												<View style={styles.type_image_preview_x_icon_background}/>
-
-												<View style={styles.type_image_preview_x_icon_image_container} >
-													<Image source={x_icon} style={styles.type_image_preview_x_icon_image}/>
-												</View>
-											</Pressable>
-										</View>
-
-										<View style={styles.type_image_preview_save_container}>
-											<Pressable style={styles.type_image_preview_save_press}>
-												<View style={styles.type_image_preview_save_background} />
-
-												<View style={styles.type_image_preview_save_text_container}>
-													<Text style={styles.type_image_preview_save_text}>save</Text>
-												</View>
-											</Pressable>
-										</View>
-
-										<View style={styles.type_image_preview_edit_icon_container}>
-											<Pressable style={styles.type_image_preview_x_icon_press}>
-												<View style={styles.type_image_preview_edit_icon_background}/>
-
-												<View style={styles.type_image_preview_edit_icon_image_container} >
-													<Image source={edit_icon} style={styles.type_image_preview_edit_icon_image}/>
-												</View>
-											</Pressable>
-										</View>
-										
-
-										<View style={styles.type_image_preview_rout_container}> 
-											<Pressable onPress={handleUpload} style={styles.type_image_preview_rout_press}>
-
-												<View style={styles.type_image_preview_rout_background}/>
-											
-												<View style={styles.type_image_preview_rout_row}>
-													<Text style={styles.type_image_preview_rout_text}>rout</Text>
-													<View style={{width: window.width / 40}}/>
-													<Image style={styles.type_image_preview_white_arrow} source={white_arrow} />
-												</View>
-											</Pressable>
-										</View>
-										<Image style={[styles.type_image_preview_image, 
-											cameraStatus === 'front' ? 
-											{height: window.height / 1.2, transform: [{ scaleX: -1 }]}
-											 : {height: window.height / 1.2}]} source={{ uri: imagePreview }}/>
-									</View>
-								</View>
-								
-							</View>
-						 : <View/>}
-						<SafeAreaView>
+						<SafeAreaView style={styles.imgae_interact_container}>
+							<SafeAreaView>
+							<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
+									<Image style={styles.image_pick} source={pick}/>
+							</Pressable>
+							</SafeAreaView>
 							<View style={styles.type_image_button_container}>
+								
 								<Pressable  onPress={handlePreview} style={styles.type_image_button_outer}>
 									{/* <View style={styles.type_image_button_inner}/> */}
 								</Pressable>
@@ -520,11 +474,106 @@ export default function CreatePost({ navigation, route }) {
 								</Pressable>
 							</View>
 						</SafeAreaView>
+						{ imagePreview !== null ? 
+							<View style={{zIndex: previewIndex}}>
+									
+								<View style={styles.image_prev_outline}/>
+								<View style={styles.image_prev_container}>
+			
+									<SafeAreaView style={styles.image_prev_top}/>
+
+
+									<Image style={styles.image_prev} source={{uri: imagePreview}}/>
+
+									
+
+								</View>
+								<SafeAreaView style={styles.preview_interact}>
+									<SafeAreaView style={styles.back_safe}>
+
+										<Pressable onPress={() => closeMedia()} style={styles.back_container}>
+											<Image style={styles.back} source={x}/>
+										</Pressable>
+									</SafeAreaView>
+
+
+									<Pressable onPress={handleUpload} style={styles.image_rout_press}>
+										<Text style={styles.image_rout_text}>rout</Text>
+									</Pressable>
+								</SafeAreaView>
+								
+								
+							</View>
+							// <View style={styles.type_image_preview_container}>
+							// 	<View style={styles.type_image_preview_background}/>
+							// 	<View style={styles.type_image_preview_button_container}>
+							// 		<View style={styles.type_image_preview_image_container}>
+
+
+							// 			<View style={styles.type_image_preview_x_icon_container}>
+							// 				<Pressable onPress={() => setImagePreview(null)} style={styles.type_image_preview_x_icon_press}>
+							// 					<View style={styles.type_image_preview_x_icon_background}/>
+
+							// 					<View style={styles.type_image_preview_x_icon_image_container} >
+							// 						<Image source={x_icon} style={styles.type_image_preview_x_icon_image}/>
+							// 					</View>
+							// 				</Pressable>
+							// 			</View>
+
+							// 			<View style={styles.type_image_preview_save_container}>
+							// 				<Pressable style={styles.type_image_preview_save_press}>
+							// 					<View style={styles.type_image_preview_save_background} />
+
+							// 					<View style={styles.type_image_preview_save_text_container}>
+							// 						<Text style={styles.type_image_preview_save_text}>save</Text>
+							// 					</View>
+							// 				</Pressable>
+							// 			</View>
+
+							// 			<View style={styles.type_image_preview_edit_icon_container}>
+							// 				<Pressable style={styles.type_image_preview_x_icon_press}>
+							// 					<View style={styles.type_image_preview_edit_icon_background}/>
+
+							// 					<View style={styles.type_image_preview_edit_icon_image_container} >
+							// 						<Image source={edit_icon} style={styles.type_image_preview_edit_icon_image}/>
+							// 					</View>
+							// 				</Pressable>
+							// 			</View>
+										
+
+							// 			<View style={styles.type_image_preview_rout_container}> 
+							// 				<Pressable onPress={handleUpload} style={styles.type_image_preview_rout_press}>
+
+							// 					<View style={styles.type_image_preview_rout_background}/>
+											
+							// 					<View style={styles.type_image_preview_rout_row}>
+							// 						<Text style={styles.type_image_preview_rout_text}>rout</Text>
+							// 						<View style={{width: window.width / 40}}/>
+							// 						<Image style={styles.type_image_preview_white_arrow} source={white_arrow} />
+							// 					</View>
+							// 				</Pressable>
+							// 			</View>
+							// 			<Image style={[styles.type_image_preview_image, 
+							// 				cameraStatus === 'front' ? 
+							// 				{height: window.height / 1.2, transform: [{ scaleX: -1 }]}
+							// 				 : {height: window.height / 1.2}]} source={{ uri: imagePreview }}/>
+							// 		</View>
+							// 	</View>
+								
+							// </View>
+						 : <View/>}
+						
 					</Camera>
 				</View>
 			 : postType === 'video' ? 
 			 <View style={styles.type_image_camera_container}>
-			 <Camera ref={photoRef} style={styles.type_image_camera} flashMode={flash} type={type}>
+			 <Camera 
+			ref={photoRef} 
+			style={styles.type_image_camera} 
+			flashMode={flash} 
+			type={type}
+			focusDepth={0.7}
+			>
 						{ imagePreview !== null ? 
 
 							<View style={styles.type_image_preview_container}>
@@ -612,39 +661,25 @@ export default function CreatePost({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
 		height: '100%',
-		// alignItems: 'center',
 		width: window.width,
-		// justifyContent: 'center',
-		// flexDirection: 'row',
 		backgroundColor: '#555555'
 	},
 
 
 	back_icon_safeArea: {
 		zIndex: 2,
-		// backgroundColor: 'blue',
-		// position: 'absolute',
 		right: window.width / 4.5
 	},
 	back_icon_container: {
-		// width: window.width / 20,
-		// overflow: 'hidden',
 		position: 'absolute',
-		// zIndex: 3,
 		justifyContent: 'center',
 		alignItems: 'center',
-		// left: window.width / 20,
-		// right: window.width / 8,
 		height: window.width / 12,
 		width: window.width / 10,
-		// backgroundColor: 'blue'
 	},
 	back_icon: {
-		// zIndex: 2,
-		// position: 'absolute',
-		width: window.width / 27,
-		height: window.width / 15,
-		// right: window.width / 30,
+		width: 12,
+        height: 21
 	},
 	type_selection: {
 		flexDirection: 'row',
@@ -652,22 +687,13 @@ const styles = StyleSheet.create({
 		zIndex: 2,
 		position: 'absolute',
 		justifyContent: 'center',
-		// left: window.width / 10
-		// backgroundColor: 'red'
-		// alignItems: 'center'
 
 	},
 	type_selection_animation_container: {
 		flexDirection: 'row',
 		justifyContent: 'center',
-		// alignItems: 'center',
 		zIndex: 2,
-		// backgroundColor: 'white',
-		// height: window.width / 5
 		width: window.width / 2,
-		// position: 'absolute'
-		// left: -window.width / 6,
-		// right: window.width / 6
 		height: window.width / 12
 	},
 	type_selection_gap: {
@@ -675,14 +701,10 @@ const styles = StyleSheet.create({
 	},
 	type_selection_text_line: {
 		justifyContent: 'center',
-		// alignItems: 'center',
 		height: '100%',
-		// position: 'absolute',
-		// backgroundColor: 'blue',
 		alignSelf: 'flex-start'
 	},
 	type_selection_text: {
-		// fontSize: window.width / 17,
 		fontFamily: 'Louis',
 		color: '#C2C2C2'
 	},
@@ -695,40 +717,29 @@ const styles = StyleSheet.create({
 		borderRadius: 50,
 	},
 	text_post_container: {
-		alignItems: 'center',
+		flexDirection: 'row',
+		justifyContent: 'center',
 		height: '100%'
 	},
 	post_input_profile_container: {
 		flexDirection: 'row',
-		// width: window.width,
-		// height: window.width / 2,
-		// backgroundColor: '#303030',
 		top: window.width / 7,
-		// left: window.width / 20
-		// borderRadius: window.width / 20
 	},
 	post_input_profile_image: {
 		borderRadius: 50,
 		width: window.width / 7,
 		height: window.width / 7,
-		// left: window.width / 30
 	},
 	post_input_username_container: {
-		// justifyContent: 'flex-start',
-		// alignItems: 'flex-start',
-		// top: window.width/
 		left: window.width / 50,
-		// right: window.width / 10
 	},
 	post_input_username: {
 		fontFamily: 'Louis',
 		fontSize: window.width / 17,
 		color: '#C2C2C2',
-		// left: window.width / 17,
 		bottom: window.width / 200
 	},
 	post_input: {
-		// backgroundColor: 'black',
 		width: window.width / 1.35,
 		left: window.width / 100,
 		fontSize: window.width / 20,
@@ -736,13 +747,14 @@ const styles = StyleSheet.create({
 		color: '#C2C2C2',
 	},
 	post_button_container: {
-		flex: 1
+		alignSelf: 'flex-end',
+		position: 'absolute',
 	},
 	post_button_row_container: {
-		flex: 1,
-		justifyContent: 'space-around',
 		alignItems: 'center',
 		flexDirection: 'row',
+		bottom: 30,
+
 	},
 	post_button_post_container: {
 		width: window.width / 4,
@@ -767,16 +779,23 @@ const styles = StyleSheet.create({
 
 	},
 	type_image_camera: {
-		// zIndex: -1,
-		// top: -100,
 		height: window.height,
 		width: window.width
 	},
+
+
+
+
+
+	
+
+
+
+	
+
 	type_image_preview_container: {
-		zIndex: 2,
-		// position: 'absolute',
+		zIndex: 1,
 		width: window.width,
-		// height: window.height,
 		justifyContent: 'center',
 		alignItems: 'center',
 		top: window.height / 8.5,
@@ -789,24 +808,19 @@ const styles = StyleSheet.create({
 		shadowRadius: window.width / 100,
 	},
 	type_image_preview_image: {
-		// position: 'absolute', 
-		
 		zIndex: 2,
 		borderRadius: window.width / 25,
-		// bottom: window.width / 10,
 		width: window.width / 1.1
-		// width: window.width / 1.5
 	},
 	type_image_preview_button_container: {
 		height: window.width / 1.2,
-		// backgroundColor: 'blue',
 		width: window.width / 1.1
 	},
 
 
 
 	type_image_preview_x_icon_container: {
-		top: window.width / 45,
+		top: window.height / 2,
 		left: window.width / 45,
 		position: 'absolute',
 		zIndex: 5,
@@ -886,7 +900,6 @@ const styles = StyleSheet.create({
 
 	type_image_preview_save_container: {
 		top: window.width / 45,
-		// left: window.width / 45,
 		position: 'absolute',
 		zIndex: 4,
 		width: window.width  / 1.1,
@@ -913,7 +926,6 @@ const styles = StyleSheet.create({
 	type_image_preview_save_text_container: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		// textAlignVertical: 'center',
 		width: window.width / 3,
 		height: window.width / 12,
 	},
@@ -932,19 +944,13 @@ const styles = StyleSheet.create({
 		top: window.height / 1.2 - window.width / 10 - window.width / 45, 
 		position: 'absolute',
 		zIndex: 4,
-		// top: window.height / 1.345,
 		width: window.width / 1.1,
-		// height: '100%',
 		height: window.width / 10,
 		justifyContent: 'flex-end',
-		// backgroundColor: 'blue',
 		alignItems: 'center'
 	},
 	type_image_preview_rout_press: {
-		// top: window.height / 1.2 - window.width / 10 - window.width / 45, 
-		// backgroundColor: 'blue',
 		zIndex: 4,
-		// position: 'absolute',
 		width: window.width / 1.1,
 		height: window.width / 10,
 		justifyContent: 'center',
@@ -957,7 +963,6 @@ const styles = StyleSheet.create({
 		opacity: 0.6,
 		width: window.width / 1.1 - window.width / 45 - window.width / 45,
 		height: '100%',
-		// bottom: window.width / 45,
 		borderTopLeftRadius: window.width / 70,
 		borderTopRightRadius: window.width / 70,
 		borderBottomRightRadius: window.width / 30,
@@ -969,8 +974,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		height: '100%',
 		flexDirection: 'row',
-		// width: '100%'
-		// bottom: window.width / 45,
 
 	},
 	type_image_preview_rout_text: {
@@ -987,7 +990,6 @@ const styles = StyleSheet.create({
 		width: window.width,
 		height: window.height + window.height / 2,
 		backgroundColor: '#555555',
-		// opacity: 0.4
 	},
 
 
@@ -1016,22 +1018,38 @@ const styles = StyleSheet.create({
 
 
 
-
-
-
-	type_image_button_container: {
-		// justifyContent: 
+	imgae_interact_container: {
 		flexDirection: 'row',
-		top: window.height / 1 - window.width / 2,
+		height: '100%',
+		width: '100%',
+		position: 'absolute'
+	},
+	type_image_button_container: {
+		position: 'absolute',
+		flexDirection: 'row',
 		width: window.width,
+		bottom: 40,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		alignSelf: 'flex-end'
+	},
+	image_pick_press: {
+		position: 'absolute',
+		// backgroundColor: 'blue', 
+		height: 40,
+		width: 40,
+		top: window.height / 17,
+		justifyContent: 'center',
+		alignItems: 'center',
+		left: window.width / 28
+	},
+	image_pick: {
+		height: 31,
+		width: 28
 	},
 	lightniing_bolt_icon_container: {
 		left: window.width / 5,
 		position: 'absolute',
-		// backgroundColor: 'white',
-		// opacity: .1,
 		width: window.width / 9,
 		height: window.width / 9,
 		justifyContent: 'center',
@@ -1041,62 +1059,136 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		backgroundColor: 'white',
 		opacity: .07,
-		width: window.width / 11,
-		height: window.width / 9,
+		width: 33,
+		height: 40,
 		borderRadius: window.width / 25
-
 	},
 	lightniing_bolt_icon: {
-		width: window.width / 23,
-		height: window.width / 15
+		width: 14,
+		height: 21
 	},
 	chagne_icon_container: {
 		right: window.width / 4.6,
-		
 		justifyContent: 'center',
 		alignItems: 'center',
-		// width: window.width / 8,
-		// height: window.width / 8,
 		position: 'absolute',
-
 	},
 	change_icon_background: {
 		backgroundColor: 'white',
 		opacity: 0.07,
-		width: window.width / 9.5,
-		height: window.width / 9,
+		width: 40,
+		height: 40,
 		position: 'absolute',
 		borderRadius: window.width / 25
-
-
 	},
 	change_icon: {
-		width: window.width / 17,
-		height: window.width / 17
-
+		width: 21,
+		height: 21
 	},
 	type_image_button_outer: {
-		width: window.width / 4,
-		height: window.width / 4,
-		// backgroundColor: 'white',
+		width: 100,
+		height: 100,
 		borderColor: '#C2C2C2',
-		borderWidth: window.width / 70,
+		borderWidth: 4,
 		borderRadius: 100,
-		// top: window.height / 1.3,
 		justifyContent: 'center',
 		alignItems: 'center',
-		// opacity: 0.1
 	},
+
+	///////
+
+
+
+
+	
+	image_prev_container: {
+		position: 'absolute',
+		zIndex: 4,
+		flexDirection: 'row',
+		height: window.height,
+		width: window.width,
+		borderRadius: 21,
+		backgroundColor: 'black'
+
+	},
+	image_prev_outline: {
+		zIndex: 4,
+		position: 'absolute',
+		width: '100%',
+		height: '100%'
+	},
+	image_prev_safe: {
+		// height: '100%',
+		width: '100%',
+	},
+	image_prev: {
+		height: '100%',
+		width: '100%',
+		
+	},
+	preview_interact: {
+		zIndex: 5,
+		position: 'absolute',
+		height: window.height,
+		width: window.width
+	},
+	back_safe: {
+		left: 20,
+	},
+	back_container: {
+		position: 'absolute',
+		height:	33,
+		width: 33,
+		
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	back: {
+		width: 22,
+        height: 22
+	},
+	image_rout_press: {
+		position: 'absolute',
+		width: '95%',
+		// right: 20,
+		bottom: 20,
+		justifyContent: 'center',
+		alignItems: 'center',
+		alignSelf: 'center',
+		borderTopLeftRadius: 10,
+		borderTopRightRadius: 10,
+		borderBottomLeftRadius: 20,
+		borderBottomRightRadius: 20,
+		backgroundColor: '#777777',
+		shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.4,
+        shadowRadius: window.width / 110,
+	},
+	image_rout_text: {
+		color: '#C2C2C2',
+		fontFamily: 'Louis',
+		fontSize: 28,
+		paddingVertical: 10,
+		paddingHorizontal: 10,
+
+	},
+
+
+
+
+
+	///////////
+
+
+
+
 	type_image_button_inner: {
 		width: window.width / 4.7,
 		height: window.width / 4.7,
 		backgroundColor: '#717171',
 		borderRadius: 100,
 	},
-
-
-
-
 	open_library: {
 		position: 'absolute',
 		alignItems: 'center',

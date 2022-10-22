@@ -5,7 +5,7 @@ import { useFonts } from 'expo-font';
 const window = Dimensions.get('window')
 const back = require('../assets/img/back.png')
 
-export default function Wallet({ navigation, route }) {
+export default function Save({ navigation, route }) {
 	
     const location = route.params.location
 
@@ -31,8 +31,8 @@ export default function Wallet({ navigation, route }) {
                         <Image style={styles.back} source={back}/>
                     </Pressable>
                 </SafeAreaView>
-                <SafeAreaView style={styles.wallet_container}>
-                    <Text style={styles.wallet}>wallet</Text>
+                <SafeAreaView style={styles.save_container}>
+                    <Text style={styles.save}>save</Text>
                 </SafeAreaView>
             </View>
         </View>
@@ -48,10 +48,10 @@ const styles = StyleSheet.create({
     head_safe: {
         // flexDirection: 'row'
     },
-    wallet_container: {
+    save_container: {
         alignSelf: 'center'
     },
-    wallet: {
+    save: {
         fontFamily: 'Louis',
         fontSize: 30,
         color: '#C2C2C2'

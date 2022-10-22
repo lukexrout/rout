@@ -62,6 +62,22 @@ export default function Create({ navigation, route }) {
 
     })
 
+    // const handleURL = async () => {
+
+	// 	const obj = {
+	// 		username: "schaffer_luke"
+	// 	}
+
+	// 	const response = await fetch('https://804qbtsf9h.execute-api.us-east-1.amazonaws.com/rout_data/upload-url', {
+	// 		method: 'POST',
+	// 		body: JSON.stringify(obj)
+	// 	})
+	
+	// 	const json = await response.json();
+
+	// 	return json
+	// }
+
     // const handleUpload = async () => {
 
 	// 	const URL = await handleURL()
@@ -100,6 +116,12 @@ export default function Create({ navigation, route }) {
         )
     }
 
+    const inputScroll = () => {
+        console.log('hello world')
+        // inputRef.current.scrollTo({ animated: true, y: 0 })
+    }
+
+
     // everything in front of this
 
     const [loaded] = useFonts({
@@ -128,9 +150,14 @@ export default function Create({ navigation, route }) {
                     <View style={styles.leave_container}>
                         <Text style={styles.leave_text}>leave a caption</Text>
                     </View>
+                    <Pressable style={styles.focus_container}/>
                     <View style={styles.caption_row}>
-
-                        <Pressable onPress={() => inputRef.current.focus()} style={styles.caption_container}>
+                        <Pressable onLayout={( event ) => {
+                            const {x, y, width, height} = event.nativeEvent.layout
+                            console.log(height)
+                        }} 
+                        onPress={() => inputRef.current.focus()} style={styles.caption_container}>
+                            {/* still needs fixing when reaching text end */}
                             <TextInput
                             ref={inputRef}
                             placeholderTextColor={'#595959'}
@@ -138,6 +165,8 @@ export default function Create({ navigation, route }) {
                             keyboardAppearance='dark'
                             selectionColor={'#696969'}
                             style={styles.caption}
+                            multiline={true}
+                            // onContentSizeChange={() => inputScroll()}
                             // value={userInput}
                             // onChangeText={i => setUserInput(i)}
                             />
@@ -152,10 +181,8 @@ export default function Create({ navigation, route }) {
             <View style={styles.interest_container}>
                 <View style={styles.find_safe}>
                     <View style={styles.find_overflow}>
-
-                        <Pressable style={styles.find_collapse}>
-                            <Text style={styles.find_text}>apply interests</Text>
-                            
+                        <Pressable style={styles.apply_container}>
+                            <Text style={styles.apply_text}>apply interests</Text>
                         </Pressable>
                         <View style={styles.find_container}>
                             <Pressable style={styles.search_container}>
@@ -169,14 +196,8 @@ export default function Create({ navigation, route }) {
                                 // value={userInput}
                                 // onChangeText={i => setUserInput(i)}
                                 />
-                                {/* <View style={styles.magnify_container}>
-                                    <Image style={styles.magnify} source={magnify}/>
-                                </View> */}
-                                
-
                             </Pressable>
                             <View style={styles.find_interest}>
-
                                 <FlatList
                                 data={find}
                                 ListHeaderComponent={FindHead}
@@ -219,19 +240,17 @@ const styles = StyleSheet.create({
         position: 'absolute',
         height: window.width / 9,
         width: window.width / 14,
-        left: window.width / 14,
-        // top: window.width / 70,
+        left: window.width / 30,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'white'
     },
     back: {
-        height: window.width / 17,
-        width: window.width / 29,
-        right: window.width / 170
+        width: 14,
+        height: 24,
+        // right: window.width / 170
     },
     head_container: {
-        height: window.width / 9,
+        // height: window.width / 9,
         justifyContent: 'center',
         alignItems: 'center',
         // position: 'absolute'
@@ -241,7 +260,7 @@ const styles = StyleSheet.create({
     head: {
         // position: 'absolute',
         fontFamily: 'Louis',
-        fontSize: window.width / 10,
+        fontSize: 35,
         color: '#C2C2C2'
     },
 
@@ -249,11 +268,12 @@ const styles = StyleSheet.create({
         // zIndex: 2,
         // position: 'absolute',
         width: window.width / 1.1,
-        height: window.width / 2.8,
+        minHeight: 120,
+        maxHeight: 280,
         backgroundColor: '#777777',
         marginTop: window.width / 20,
         // top: window.width / 7,
-        borderRadius: window.width / 40,
+        borderRadius: 21,
         shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.4,
@@ -263,41 +283,52 @@ const styles = StyleSheet.create({
         height: window.width / 12,
         width: '101%',
         justifyContent: 'center',
-        backgroundColor: '#494949',
+        backgroundColor: '#555555',
         // borderTopLeftRadius: window.width / 40,
         // borderTopRightRadius: window.width / 40
 
     },
     caption_overflow: {
-        height: '100%',
+        minHeight: 120,
+        maxHeight: 280,
         width: '100%',
-        borderRadius: window.width / 45,
+        borderRadius: 21,
         overflow: 'hidden'
     },
     leave_text: {
         alignSelf: 'center',
         fontFamily: 'Louis',
         color: '#C2C2C2',
-        fontSize: window.width / 22
+        fontSize: 20,
     },
+    
     caption_row: {
         flexDirection: 'row',
         width: '100%',
-        height: '75%'
+        // height: '75%'
         // backgroundColor: 'white'
     },
     caption_container: {
         zIndex: 2,
-        height: '100%',
+        backgroundColor: 'blue',
+        // minHeight: 14,
+        // height: ,
+        minHeight: 120,
         width: '85%',
-        borderBottomLeftRadius: window.width / 17,
+        borderBottomLeftRadius: 21,
         // backgroundColor: 'white'
+        // paddingTop: 11,
+        // paddingLeft: 11,
     },
     caption: {
-        top: window.width / 70,
-        left: window.width / 30,
+        // top: window.width / 70,
+        // left: window.width / 30,
         fontFamily: 'Louis',
-        fontSize: window.width / 22
+        fontSize: 19,
+        // paddingBottom: 7,
+        paddingLeft: 11,
+
+        
     },
     preview_container: {
         position: 'absolute',
@@ -306,6 +337,7 @@ const styles = StyleSheet.create({
         // backgroundColor: 'white'
     },
     preview: {
+        // position: 'absolute',
         alignSelf: 'flex-end',
         height: window.width / 10,
         width: window.width / 10,
@@ -320,44 +352,46 @@ const styles = StyleSheet.create({
 
 
     interest_container: {
+        flex: 1,
         alignItems: 'center',
+        marginBottom: 10,
     },
 
 
     find_safe: {
         // overflow: 'hidden',
-        position: 'absolute',
+        // position: 'absolute',
         width: window.width / 1.1,
-        height: window.width + window.width / 4.8,
-        marginTop: window.width / 17,
-        borderRadius: window.width / 40,
+        // height: 470,
+        marginTop: 10,
+        borderRadius: 21,
         backgroundColor: '#777777',
         shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.5,
-        shadowRadius: window.width / 70,
+        shadowRadius: 5,
     },
     find_overflow: {
         height: '100%',
         width: '100%',
         alignItems: 'center',
-        borderRadius: window.width / 49,
+        borderRadius: 21,
         overflow: 'hidden'
     },
-    find_collapse: {
+    apply_container: {
         height: window.width / 11,
         width: '101%',
         justifyContent: 'center',
-        backgroundColor: '#494949',
-        borderTopLeftRadius: window.width / 40,
-        borderTopRightRadius: window.width / 40
+        backgroundColor: '#555555',
+        borderTopLeftRadius: 21,
+        borderTopRightRadius: 21
     },
-    find_text: {
+    apply_text: {
         // left: window.width / 40,
         alignSelf: 'center',
         fontFamily: 'Louis',
         color: '#C2C2C2',
-        fontSize: window.width / 22
+        fontSize: 20
     },
     drop_down_container: {
         alignSelf: 'flex-end',
@@ -389,7 +423,7 @@ const styles = StyleSheet.create({
     search: {
         left: window.width / 40,
         fontFamily: 'Louis',
-        fontSize: window.width / 25
+        fontSize: 18
     },
     magnify_container: {
         position: 'absolute',
@@ -419,14 +453,14 @@ const styles = StyleSheet.create({
         marginTop: window.width / 70,
         alignSelf: 'center',
         justifyContent: 'center',
-        borderRadius: window.width / 70,
-        backgroundColor: '#494949'
+        borderRadius: 14,
+        backgroundColor: '#555555'
     },
     interest_text: {
         left: window.width / 40,
         fontFamily: 'Louis',
         color: '#C2C2C2',
-        fontSize: window.width / 22
+        fontSize: 18
     },
 
 
@@ -438,12 +472,12 @@ const styles = StyleSheet.create({
 
 
     rout_press: {
-        position: 'absolute',
-        bottom: window.width / 14,
-        height: window.width / 7,
+        // position: 'absolute',
+        marginBottom: window.width / 14,
+        height: 55,
         width: window.width  / 1.1,
-        borderTopLeftRadius: window.width / 40,
-        borderTopRightRadius: window.width / 40,
+        borderTopLeftRadius: 17,
+        borderTopRightRadius: 17,
         borderBottomRightRadius: window.width / 17,
         borderBottomLeftRadius: window.width / 17,
         backgroundColor: '#777777',
@@ -457,7 +491,7 @@ const styles = StyleSheet.create({
     rout_text: {
         fontFamily: 'Louis',
         color: '#C2C2C2',
-        fontSize: window.width / 12
+        fontSize: 35
     }
 
 })
