@@ -55,7 +55,7 @@ export default function App() {
 					<Stack.Screen name='state' component={state === 'in' ? Bottom_Nav : state === null ? Loading : Out}/>
 					<Stack.Screen name='out' component={Out}/>
 					<Stack.Screen name='bottom_nav' component={Bottom_Nav}/>
-					<Stack.Screen options={{animationTypeForReplace: 'pop'}} name='create_post' component={CreatePost}/>
+					<Stack.Screen name='create_post' component={CreatePost}/>
 					<Stack.Screen name='pick' component={Pick}/>
 					<Stack.Screen name='create' component={Create}/>
 					<Stack.Screen name='filter' component={Filter}/>

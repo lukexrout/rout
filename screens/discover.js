@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#555555',
 	},
 	disc_head: {
-		marginTop: 10,
+		marginTop: 10, 
 		width: window.width,
 		alignItems: 'center',
 		backgroundColor: '#555555',

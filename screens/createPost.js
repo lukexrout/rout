@@ -1,4 +1,3 @@
-import * as MediaLibrary from 'expo-media-library';
 import React, { useEffect, useState, useRef } from 'react';
 import { useFonts } from 'expo-font';
 import { Camera, CameraType } from 'expo-camera'
@@ -64,7 +63,9 @@ export default function CreatePost({ navigation, route }) {
 	}
 
 	const navigate = (x) => {
-		navigation.navigate(x)
+		navigation.navigate(x, {
+			location: 'create_post'
+		})
 	}
 
 	const media_grid = ({ item }) => {
