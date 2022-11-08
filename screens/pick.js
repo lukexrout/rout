@@ -19,7 +19,7 @@ export default function Pick({ navigation, route }) {
 	
     const [status, setStatus] = useState()
     const [data, setData] = useState()
-    const [count, setCount] = useState(88)
+    const [count, setCount] = useState(40)
     const [momentum, setMomentum] = useState(false)
 
     const location = route.params.location
@@ -38,7 +38,7 @@ export default function Pick({ navigation, route }) {
 
     const end = () => {
         setMomentum(false)
-        setCount(i => i + 88)
+        setCount(i => i + 40)
     }
 
     useEffect(() => {

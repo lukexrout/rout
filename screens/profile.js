@@ -6,6 +6,8 @@ import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
+import Content from './content.js'
+
 const window = Dimensions.get('window')
 
 const profile_img = require('../assets/img/user_profile_template.png')
@@ -14,21 +16,103 @@ const set_icon = require('../assets/img/cog.png')
 const dm_icon = require('../assets/img/dm_icon_2.png')
 const save_icon = require('../assets/img/save_icon_profile.png')
 
-import MemoizedProfileHead from './profileHead.js'
-
-const Content = () => {
-    return (
-        <View style={styles.content_container}>
-
-        </View>
-    )
-}
+const aws = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/353A7670-2B3B-4B7E-91CD-29640662A756_4_5005_c.jpeg'
+const aws_2 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/3B7B6670-B919-4C98-A232-9044BA65B022_4_5005_c.jpeg'
+const aws_3 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/image_lol.jpeg'
+const aws_4 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/new+found.jpeg'
 
 const Interest = ({ cent, interest }) => {
     return (
         <View style={styles.interest_container}>
             <View style={[styles.interest_level, {width: cent}]}/>
             <Text style={styles.interest}>{interest}</Text>
+        </View>
+    )
+}
+
+const Head = ({ interestOpacity, interestPress, contentOpacity, contentPress, navigate }) => {
+
+    return (
+        <View style={styles.general_profile_container}>
+            <View style={styles.head_container}>
+                <SafeAreaView style={styles.rout_container}>
+
+                    <Text style={styles.rout_text}>rout</Text>
+                </SafeAreaView>
+                
+            </View>
+            <View style={styles.profile_container}>
+                <View style={styles.set_dm_container}>
+                    <Pressable onPress={() => navigate('direct_msg')} style={styles.dm_container}>
+                        <Image style={styles.dm} source={dm_icon}/>
+                    </Pressable>
+                    <Pressable onPress={() => navigate('settings')} style={styles.set_container}>
+                        <Image style={styles.set} source={set_icon}/>
+                    </Pressable>
+                    <Pressable onPress={() => navigate('save')} style={styles.save_container}>
+                        <Image style={styles.save} source={save_icon}/>
+                    </Pressable>
+                </View>
+                <View style={styles.info_container}>
+                    <View style={styles.pic_container}>
+                        <Image style={styles.pic} source={profile_img}/>
+                    </View>
+                    <View style={styles.user_container}>
+                        <Text style={styles.user}>schafferluke</Text>
+                    </View>
+                    <View style={styles.stat_container}>
+                        <View style={{flexDirection: 'row'}}>
+                            <Pressable onPress={() => navigate('followers')} style={styles.stat}>
+                                <View style={styles.stat_text_container}>
+                                    <Text style={styles.stat_text}>followers</Text>
+                                </View>
+                                <View style={styles.stat_num_container}>
+                                    <Text style={styles.stat_num}>1.35m</Text>
+                                </View>
+                            </Pressable>
+                            <View style={{width: window.width / 20}}/>
+                            <Pressable onPress={() => navigate('following')} style={styles.stat}>
+                                <View style={styles.stat_text_container}>
+                                    <Text style={styles.stat_text}>following</Text>
+                                </View>
+                                <View style={styles.stat_num_container}>
+                                    <Text style={styles.stat_num}>5000</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                        
+                    </View>
+                    <View style={styles.sep_stat}/>
+                    <View style={styles.bio_container}>
+                        <Text style={styles.bio}>this is my bio currently. what do you think? I hope you like it considerably.</Text>
+                    </View>
+                    <View style={[styles.sep_stat, {width: 77}]}/>
+                    <View style={styles.button_container}>
+                        <Pressable onPress={() => navigate('wallet')} style={styles.button_wallet}>
+                            <Text style={styles.button_text}>wallet</Text>
+                        </Pressable>
+                        <View style={{width: window.width / 11}}/>
+                        <Pressable onPress={() => navigate('edit_profile')} style={styles.button_edit}>
+                            <Text style={styles.button_text}>edit profile</Text>
+                        </Pressable>
+                    </View>
+                    <View style={styles.tab_container}>
+                        <Pressable onPress={() => contentPress()} style={styles.tab_text_container}>
+                            <View style={styles.tab_text_center}>
+                                <Animated.View style={[styles.tab_text_outline, {opacity: contentOpacity}]}/>
+                                <Text style={styles.tab_text}>content</Text>
+                            </View>
+                        </Pressable>
+                        <View style={styles.sep_line}/>
+                        <Pressable onPress={() => interestPress()} style={styles.tab_text_container}>
+                            <View style={styles.tab_text_center}>
+                                <Animated.View style={[styles.tab_text_outline, {opacity: interestOpacity}]}/>
+                                <Text style={styles.tab_text}>interests</Text>
+                            </View>
+                        </Pressable>
+                    </View>
+                </View>
+            </View>
         </View>
     )
 }
@@ -41,28 +125,13 @@ const Foot = () => {
     )
 }
 
-const Profile_ = ({ navigation }) => {
-
-    const navigate = (i) => {
-		navigation.navigate(i, {
-            location: 'profile'
-        })
-	}
-
-
-
-
-
-
-    
-}
-
-
 export default function Profile({ navigation }) {
 
     const contentOpacity = useRef(new Animated.Value(1)).current
     const interestOpacity = useRef(new Animated.Value(0)).current
 	
+	const listRef = useRef()
+
     const [numColumns, setNumColumns] = useState(3)
     const [state, setState] = useState('content')
     const [username, setUsername] = useState()
@@ -79,6 +148,15 @@ export default function Profile({ navigation }) {
         {id: 10, interest: 'business', cent: '88%'},
         {id: 11, interest: 'startups', cent: '99%'},
     ])
+    const [sourceList, setSourceList] = useState([
+		{id: 0, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
+		{id: 1, type: 'image', uri: aws, content: 'hello world!'}, 
+		{id: 2, type: 'text', content: 'set for launch in exactly 2 months!'}, 
+		{id: 3, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
+		{id: 4, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+		{id: 5, type: 'image', uri: aws, content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+		{id: 6, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}
+	])
 
     useEffect(() => {
         AsyncStorage.getItem('user', (err, res) => {
@@ -134,8 +212,19 @@ export default function Profile({ navigation }) {
 
     }
 
-    const content = ({ item, index }) => {
-		return (<Content/>)
+    const scrollTo = (y) => {
+		listRef.current.scrollToOffset({ animated: true, offset: y })
+	}
+
+    const content = ({ item }) => {
+		return (<Content 
+			source={item} 
+			id={item.id} 
+			key={item.id} 
+			scrollTo={scrollTo} 
+			navigation={navigation}
+            location={'profile'}
+			/>)
     }
 
     const interest = ({ item }) => {
@@ -143,92 +232,13 @@ export default function Profile({ navigation }) {
     }
 
     const head = () => {
-
-        
-    
-    
         return (
-            <View style={styles.general_profile_container}>
-                <View style={styles.head_container}>
-                    <SafeAreaView style={styles.rout_container}>
-
-                        <Text style={styles.rout_text}>rout</Text>
-                    </SafeAreaView>
-                    
-                </View>
-                <View style={styles.profile_container}>
-                    <View style={styles.set_dm_container}>
-                        <Pressable onPress={() => navigate('direct_msg')} style={styles.dm_container}>
-                            <Image style={styles.dm} source={dm_icon}/>
-                        </Pressable>
-                        <Pressable onPress={() => navigate('settings')} style={styles.set_container}>
-                            <Image style={styles.set} source={set_icon}/>
-                        </Pressable>
-                        <Pressable onPress={() => navigate('save')} style={styles.save_container}>
-                            <Image style={styles.save} source={save_icon}/>
-                        </Pressable>
-                    </View>
-                    <View style={styles.info_container}>
-                        <View style={styles.pic_container}>
-                            <Image style={styles.pic} source={profile_img}/>
-                        </View>
-                        <View style={styles.user_container}>
-                            <Text style={styles.user}>schafferluke</Text>
-                        </View>
-                        <View style={styles.stat_container}>
-                            <View style={{flexDirection: 'row'}}>
-                                <Pressable onPress={() => navigate('followers')} style={styles.stat}>
-                                    <View style={styles.stat_text_container}>
-                                        <Text style={styles.stat_text}>followers</Text>
-                                    </View>
-                                    <View style={styles.stat_num_container}>
-                                        <Text style={styles.stat_num}>1.35m</Text>
-                                    </View>
-                                </Pressable>
-                                <View style={{width: window.width / 20}}/>
-                                <Pressable onPress={() => navigate('following')} style={styles.stat}>
-                                    <View style={styles.stat_text_container}>
-                                        <Text style={styles.stat_text}>following</Text>
-                                    </View>
-                                    <View style={styles.stat_num_container}>
-                                        <Text style={styles.stat_num}>5000</Text>
-                                    </View>
-                                </Pressable>
-                            </View>
-                            
-                        </View>
-                        <View style={styles.sep_stat}/>
-                        <View style={styles.bio_container}>
-                            <Text style={styles.bio}>this is my bio currently. what do you think? I hope you like it considerably.</Text>
-                        </View>
-                        <View style={[styles.sep_stat, {width: 77}]}/>
-                        <View style={styles.button_container}>
-                            <Pressable onPress={() => navigate('wallet')} style={styles.button_wallet}>
-                                <Text style={styles.button_text}>wallet</Text>
-                            </Pressable>
-                            <View style={{width: window.width / 11}}/>
-                            <Pressable onPress={() => navigate('edit_profile')} style={styles.button_edit}>
-                                <Text style={styles.button_text}>edit profile</Text>
-                            </Pressable>
-                        </View>
-                        <View style={styles.tab_container}>
-                            <Pressable onPress={() => contentPress()} style={styles.tab_text_container}>
-                                <View style={styles.tab_text_center}>
-                                    <Animated.View style={[styles.tab_text_outline, {opacity: contentOpacity}]}/>
-                                    <Text style={styles.tab_text}>content</Text>
-                                </View>
-                            </Pressable>
-                            <View style={styles.sep_line}/>
-                            <Pressable onPress={() => interestPress()} style={styles.tab_text_container}>
-                                <View style={styles.tab_text_center}>
-                                    <Animated.View style={[styles.tab_text_outline, {opacity: interestOpacity}]}/>
-                                    <Text style={styles.tab_text}>interests</Text>
-                                </View>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-            </View>
+        <Head 
+        navigate={navigate}
+        interestOpacity={interestOpacity} 
+        interestPress={interestPress} 
+        contentOpacity={contentOpacity} 
+        contentPress={contentPress}/>
         )
     }
 
@@ -256,10 +266,11 @@ export default function Profile({ navigation }) {
                 </SafeAreaView>
             
                 <FlatList
+                    ref={listRef}
                     style={styles.list_container}
-                    key={numColumns}
-                    renderItem={state === 'content' ? content : interest}
-                    data={data}
+                    key={data}
+				    CellRendererComponent={state === 'content' ? content : interest}
+                    data={state === 'content' ? sourceList : data}
                     numColumns={1}
                     contentContainerStyle={state === 'content' ? {alignItems: 'flex-start'} : {alignItems: 'center'}}
                     ListHeaderComponent={head}
@@ -426,8 +437,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     pic: {
-        height: window.width / 6,
-        width: window.width / 6,
+        height: 70,
+        width: 70,
         borderRadius: 50
     },
     stat_container: {
@@ -481,6 +492,7 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '110%',
         paddingVertical: 10,
+        paddingHorizontal: 10,
         alignSelf: 'center',
         alignItems: 'center',
     },

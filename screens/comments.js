@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#5F5F5F'
 	},
 	send: {
-		height: 19,
+		height: 21,
         width: 16
 	}
 })

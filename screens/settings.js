@@ -1,16 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, FlatList } from 'react-native';
 import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
 const back = require('../assets/img/back.png')
 
+const Setting = ({ setting }) => {
+    return (
+        <View style={styles.setting_container}>
+            <Text style={styles.setting_text}>{setting}</Text>
+        </View>
+    )
+}
+
 export default function Save({ navigation, route }) {
 	
+    const [settings, setSettings] = useState([
+        {id: 0, setting: 'privacy'},
+        {id: 1, setting: 'data'},
+        {id: 2, setting: 'monetize'},
+        {id: 3, setting: 'password'},
+        {id: 4, setting: 'feedback'}
+    ])
+
     const location = route.params.location
 
     const navigate = (x) => {
         navigation.navigate(x)
+    }
+
+    const setting = ({ item }) => {
+        return (<Setting setting={item.setting}/>)
     }
 
     // everything in front of this
@@ -35,6 +55,16 @@ export default function Save({ navigation, route }) {
                     <Text style={styles.settings}>settings</Text>
                 </SafeAreaView>
             </View>
+            <FlatList
+            listKey='settings'
+            style={styles.settings_list}
+            data={settings}
+            renderItem={setting}
+            scrollEnabled={false}
+            />
+            <Pressable style={styles.logout_container}>
+                <Text style={styles.logout_text}>logout</Text>
+            </Pressable>
         </View>
     )
 }
@@ -69,6 +99,43 @@ const styles = StyleSheet.create({
     back: {
         width: 12,
         height: 21
+    },
+
+    settings_list: {
+        marginTop: 21
+    },
+
+    setting_container: {
+        height: 63,
+        width: window.width / 1.1,
+        marginBottom: 10,
+        borderRadius: 21,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#494949'
+    },
+    setting_text: {
+        fontFamily: 'Louis',
+        fontSize: 17,
+        left: 21,
+        color: '#A1A1A1'
+    },
+
+    logout_container: {
+        height: 42,
+        width: 100,
+        right: 21,
+        bottom: 21,
+        borderRadius: 17,
+        alignSelf: 'flex-end',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#444444',
+    },
+    logout_text: {
+        fontFamily: 'Louis',
+        fontSize: 17,
+        color: '#A1A1A1'
     }
     
 })

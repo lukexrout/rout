@@ -5,11 +5,18 @@ import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 
+import Content from './content.js';
+
 import Recommended from '../components/recommended'
 import Trending from '../components/trending'
 import News from '../components/news'
 
 const profile_img = require('../assets/img/user_profile_template.png')
+
+const aws = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/353A7670-2B3B-4B7E-91CD-29640662A756_4_5005_c.jpeg'
+const aws_2 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/3B7B6670-B919-4C98-A232-9044BA65B022_4_5005_c.jpeg'
+const aws_3 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/image_lol.jpeg'
+const aws_4 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/new+found.jpeg'
 
 const window = Dimensions.get('window')
 
@@ -115,7 +122,13 @@ const DiscHead = () => {
 
 	return (
 		<View style={styles.disc_head}>
-			{/* <SafeAreaView style={styles.disc_head_safe}/> */}
+			<View>
+
+				<SafeAreaView style={styles.disc_head_safe}>
+					
+				</SafeAreaView>
+			</View>
+			<View style={{height: 50}}/>
 			<View style={styles.disc_trending}>
 				<View style={styles.trending_container}>
 					<Text style={styles.trending_text}>trending</Text>
@@ -181,8 +194,18 @@ const Disc = () => {
 
 export default function Discover({ navigation }) {
 
+	const listRef = useRef()
+
 	const [results, setResults] = useState()
-	const [discover, setDiscover] = useState([{id: 0}])
+	const [sourceList, setSourceList] = useState([
+		// {id: 0, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
+		{id: 1, type: 'image', uri: aws, content: 'hello world!'}, 
+		{id: 2, type: 'text', content: 'set for launch in exactly 2 months!'}, 
+		{id: 3, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
+		{id: 4, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+		{id: 5, type: 'image', uri: aws, content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+		{id: 6, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}
+	])
 	const [search, setSearch] = useState('')
 	const [count, setCount] = useState(17)
 	const [momentum, setMomentum] = useState(false)
@@ -193,12 +216,25 @@ export default function Discover({ navigation }) {
 	const continuousResult = ({ item }) => {
 		return (<Result navigation={navigation} username={item} id={results.indexOf(item)} length={results.length} />)
 	}
-	const disc = ({ item }) => {
-		return (<Disc/>)
-	}
+	
 	const discHead = ({ item }) => {
 		return (<DiscHead/>)
 	}
+
+	const scrollTo = (y) => {
+		listRef.current.scrollToOffset({ animated: true, offset: y })
+	}
+
+	const content = ({ item }) => {
+		return (<Content 
+			source={item} 
+			id={item.id} 
+			key={item.id} 
+			scrollTo={scrollTo} 
+			navigation={navigation}
+            location={'discover'}
+			/>)
+    }
 
 	const headResult = () => {
 		return (<View style={styles.result_head}/>)
@@ -278,7 +314,7 @@ export default function Discover({ navigation }) {
 	return (
 		<View style={styles.container}>			
 
-				<SafeAreaView style={styles.search_container}>
+				<SafeAreaView style={styles.search_safe}>
 					<Pressable onPress={searchPress} style={styles.search_press}>
 						<TextInput
 						ref={searchRef}
@@ -293,14 +329,17 @@ export default function Discover({ navigation }) {
 					</Pressable>
 				</SafeAreaView>
 
-				<SafeAreaView/>
+					
+
+
 
 				<Animated.View style={[styles.disc_safe, {top: topRef}]}>
 
 					<FlatList
+					ref={listRef}
 					style={styles.disc_list}
-					data={discover}
-					renderItem={disc}
+					data={sourceList}
+					CellRendererComponent={content}
 					ListHeaderComponent={discHead}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
@@ -336,11 +375,12 @@ const styles = StyleSheet.create({
         height: window.width,
         width: window.width,
 	},
-
-	search_container: {
-		zIndex: 2
+	search_safe: {
+		zIndex: 2,
+		// width: 1
 	},
 	search_press: {
+		// position: 'absolute',
 		alignSelf: 'center',
 		backgroundColor: '#C2C2C2',
 		height: window.height / 24,
@@ -366,20 +406,22 @@ const styles = StyleSheet.create({
 
 
 	disc_safe: {
-		// position: 'absolute',
+
+		position: 'absolute',
 		height: window.height,
 		width: window.width,
 	},
 	disc_list: {
+		// borderRadius: 20,
 		zIndex: 1,
-		position: 'absolute',
+		// position: 'absolute',
 		height: window.height,
 		width: window.width,
 		alignSelf: 'center',
 		backgroundColor: '#555555',
 	},
 	disc_head: {
-		marginTop: 10, 
+		height: window.height / 1.5,
 		width: window.width,
 		alignItems: 'center',
 		backgroundColor: '#555555',
@@ -391,7 +433,7 @@ const styles = StyleSheet.create({
 	disc_trending: {
 		// marginTop: 47,
 		width: window.width / 1.1,
-		// height: 170,
+		flex: 1,
 		borderRadius: window.width / 40,
 		backgroundColor: '#696969',
 		shadowColor: '#121212',
@@ -400,9 +442,10 @@ const styles = StyleSheet.create({
         shadowRadius: window.width / 70,
 	},
 	trending_container: { 
-		width: '100.2%',
 		height: 28,
-		backgroundColor: '#424242',
+		// flex: 1,
+		width: '100.2%',
+		backgroundColor: '#888888',
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
@@ -415,8 +458,11 @@ const styles = StyleSheet.create({
 		color: '#C2C2C2'
 	},
 	trending_row: {
+		flex: 1,
+		backgroundColor: 'blue',
+		// height: '100%',
 		width: '100%',
-		marginVertical: 10,
+		// marginVertical: ,
 		justifyContent: 'center',
 		flexDirection: 'row'
 	},
@@ -428,7 +474,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#616161'
 	},
 	trend_container: {
-		// backgroundColor: 'white',/
+		// height: '100%',
+		// backgroundColor:  'white',
 		// height: window.height / 2.9,
 		width: window.width / 2.2,
 		alignItems: 'center'
@@ -447,13 +494,19 @@ const styles = StyleSheet.create({
 		fontSize: 17
 	},
 	list_trend_container: {
+		flex: 1,
+		backgroundColor: 'green',
+		// height: '100%',
 		width: '100%',
 	},
 	list_trend: {
-		
+		flex: 1,
+		backgroundColor: 'white',
+
 	},
 	hash_acc_outline: {
-		height: 28,
+		flex: 1,
+		// height: 28,
 		width: '88%',
 		alignSelf: 'center',
 		alignItems: 'center',
@@ -473,7 +526,7 @@ const styles = StyleSheet.create({
 	trend_post: {
 		height: 28,
 		width: window.width / 1.04,
-		backgroundColor: '#424242',
+		backgroundColor: '#888888',
 		justifyContent: 'center',
 		alignItems: 'center',
 		marginTop: window.height / 77,

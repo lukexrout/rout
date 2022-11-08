@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import userJSON from './user.json'
 
 import Bottom_Nav from './navs/bottom_nav';
+import Content from './screens/content';
 import CreatePost from './screens/createPost';
 import Create from './screens/create/create';
 import Wallet from './screens/wallet'
@@ -55,6 +56,7 @@ export default function App() {
 					<Stack.Screen name='state' component={state === 'in' ? Bottom_Nav : state === null ? Loading : Out}/>
 					<Stack.Screen name='out' component={Out}/>
 					<Stack.Screen name='bottom_nav' component={Bottom_Nav}/>
+					<Stack.Screen name='content' component={Content}/>
 					<Stack.Screen name='create_post' component={CreatePost}/>
 					<Stack.Screen name='pick' component={Pick}/>
 					<Stack.Screen name='create' component={Create}/>
