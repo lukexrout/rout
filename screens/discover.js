@@ -64,8 +64,8 @@ const Result = ({ navigation, username, length, id }) => {
 const Hash = ({ hash }) => {
 
 	return (
-		<View style={styles.hash_acc_outline}>
-			<Text style={styles.trend_text}>{hash}</Text>
+		<View style={styles.hashtag_outline}>
+			<Text style={styles.hashtag_text}>{hash}</Text>
 		</View>
 	)
 }
@@ -73,8 +73,8 @@ const Hash = ({ hash }) => {
 const Acc = ({ acc }) => {
 
 	return (
-		<View style={styles.hash_acc_outline}>
-			<Text style={styles.trend_text}>{acc}</Text>
+		<View style={styles.account_outline}>
+			<Text style={styles.account_text}>{acc}</Text>
 		</View>
 	)
 }
@@ -97,17 +97,17 @@ const DiscHead = () => {
 
 
 
-	const hash_ = ({ item }) => {
+	// const hash_ = ({ item }) => {
 
-		return(<Hash hash={item.hash} key={item.id}/>)
+	// 	return(<Hash hash={item.hash} key={item.id}/>)
 		
-	}
+	// }
 
-	const acc_ = ({ item }) => {
+	// const acc_ = ({ item }) => {
 
-		return(<Acc acc={item.acc} key={item.id}/>)
+	// 	return(<Acc acc={item.acc} key={item.id}/>)
 		
-	}
+	// }
 
 
 
@@ -133,37 +133,27 @@ const DiscHead = () => {
 				<View style={styles.trending_container}>
 					<Text style={styles.trending_text}>trending</Text>
 				</View>
-				<View style={styles.trending_row}>
-					<View style={styles.trend_container}>
-						<View style={styles.outline_trend}>
-							<Text style={styles.text_trend}>hastags</Text>
+				<View style={styles.interact_container}>
+					<View style={styles.hashtag_container}>
+						<View style={styles.hashtag_title_container}>
+							<Text style={styles.hashtag_title}>hashtags</Text>
 						</View>
-						<View style={styles.list_trend_container}>
-							<FlatList
-							listKey='hash'
-							style={styles.list_trend}
-							data={hash}
-							renderItem={hash_}
-							scrollEnabled={false}
-							/>
-						</View>
-						
-							
+						<Hash hash={hash[0].hash}/>
+						<Hash hash={hash[1].hash}/>
+						<Hash hash={hash[2].hash}/>
+						<Hash hash={hash[3].hash}/>
 					</View>
-						<View style={styles.sep_line}/>
-					<View style={styles.trend_container}>
-						<View style={styles.outline_trend}>
-							<Text style={styles.text_trend}>accounts</Text>
+					<View style={styles.sep_container}>
+						<View style={styles.sep}/>
+					</View>
+					<View style={styles.account_container}>
+						<View style={styles.account_title_container}>
+							<Text style={styles.account_title}>accounts</Text>
 						</View>
-						<View style={styles.list_trend_container}>
-							<FlatList
-							listKey='acc'
-							style={styles.list_trend}
-							data={acc}
-							renderItem={acc_}
-							scrollEnabled={false}
-							/>
-						</View>
+						<Acc acc={acc[0].acc}/>
+						<Acc acc={acc[1].acc}/>
+						<Acc acc={acc[2].acc}/>
+						<Acc acc={acc[3].acc}/>
 					</View>
 				</View>
 			</View>
@@ -412,7 +402,7 @@ const styles = StyleSheet.create({
 		width: window.width,
 	},
 	disc_list: {
-		// borderRadius: 20,
+
 		zIndex: 1,
 		// position: 'absolute',
 		height: window.height,
@@ -421,7 +411,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#555555',
 	},
 	disc_head: {
-		height: window.height / 1.5,
+		height: window.height / 2.3,
 		width: window.width,
 		alignItems: 'center',
 		backgroundColor: '#555555',
@@ -444,7 +434,7 @@ const styles = StyleSheet.create({
 	trending_container: { 
 		height: 28,
 		// flex: 1,
-		width: '100.2%',
+		width: '100%',
 		backgroundColor: '#888888',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -457,69 +447,94 @@ const styles = StyleSheet.create({
 		fontSize: 17,
 		color: '#C2C2C2'
 	},
-	trending_row: {
+	
+
+
+
+	interact_container: {
 		flex: 1,
-		backgroundColor: 'blue',
-		// height: '100%',
-		width: '100%',
-		// marginVertical: ,
-		justifyContent: 'center',
 		flexDirection: 'row'
 	},
-	sep_line: {
-		width: window.width / 170,
-		position: 'absolute',
+	hashtag_container: {
+		flex: 1
+	},
+	hashtag_title_container: {
+		height: 34,
+		width: 140,
+		marginTop: 10,
+		marginBottom: 10,
+		borderRadius: 7,
 		alignSelf: 'center',
-		height: '88%',
-		backgroundColor: '#616161'
-	},
-	trend_container: {
-		// height: '100%',
-		// backgroundColor:  'white',
-		// height: window.height / 2.9,
-		width: window.width / 2.2,
-		alignItems: 'center'
-	},
-	outline_trend: {
-		width: 120,
-		height: 28,
-		borderRadius: window.width / 70,
-		justifyContent: 'center',
 		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#717171'
+	},
+	hashtag_title: {
+		fontFamily: 'Louis',
+		fontSize: 17,
+		color: '#C2C2C2'
+	},
+	hashtag_outline: {
+		flex: 1,
+		marginBottom: 10,
+		borderRadius: 7,
+		alignSelf: 'center',
+		alignItems: 'center',
+		justifyContent: 'center',
 		backgroundColor: '#777777'
 	},
-	text_trend: {
-		color: '#C2C2C2',
+	hashtag_text: {
 		fontFamily: 'Louis',
-		fontSize: 17
+		fontSize: 17,
+		paddingHorizontal: 20,
+		color: '#C2C2C2'
 	},
-	list_trend_container: {
-		flex: 1,
-		backgroundColor: 'green',
-		// height: '100%',
-		width: '100%',
+	sep_container: {
+		flexDirection: 'column'
 	},
-	list_trend: {
+	sep: {
+		// position: 'absolute',
 		flex: 1,
-		backgroundColor: 'white',
+		width: 1,
+		alignSelf: 'center',
+		backgroundColor: '#494949'
+	},
 
+	account_container: {
+		flex: 1
 	},
-	hash_acc_outline: {
-		flex: 1,
-		// height: 28,
-		width: '88%',
+	account_title_container: {
+		height: 34,
+		width: 140,
+		marginTop: 10,
+		marginBottom: 10,
+		borderRadius: 7,
 		alignSelf: 'center',
 		alignItems: 'center',
 		justifyContent: 'center',
-		marginTop: window.height / 70,
-		borderRadius: window.width / 70,
-		backgroundColor: '#6F6F6F'
+		backgroundColor: '#717171'
 	},
-	trend_text: {
-		color: '#C2C2C2',
+	account_title: {
 		fontFamily: 'Louis',
-		fontSize: 16
+		fontSize: 17,
+		color: '#C2C2C2'
 	},
+	account_outline: {
+		flex: 1,
+		marginBottom: 10,
+		borderRadius: 7,
+		alignSelf: 'center',
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: '#777777'
+	},
+	account_text: {
+		fontFamily: 'Louis',
+		fontSize: 17,
+		paddingHorizontal: 20,
+		color: '#C2C2C2'
+	},
+
 
 
 
@@ -542,8 +557,6 @@ const styles = StyleSheet.create({
 		fontSize: 17,
 		color: '#C2C2C2'
 	},
-
-
 	disc_container: {
 		width: '100.07%',
 		height: window.height * 2,
