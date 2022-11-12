@@ -95,30 +95,10 @@ const DiscHead = () => {
 		{id: 4, acc: '@elon'},
 	])
 
-
-
-	// const hash_ = ({ item }) => {
-
-	// 	return(<Hash hash={item.hash} key={item.id}/>)
-		
-	// }
-
-	// const acc_ = ({ item }) => {
-
-	// 	return(<Acc acc={item.acc} key={item.id}/>)
-		
-	// }
-
-
-
-
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// for search, have a sectionList to where both hashtags and users show up at the same time
 	// use the top 5 of both catagories and have drop downs for both sections (provide post count for both)
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 	return (
 		<View style={styles.disc_head}>

@@ -41,49 +41,58 @@ export default function EditProfile({ navigation, route }) {
                     <Text style={styles.edit}>edit</Text>
                 </SafeAreaView>
             </View>
-
-
             <View style={styles.profile_container}>
-                    
-                    <View style={styles.info_container}>
-                        <View style={styles.pic_container}>
-                            <Image style={styles.pic} source={profile_img}/>
+                <View style={styles.info_container}>
+                    <View style={styles.pic_container}>
+                        <Image style={styles.pic} source={profile_img}/>
+                    </View>
+                    <View style={styles.user_container}>
+                        <Text style={styles.user}>schafferluke</Text>
+                    </View>
+                    <View style={styles.stat_container}>
+                        <View style={{flexDirection: 'row'}}>
+                            <Pressable onPress={() => navigate('followers')} style={styles.stat}>
+                                <View style={styles.stat_text_container}>
+                                    <Text style={styles.stat_text}>followers</Text>
+                                </View>
+                                <View style={styles.stat_num_container}>
+                                    <Text style={styles.stat_num}>1.35m</Text>
+                                </View>
+                            </Pressable>
+                            <View style={{width: window.width / 20}}/>
+                            <Pressable onPress={() => navigate('following')} style={styles.stat}>
+                                <View style={styles.stat_text_container}>
+                                    <Text style={styles.stat_text}>following</Text>
+                                </View>
+                                <View style={styles.stat_num_container}>
+                                    <Text style={styles.stat_num}>5000</Text>
+                                </View>
+                            </Pressable>
                         </View>
-                        <View style={styles.user_container}>
-                            <Text style={styles.user}>schafferluke</Text>
-                        </View>
-                        <View style={styles.stat_container}>
-                            <View style={{flexDirection: 'row'}}>
-                                <Pressable onPress={() => navigate('followers')} style={styles.stat}>
-                                    <View style={styles.stat_text_container}>
-                                        <Text style={styles.stat_text}>followers</Text>
-                                    </View>
-                                    <View style={styles.stat_num_container}>
-                                        <Text style={styles.stat_num}>1.35m</Text>
-                                    </View>
-                                </Pressable>
-                                <View style={{width: window.width / 20}}/>
-                                <Pressable onPress={() => navigate('following')} style={styles.stat}>
-                                    <View style={styles.stat_text_container}>
-                                        <Text style={styles.stat_text}>following</Text>
-                                    </View>
-                                    <View style={styles.stat_num_container}>
-                                        <Text style={styles.stat_num}>5000</Text>
-                                    </View>
-                                </Pressable>
+                    </View>
+                    <View style={styles.sep_stat}/>
+                    <View style={styles.bio_container}>
+                        <Text style={styles.bio}>this is my bio currently. what do you think? I hope you like it considerably.</Text>
+                    </View>
+                    <View style={[styles.sep_stat, {width: 77}]}/>
+                </View>
+            </View>
+
+            <View style={styles.toggle_container}>
+                <View style={styles.promote_container}>
+                    <View style={styles.promote_text_container}>
+                        <Text style={styles.promote_text}>monetize</Text>
+                    </View>    
+                    <View style={styles.promote_toggle_container}>
+                        <View style={styles.promote_toggle}>
+                            <View style={styles.promote_circle}>
+
                             </View>
-                            
                         </View>
-                        <View style={styles.sep_stat}/>
-                        <View style={styles.bio_container}>
-                            <Text style={styles.bio}>this is my bio currently. what do you think? I hope you like it considerably.</Text>
-                        </View>
-                        <View style={[styles.sep_stat, {width: 77}]}/>
-                        
-                        
                     </View>
                 </View>
 
+            </View>
 
         </View>
     )
@@ -123,7 +132,7 @@ const styles = StyleSheet.create({
     
 
     profile_container: {
-        flex: 1,
+        // flex: 1,
         // justifyContent: 'center',
         marginTop: 10,
         width: window.width,
@@ -245,5 +254,53 @@ const styles = StyleSheet.create({
         color: '#C2C2C2',
         textAlign: 'center'
     },
+
+
+
+
+    toggle_container: {
+        flex: 1
+    },
+    promote_container: {
+        height: 55,
+        width: window.width / 1.1,
+        borderRadius: 17,
+        flexDirection: 'row',
+        alignSelf: 'center',
+        alignItems: 'center',
+        backgroundColor: '#444444'
+    },
+    promote_text_container: {
+        marginLeft: 17,
+        flex: 1,
+        // backgroundColor: 'blue'
+    },
+    promote_text: {
+        fontFamily: 'Louis',
+        fontSize: 17,
+        color: '#C2C2C2',
+    },
+
+    promote_toggle_container: {
+        height: '100%',
+        width: 70,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // backgroundColor: 'white'
+    },
+    promote_toggle: {
+        height: 30,
+        width: 50,
+        borderRadius: 50,
+        justifyContent: 'center',
+        backgroundColor: '#333333'
+    },
+    promote_circle: {
+        height: 26,
+        width: 26,
+        left: 2,
+        borderRadius: 50,
+        backgroundColor: '#C2C2C2'
+    }
     
 })

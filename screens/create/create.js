@@ -161,19 +161,21 @@ export default function Create({ navigation, route }) {
                             <TextInput
                             ref={inputRef}
                             placeholderTextColor={'#595959'}
-                            placeholder='caption'
+                            placeholder='encouraging others?'
                             keyboardAppearance='dark'
                             selectionColor={'#696969'}
                             style={styles.caption}
                             multiline={true}
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
                             // onContentSizeChange={() => inputScroll()}
                             // value={userInput}
                             // onChangeText={i => setUserInput(i)}
                             />
                         </Pressable>
-                        <View style={styles.preview_container}>
+                        <Pressable onPress={() => navigate('create_post')} style={styles.preview_container}>
                             <Image style={styles.preview} source={{uri: uri}}/>
-                        </View>
+                        </Pressable>
                     </View>
                 </View>
             </View>
@@ -289,8 +291,7 @@ const styles = StyleSheet.create({
 
     },
     caption_overflow: {
-        minHeight: 120,
-        maxHeight: 280,
+        height: 200,
         width: '100%',
         borderRadius: 21,
         overflow: 'hidden'
@@ -303,47 +304,33 @@ const styles = StyleSheet.create({
     },
     
     caption_row: {
+        flex: 1,
         flexDirection: 'row',
         width: '100%',
-        // height: '75%'
-        // backgroundColor: 'white'
     },
     caption_container: {
         zIndex: 2,
-        backgroundColor: 'blue',
-        // minHeight: 14,
-        // height: ,
-        minHeight: 120,
-        width: '85%',
-        borderBottomLeftRadius: 21,
-        // backgroundColor: 'white'
-        // paddingTop: 11,
-        // paddingLeft: 11,
+        flex: 1,
+        
     },
     caption: {
-        // top: window.width / 70,
-        // left: window.width / 30,
+        flex: 1,
         fontFamily: 'Louis',
         fontSize: 19,
-        // paddingBottom: 7,
         paddingLeft: 11,
-
+        paddingBottom: 7
         
     },
     preview_container: {
-        position: 'absolute',
-        height: window.width / 10,
-        width: '100%',
-        // backgroundColor: 'white'
+        height: '100%',
+        paddingRight: 10,
+        paddingLeft: 4,
     },
     preview: {
-        // position: 'absolute',
-        alignSelf: 'flex-end',
-        height: window.width / 10,
-        width: window.width / 10,
-        top: window.width / 70,
-        right: window.width / 70,
-        borderRadius: window.width / 70
+        height: 50,
+        width: 50,
+        top: 10,
+        borderRadius: 7
     },
 
 

@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
 
     },
     send: {
-        height: 19,
+        height: 21,
         width: 16
     }
 
