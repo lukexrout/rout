@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'center',
         alignItems: 'center',
-        backgroundColor: '#444444'
+        backgroundColor: '#777777'
     },
     promote_text_container: {
         marginLeft: 17,
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
         width: 50,
         borderRadius: 50,
         justifyContent: 'center',
-        backgroundColor: '#333333'
+        backgroundColor: '#555555'
     },
     promote_circle: {
         height: 26,

@@ -62,43 +62,43 @@ export default function Create({ navigation, route }) {
 
     })
 
-    // const handleURL = async () => {
+    const handleURL = async () => {
 
-	// 	const obj = {
-	// 		username: "schaffer_luke"
-	// 	}
+		const obj = {
+			username: "schaffer_luke"
+		}
 
-	// 	const response = await fetch('https://804qbtsf9h.execute-api.us-east-1.amazonaws.com/rout_data/upload-url', {
-	// 		method: 'POST',
-	// 		body: JSON.stringify(obj)
-	// 	})
+		const response = await fetch('https://804qbtsf9h.execute-api.us-east-1.amazonaws.com/rout_data/upload-url', {
+			method: 'POST',
+			body: JSON.stringify(obj)
+		})
 	
-	// 	const json = await response.json();
+		const json = await response.json();
 
-	// 	return json
-	// }
+		return json
+	}
 
-    // const handleUpload = async () => {
+    const handleUpload = async () => {
 
-	// 	const URL = await handleURL()
+		const URL = await handleURL()
 
-	// 	const imageExt = imagePreview.split('.').pop()
+		const imageExt = uri.split('.').pop()
 
-	// 	let image = await fetch(imagePreview)
-	// 	image = await image.blob()
+		let image = await fetch(uri)
+		image = await image.blob()
 
-	// 	await fetch(URL, {
-	// 		method: 'PUT',
-	// 		body: image,
-	// 		headers: {
-	// 			Accept: `image/${imageExt}`,
-	// 			'Content-Type': `image/${imageExt}`
-	// 		}
-	// 	})
-	// 	.then((res) => console.log(JSON.parse(JSON.stringify(res)).status))
-	// 	.catch((err) => console.error(err))
+		await fetch(URL, {
+			method: 'PUT',
+			body: image,
+			headers: {
+				Accept: `image/${imageExt}`,
+				'Content-Type': `image/${imageExt}`,
+			}
+		})
+		.then((res) => console.log(JSON.parse(JSON.stringify(res))))
+		.catch((err) => console.error(err))
 
-	// }
+	}
 
     const location = route.params.location
 
@@ -160,7 +160,7 @@ export default function Create({ navigation, route }) {
                             {/* still needs fixing when reaching text end */}
                             <TextInput
                             ref={inputRef}
-                            placeholderTextColor={'#595959'}
+                            placeholderTextColor={'#999999'}
                             placeholder='encouraging others?'
                             keyboardAppearance='dark'
                             selectionColor={'#696969'}
@@ -190,7 +190,7 @@ export default function Create({ navigation, route }) {
                             <Pressable style={styles.search_container}>
                                 <TextInput
                                 ref={searchRef}
-                                placeholderTextColor={'#595959'}
+                                placeholderTextColor={'#999999'}
                                 placeholder='search'
                                 keyboardAppearance='dark'
                                 selectionColor={'#696969'}
@@ -215,7 +215,7 @@ export default function Create({ navigation, route }) {
                 
             </View>
             
-            <Pressable style={styles.rout_press}>
+            <Pressable onPress={() => handleUpload()} style={styles.rout_press}>
                 <Text style={styles.rout_text}>rout</Text>
             </Pressable>
         </View>
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     container: {
         height: window.height,
         width: window.width,
-        backgroundColor: '#555555',
+        backgroundColor: '#5F5F5F',
         alignItems: 'center'
     },
     header_safe: {
@@ -253,6 +253,7 @@ const styles = StyleSheet.create({
     },
     head_container: {
         // height: window.width / 9,
+        marginBottom: 14,
         justifyContent: 'center',
         alignItems: 'center',
         // position: 'absolute'
@@ -273,9 +274,12 @@ const styles = StyleSheet.create({
         minHeight: 120,
         maxHeight: 280,
         backgroundColor: '#777777',
-        marginTop: window.width / 20,
+        // marginTop: window.width / 20,
         // top: window.width / 7,
-        borderRadius: 21,
+        borderTopLeftRadius: 21,
+        borderTopRightRadius: 21,
+        borderBottomLeftRadius: 11,
+        borderBottomRightRadius: 11,
         shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.4,
@@ -285,7 +289,7 @@ const styles = StyleSheet.create({
         height: window.width / 12,
         width: '101%',
         justifyContent: 'center',
-        backgroundColor: '#555555',
+        backgroundColor: '#919191',
         // borderTopLeftRadius: window.width / 40,
         // borderTopRightRadius: window.width / 40
 
@@ -293,7 +297,7 @@ const styles = StyleSheet.create({
     caption_overflow: {
         height: 200,
         width: '100%',
-        borderRadius: 21,
+        borderRadius: 14,
         overflow: 'hidden'
     },
     leave_text: {
@@ -351,7 +355,10 @@ const styles = StyleSheet.create({
         width: window.width / 1.1,
         // height: 470,
         marginTop: 10,
-        borderRadius: 21,
+        borderTopLeftRadius: 11,
+        borderTopRightRadius: 11,
+        borderBottomLeftRadius: 11,
+        borderBottomRightRadius: 11,
         backgroundColor: '#777777',
         shadowColor: '#121212',
         shadowOffset: {height: 0},
@@ -362,16 +369,16 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         alignItems: 'center',
-        borderRadius: 21,
+        borderRadius: 14,
         overflow: 'hidden'
     },
     apply_container: {
         height: window.width / 11,
         width: '101%',
         justifyContent: 'center',
-        backgroundColor: '#555555',
-        borderTopLeftRadius: 21,
-        borderTopRightRadius: 21
+        backgroundColor: '#919191',
+        borderTopLeftRadius: 14,
+        borderTopRightRadius: 14
     },
     apply_text: {
         // left: window.width / 40,
@@ -441,7 +448,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         borderRadius: 14,
-        backgroundColor: '#555555'
+        backgroundColor: '#919191'
     },
     interest_text: {
         left: window.width / 40,
@@ -463,11 +470,11 @@ const styles = StyleSheet.create({
         marginBottom: window.width / 14,
         height: 55,
         width: window.width  / 1.1,
-        borderTopLeftRadius: 17,
-        borderTopRightRadius: 17,
-        borderBottomRightRadius: window.width / 17,
-        borderBottomLeftRadius: window.width / 17,
-        backgroundColor: '#777777',
+        borderTopLeftRadius: 11,
+        borderTopRightRadius: 11,
+        borderBottomRightRadius: 21,
+        borderBottomLeftRadius: 21,
+        backgroundColor: '#888888',
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#121212',

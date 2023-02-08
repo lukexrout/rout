@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Button, View, Pressable, Image, Dimensions, SafeAreaView, FlatList, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -30,7 +30,7 @@ const Interest = ({ cent, interest }) => {
     )
 }
 
-const Head = ({ interestOpacity, interestPress, contentOpacity, contentPress, navigate }) => {
+const Head = memo(({ interestOpacity, interestPress, contentOpacity, contentPress, navigate }) => {
 
     return (
         <View style={styles.general_profile_container}>
@@ -43,7 +43,7 @@ const Head = ({ interestOpacity, interestPress, contentOpacity, contentPress, na
             </View>
             <View style={styles.profile_container}>
                 <View style={styles.set_dm_container}>
-                    <Pressable onPress={() => navigate('direct_msg')} style={styles.dm_container}>
+                    <Pressable onPress={() => navigate('dm')} style={styles.dm_container}>
                         <Image style={styles.dm} source={dm_icon}/>
                     </Pressable>
                     <Pressable onPress={() => navigate('settings')} style={styles.set_container}>
@@ -91,7 +91,7 @@ const Head = ({ interestOpacity, interestPress, contentOpacity, contentPress, na
                         <Pressable onPress={() => navigate('wallet')} style={styles.button_wallet}>
                             <Text style={styles.button_text}>wallet</Text>
                         </Pressable>
-                        <View style={{width: window.width / 11}}/>
+                        <View style={{width: 55}}/>
                         <Pressable onPress={() => navigate('edit_profile')} style={styles.button_edit}>
                             <Text style={styles.button_text}>edit profile</Text>
                         </Pressable>
@@ -115,7 +115,7 @@ const Head = ({ interestOpacity, interestPress, contentOpacity, contentPress, na
             </View>
         </View>
     )
-}
+})
 
 const Foot = () => {
     return(
@@ -264,7 +264,6 @@ export default function Profile({ navigation }) {
                         <Image style={styles.create} source={plus_img}/>
                     </Pressable>
                 </SafeAreaView>
-            
                 <FlatList
                     ref={listRef}
                     style={styles.list_container}
@@ -274,7 +273,7 @@ export default function Profile({ navigation }) {
                     numColumns={1}
                     contentContainerStyle={state === 'content' ? {alignItems: 'flex-start'} : {alignItems: 'center'}}
                     ListHeaderComponent={head}
-                    ListHeaderComponentStyle={{backgroundColor: '#555555'}}
+                    ListHeaderComponentStyle={{backgroundColor: '#5F5F5F'}}
                     ListFooterComponent={foot}
                     keyExtractor={item => item.id}
                     showsVerticalScrollIndicator={false}
@@ -291,16 +290,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
         backgroundColor: '#555555',
     },
-    
-
-
     create_center: {
         width: window.width / 777,
         borderBottomRightRadius: window.width / 14,
         zIndex: 2,
     },
-
-
     create_container: {
         top: 0,
         alignSelf: 'flex-start',
@@ -320,31 +314,19 @@ const styles = StyleSheet.create({
         width: 33,
         height: 33,
     },
-
-    
-
     list_container: {
         zIndex: 1,
 		position: 'absolute',
-		backgroundColor: '#555555',
+		backgroundColor: '#5F5F5F',
 		width: window.width,
 		height: window.height,
     },
-
-
     general_profile_container: {
-        // flexDirection: 'row',
         width: window.width,
-        // height: window.height / 2.08,
-        // alignItems: 'center',
-
     },
     head_container: {
-        // backgroundColor: 'white',
-        // flexDirection: 'row',
         height: 110,
         width: window.width,
-        // top: 0,
         alignItems: 'center'
     },
     rout_container: {
@@ -357,29 +339,17 @@ const styles = StyleSheet.create({
     },
     profile_container: {
         marginTop: 10,
-        // height: window.height / 2.8
         width: window.width,
-        // justifyContent: 'center',
         alignItems: 'center',
-
     },
-    
     set_dm_container: {
         position: 'absolute',
-        // backgroundColor: 'white',
-        // height: 170,
         width: 28,
-        // marginTop:40,
         top: -40,
         right: window.width / 21,
         alignSelf: 'flex-start',
-        // justifyContent: 'flex-end',
     },
     dm_container: {
-        // flex: 1,
-        // backgroundColor: 'white',
-        // top: 0,
-        // position: 'absolute',
         justifyContent: 'center',
         width: '100%',
     },
@@ -390,19 +360,14 @@ const styles = StyleSheet.create({
     },
     set_container: {
         marginVertical: 11,
-        // backgroundColor: 'blue',
-        // flex: 1,
         justifyContent: 'center',
         width: '100%',
     },
     set: {
-        // backgroundColor: 'purple',
         width: '100%',
         height: 28
     },
     save_container: {
-        // backgroundColor: 'purple',
-        // flex: 1,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'
@@ -412,13 +377,9 @@ const styles = StyleSheet.create({
         height: 27
     },
     info_container: {
-        // top: window.width / 70,
-        // marginTop: window.width / 8,
         width: window.width / 1.5,
-        // backgroundColor: 'blue'
     },
     user_container: {
-        // backgroundColor: 'red',
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
@@ -431,7 +392,6 @@ const styles = StyleSheet.create({
         color: '#C2C2C2'
     },
     pic_container: {
-        // backgroundColor: 'gray',
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'
@@ -452,11 +412,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     stat_text_container: {
-        backgroundColor: '#616161',
+        backgroundColor: '#595959',
         borderRadius: window.width / 70,
         marginBottom: window.width / 120
-
-
     },
     stat_text: {
         color: '#C2C2C2',
@@ -468,7 +426,7 @@ const styles = StyleSheet.create({
         marginRight: window.width / 12,
     },
     stat_num_container: {
-        backgroundColor: '#616161',
+        backgroundColor: '#595959',
         borderRadius: window.width / 70,
     },
     stat_num: {
@@ -484,9 +442,8 @@ const styles = StyleSheet.create({
         width: '70%',
         height: window.width / 170,
         alignSelf: 'center',
-        // marginTop: window.height / 70,
         borderRadius: 50,
-        backgroundColor: '#616161'
+        backgroundColor: '#595959'
     },
     bio_container: {
         flex: 1,
@@ -505,8 +462,6 @@ const styles = StyleSheet.create({
     button_container: {
         flexDirection: 'row',
         marginVertical: 17,
-
-        // backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -516,7 +471,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#C2C2C2',
         borderRadius: window.width / 70,
         width: window.width / 2.8
-
     },
     button_edit: {
         justifyContent: 'center',
@@ -532,12 +486,7 @@ const styles = StyleSheet.create({
         color: '#555555'
         
     },
-
-
-
-
     tab_container: {
-        // position: 'absolute',
         width: window.width,
         height: window.height / 20,
         backgroundColor: '#5F5F5F',
@@ -555,7 +504,6 @@ const styles = StyleSheet.create({
     },
     tab_text_container: {
         width: window.width / 2,
-        // backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -572,10 +520,7 @@ const styles = StyleSheet.create({
     tab_text: {
         position: 'absolute',
         fontFamily: 'Louis',
-        // alignSelf: 'center',
         fontSize: 17,
-        // marginVertical: window.width / 70,
-        // marginHorizontal: window.width / 7,
         color: '#C2C2C2'
     },
     content_container: {
@@ -586,10 +531,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     interest_container: {
-        marginTop: window.width / 40,
+        marginBottom: 7,
         height: window.height / 20,
         width: window.width / 1.04,
-        backgroundColor: '#424242',
+        backgroundColor: '#777777',
         borderRadius: window.width / 70,
         justifyContent: 'center',
     },
@@ -601,7 +546,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#C2C2C2'
     },
     interest: {
-        left: window.width / 17,
+        left: 14,
         fontFamily: 'Louis',
         fontSize: 17
     },

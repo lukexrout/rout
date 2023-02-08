@@ -341,7 +341,7 @@ export default function Discover({ navigation }) {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#555555',
+		backgroundColor: '#5F5F5F',
         height: window.width,
         width: window.width,
 	},
@@ -388,13 +388,13 @@ const styles = StyleSheet.create({
 		height: window.height,
 		width: window.width,
 		alignSelf: 'center',
-		backgroundColor: '#555555',
+		backgroundColor: '#5F5F5F',
 	},
 	disc_head: {
 		height: window.height / 2.3,
 		width: window.width,
 		alignItems: 'center',
-		backgroundColor: '#555555',
+		backgroundColor: '#5F5F5F',
 	},
 	disc_head_safe: {
 

@@ -61,7 +61,7 @@ export default function Bottom_Nav() {
 				)}} />
 				{/* <Tab.Screen name="_user" component={User} options={{ headerStyle: {height: 0}, animationEnabled: false,tabBarIconStyle: {position: 'absolute'} }} /> */}
 			</Tab.Group>
-			<Tab.Screen name="notification" component={Notification} options={{ headerStyle: {height: 0}, animationEnabled: false,
+			<Tab.Screen name="notifications" component={Notification} options={{ headerStyle: {height: 0}, animationEnabled: false,
 			tabBarIcon: ({ focused }) => (
 				<View style={styles.icon_flow}>
 					{focused ? <Image 
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		width: '100%',
 		height: window.height / 12.4,
-		backgroundColor: '#555555',
+		backgroundColor: '#5F5F5F',
 		borderTopLeftRadius: 11,
 		borderTopRightRadius: 11,
 		justifyContent: 'flex-start',

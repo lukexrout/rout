@@ -4,7 +4,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Direct_Msg from '../screens/direct_msg';
+import Direct_Msg from '../screens/(not used) dm';
 import ActiveChat from '../screens/activeChat';
 
 const Stack = createNativeStackNavigator();

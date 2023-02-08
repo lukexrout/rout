@@ -16,17 +16,24 @@ import Wallet from './screens/wallet'
 import EditProfile from './screens/editprofile'
 import Following from './screens/following'
 import Followers from './screens/followers'
-import DirectMsg from './screens/direct_msg';
+import DM from './screens/dm';
 import ActiveChat from './screens/activeChat';
 import Settings from './screens/settings';
 import User from './screens/_user'
-import Out from './screens/out/out'
-import Loading from './screens/out/loading'
+import Out from './screens/rout/out'
+import Loading from './screens/rout/loading'
 import Comments from './screens/comments';
 import Save from './screens/save';
 import Rerout from './screens/rerout';
 import Filter from './screens/filter';
 import Pick from './screens/pick';
+import Data from './screens/set/data'
+import Feedback from './screens/set/feedback'
+import InterestSet from './screens/set/interest_set'
+import MonetizeSet from './screens/set/monetize_set'
+import NotificationSet from './screens/set/noti_set'
+import Password from './screens/set/password'
+import Privacy from './screens/set/privacy'
 
 const Stack = createNativeStackNavigator();
 
@@ -52,7 +59,6 @@ export default function App() {
 		<NavigationContainer independent={true}>
 			<Stack.Navigator name='main_nav'>
 				<Stack.Group screenOptions={{headerShown: false}}>
-					 
 					<Stack.Screen name='state' component={state === 'in' ? Bottom_Nav : state === null ? Loading : Out}/>
 					<Stack.Screen name='out' component={Out}/>
 					<Stack.Screen name='bottom_nav' component={Bottom_Nav}/>
@@ -65,7 +71,14 @@ export default function App() {
 					<Stack.Screen name='comments' component={Comments}/>
 					<Stack.Screen name='save' component={Save}/>
 					<Stack.Screen name='settings' component={Settings}/>
-					<Stack.Screen name='direct_msg' component={DirectMsg}/>
+					<Stack.Screen name='data' component={Data}/>
+					<Stack.Screen name='feedback' component={Feedback}/>
+					<Stack.Screen name='interest_set' component={InterestSet}/>
+					<Stack.Screen name='monetize_set' component={MonetizeSet}/>
+					<Stack.Screen name='noti_set' component={NotificationSet}/>
+					<Stack.Screen name='password' component={Password}/>
+					<Stack.Screen name='privacy' component={Privacy}/>
+					<Stack.Screen name='dm' component={DM}/>
 					<Stack.Screen name='active_chat' component={ActiveChat}/>
 					<Stack.Screen name='wallet' component={Wallet}/>
 					<Stack.Screen name='edit_profile' component={EditProfile}/>

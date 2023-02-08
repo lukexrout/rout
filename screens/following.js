@@ -18,7 +18,7 @@ const Head = () => {
             <View>
                 <SafeAreaView/>
             </View>
-            <View style={{height: 55}}/>
+            <View style={{height: 40}}/>
             <View style={styles.user_search_container}>
                 <Pressable onPress={() => searchRef.focus} style={styles.user_search_press}>
                     <TextInput
@@ -162,21 +162,21 @@ const styles = StyleSheet.create({
         zIndex: 2,
         // flex: 1,
         width: window.width / 1.07,
-        borderRadius: 21,
+        borderRadius: 17,
         alignSelf: 'center',
         justifyContent: 'center',
         backgroundColor: '#616161',
-        shadowColor: '#121212',
+        shadowColor: '#444444',
         shadowOffset: {height: 0},
         shadowOpacity: 1,
-        shadowRadius: 7,
+        shadowRadius: 4,
     },
     following_container: {
         // backgroundColor: 'blue',
         alignSelf: 'center',
     },
     following: {
-        padding: 10,
+        padding: 7,
         fontFamily: 'Louis',
         fontSize: 30,
         color: '#C2C2C2'
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     },
     back_press: {
         height: 40,
-        width: 70,
+        width: 50,
         alignItems: 'center',
         justifyContent: 'center',
     },

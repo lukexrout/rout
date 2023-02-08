@@ -428,8 +428,8 @@ export default function CreatePost({ navigation, route }) {
 						<View style={styles.post_input_username_container}>
 							<Text style={styles.post_input_username}>@username</Text>
 							<TextInput 
-							placeholder='Encouraging Others?'
-							placeholderTextColor='#222222' 
+							placeholder='encouraging others?'
+							placeholderTextColor='#999999' 
 							style={styles.post_input}
 							selectionColor='#717171'
 							keyboardAppearance='dark'
@@ -505,138 +505,21 @@ export default function CreatePost({ navigation, route }) {
 								
 								
 							</View>
-							// <View style={styles.type_image_preview_container}>
-							// 	<View style={styles.type_image_preview_background}/>
-							// 	<View style={styles.type_image_preview_button_container}>
-							// 		<View style={styles.type_image_preview_image_container}>
-
-
-							// 			<View style={styles.type_image_preview_x_icon_container}>
-							// 				<Pressable onPress={() => setImagePreview(null)} style={styles.type_image_preview_x_icon_press}>
-							// 					<View style={styles.type_image_preview_x_icon_background}/>
-
-							// 					<View style={styles.type_image_preview_x_icon_image_container} >
-							// 						<Image source={x_icon} style={styles.type_image_preview_x_icon_image}/>
-							// 					</View>
-							// 				</Pressable>
-							// 			</View>
-
-							// 			<View style={styles.type_image_preview_save_container}>
-							// 				<Pressable style={styles.type_image_preview_save_press}>
-							// 					<View style={styles.type_image_preview_save_background} />
-
-							// 					<View style={styles.type_image_preview_save_text_container}>
-							// 						<Text style={styles.type_image_preview_save_text}>save</Text>
-							// 					</View>
-							// 				</Pressable>
-							// 			</View>
-
-							// 			<View style={styles.type_image_preview_edit_icon_container}>
-							// 				<Pressable style={styles.type_image_preview_x_icon_press}>
-							// 					<View style={styles.type_image_preview_edit_icon_background}/>
-
-							// 					<View style={styles.type_image_preview_edit_icon_image_container} >
-							// 						<Image source={edit_icon} style={styles.type_image_preview_edit_icon_image}/>
-							// 					</View>
-							// 				</Pressable>
-							// 			</View>
-										
-
-							// 			<View style={styles.type_image_preview_rout_container}> 
-							// 				<Pressable onPress={handleUpload} style={styles.type_image_preview_rout_press}>
-
-							// 					<View style={styles.type_image_preview_rout_background}/>
-											
-							// 					<View style={styles.type_image_preview_rout_row}>
-							// 						<Text style={styles.type_image_preview_rout_text}>rout</Text>
-							// 						<View style={{width: window.width / 40}}/>
-							// 						<Image style={styles.type_image_preview_white_arrow} source={white_arrow} />
-							// 					</View>
-							// 				</Pressable>
-							// 			</View>
-							// 			<Image style={[styles.type_image_preview_image, 
-							// 				cameraStatus === 'front' ? 
-							// 				{height: window.height / 1.2, transform: [{ scaleX: -1 }]}
-							// 				 : {height: window.height / 1.2}]} source={{ uri: imagePreview }}/>
-							// 		</View>
-							// 	</View>
-								
-							// </View>
 						 : <View/>}
 						
 					</Camera>
 				</View>
 			 : postType === 'video' ? 
-			 <View style={styles.type_image_camera_container}>
-			 <Camera 
-			ref={photoRef} 
-			style={styles.type_image_camera} 
-			flashMode={flash} 
-			type={type}
-			focusDepth={0.7}
-			>
-						{ imagePreview !== null ? 
-
-							<View style={styles.type_image_preview_container}>
-								<View style={styles.type_image_preview_background}/>
-								<View style={styles.type_image_preview_button_container}>
-									<View style={styles.type_image_preview_image_container}>
-
-
-										<View style={styles.type_image_preview_x_icon_container}>
-											<Pressable onPress={() => setImagePreview(null)} style={styles.type_image_preview_x_icon_press}>
-												<View style={styles.type_image_preview_x_icon_background}/>
-
-												<View style={styles.type_image_preview_x_icon_image_container} >
-													<Image source={x_icon} style={styles.type_image_preview_x_icon_image}/>
-												</View>
-											</Pressable>
-										</View>
-
-										<View style={styles.type_image_preview_save_container}>
-											<Pressable style={styles.type_image_preview_save_press}>
-												<View style={styles.type_image_preview_save_background} />
-
-												<View style={styles.type_image_preview_save_text_container}>
-													<Text style={styles.type_image_preview_save_text}>save</Text>
-												</View>
-											</Pressable>
-										</View>
-
-										<View style={styles.type_image_preview_edit_icon_container}>
-											<Pressable style={styles.type_image_preview_x_icon_press}>
-												<View style={styles.type_image_preview_edit_icon_background}/>
-
-												<View style={styles.type_image_preview_edit_icon_image_container} >
-													<Image source={edit_icon} style={styles.type_image_preview_edit_icon_image}/>
-												</View>
-											</Pressable>
-										</View>
-										
-
-										<View style={styles.type_image_preview_rout_container}> 
-											<Pressable onPress={handleUpload} style={styles.type_image_preview_rout_press}>
-
-												<View style={styles.type_image_preview_rout_background}/>
-											
-												<View style={styles.type_image_preview_rout_row}>
-													<Text style={styles.type_image_preview_rout_text}>rout</Text>
-													<View style={{width: window.width / 40}}/>
-													<Image style={styles.type_image_preview_white_arrow} source={white_arrow} />
-												</View>
-											</Pressable>
-										</View>
-										<Image style={[styles.type_image_preview_image, 
-											cameraStatus === 'front' ? 
-											{height: window.height / 1.2, transform: [{ scaleX: -1 }]}
-											 : {height: window.height / 1.2}]} source={{ uri: imagePreview }}/>
-									</View>
-								</View>
-								
-							</View>
-						 : <View/>}
-						<SafeAreaView>
+			 <View style={[styles.type_image_camera_container, {zIndex: previewIndex}]}>
+					<Camera ref={photoRef} style={styles.type_image_camera} flashMode={flash} type={type}>
+						<SafeAreaView style={styles.imgae_interact_container}>
+							<SafeAreaView>
+							<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
+									<Image style={styles.image_pick} source={pick}/>
+							</Pressable>
+							</SafeAreaView>
 							<View style={styles.type_image_button_container}>
+								
 								<Pressable  onPress={handlePreview} style={styles.type_image_button_outer}>
 									{/* <View style={styles.type_image_button_inner}/> */}
 								</Pressable>
@@ -650,8 +533,40 @@ export default function CreatePost({ navigation, route }) {
 								</Pressable>
 							</View>
 						</SafeAreaView>
+						{ imagePreview !== null ? 
+							<View style={{zIndex: previewIndex}}>
+									
+								<View style={styles.image_prev_outline}/>
+								<View style={styles.image_prev_container}>
+			
+									<SafeAreaView style={styles.image_prev_top}/>
+
+
+									<Image style={styles.image_prev} source={{uri: imagePreview}}/>
+
+									
+
+								</View>
+								<SafeAreaView style={styles.preview_interact}>
+									<SafeAreaView style={styles.back_safe}>
+
+										<Pressable onPress={() => closeMedia()} style={styles.back_container}>
+											<Image style={styles.back} source={x}/>
+										</Pressable>
+									</SafeAreaView>
+
+
+									<Pressable onPress={handleUpload} style={styles.image_rout_press}>
+										<Text style={styles.image_rout_text}>rout</Text>
+									</Pressable>
+								</SafeAreaView>
+								
+								
+							</View>
+						 : <View/>}
+						
 					</Camera>
-		 </View>
+				</View>
 			 : <View/>}
 		</View>
     )
@@ -663,7 +578,7 @@ const styles = StyleSheet.create({
     container: {
 		height: '100%',
 		width: window.width,
-		backgroundColor: '#555555'
+		backgroundColor: '#5F5F5F'
 	},
 
 
@@ -714,7 +629,7 @@ const styles = StyleSheet.create({
 		top: window.width / 150,
 		width: '100%',
 		height: window.width / 150,
-		backgroundColor: '#222222',
+		backgroundColor: '#444444',
 		borderRadius: 50,
 	},
 	text_post_container: {
@@ -1160,7 +1075,7 @@ const styles = StyleSheet.create({
 		borderTopRightRadius: 10,
 		borderBottomLeftRadius: 20,
 		borderBottomRightRadius: 20,
-		backgroundColor: '#777777',
+		backgroundColor: '#888888',
 		shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.4,

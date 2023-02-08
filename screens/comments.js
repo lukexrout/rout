@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Pressable, Dimensions, FlatList, Image, SafeAreaView, TextInput, KeyboardAvoidingView } from 'react-native';
+import React, { useEffect, useState, useRef, useMemo, useCallback, memo } from 'react';
+import { StyleSheet, Text, View, Pressable, Dimensions, FlatList, Image, SafeAreaView, TextInput, KeyboardAvoidingView, Animated } from 'react-native';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 
@@ -18,34 +18,22 @@ const CommentsClose = ({ navigation, route }) => {
     const location = route.params.location
 
 	const click = () => {
-	
         navigation.navigate(location)
-
     }
-
-	
 
 	return (
 		<View style={styles.comment_head}>
-
-
-
-			
 			<View style={styles.comment_close_safe}>
 				<Pressable onPress={() => click()} style={styles.comment_close_press}>
 					<Text style={styles.comment_close}>close</Text>
 				</Pressable>
 			</View>
-			
-
 		</View>
 	)
 }
 
 
-const PostComment = ({ postComment, route }) => {
-
-    const content = route.params.content
+const PostComment = ({ postComment, postCaption }) => {
 
 	return (
         <View style={[styles.comment_post_content_container]}>
@@ -55,26 +43,21 @@ const PostComment = ({ postComment, route }) => {
             <View style={styles.comment_container}>
             <View style={styles.comment_profile_container}>
                 <View style={styles.comment_profile_username_row}>
-
                     <Image style={styles.comment_profile} source={profile_img}/>
                     <View style={styles.comment_username_container}>
                         <Text style={styles.comment_username}>@schafferluke</Text>
                     </View>
-                    
                 </View>
                 <View style={styles.comment_end_container}>
                         <View style={[styles.comment_time_container, {right: window.width / 28}]}>
                             <Text style={styles.comment_time}>20h</Text>
                         </View>
-                        
                 </View>
                 <View style={[styles.comment_content_container, {left: window.width / 70,marginBottom: window.height / 70, marginTop: window.height / 170}]}>
-                    <Text style={styles.comment_content}>{content}</Text>
+                    <Text style={styles.comment_content}>{postCaption}</Text>
                 </View>
-                
             </View>
         </View>
-
             <View style={styles.comment_sep}/>
         </View>
 	)
@@ -83,14 +66,18 @@ const CommentFoot = () => {
 
 	return (
 		<View style={styles.comment_foot}>
-
 		</View>
 	)
 }
 
-const Comment = () => {
+const Comment = memo(({ comment, reply_count, scrollTo, setExpanded, id }) => {
+
+    const commentMinHeight = useRef(new Animated.Value(0)).current
 
 	const [voteStatus, setVoteStatus] = useState(null)
+	const [expand, setExpand] = useState(false)
+	const [y, setY] = useState()
+	const [loaded, setLoaded] = useState(false)
 
 	const votePress = (x) => {
 		if (x !== voteStatus) {
@@ -101,95 +88,148 @@ const Comment = () => {
 
 	}
 
+	const expandPress = () => {
+		if (expand === false) {
+			Animated.parallel([
+				Animated.timing(commentMinHeight, {
+					toValue: 400,
+					duration: 177,
+					useNativeDriver: false
+				}),
+			]).start(() => {
+			scrollTo(y - window.height / 9)
+			})
+			setExpand(true)
+		} else {
+			Animated.parallel([
+				Animated.timing(commentMinHeight, {
+					toValue: 0,
+					duration: 177,
+					useNativeDriver: false
+				}),
+			]).start()
+			setExpand(false)
+		}
+	}
+
 	return (
-		<View style={styles.comment_container}>
-			<View style={styles.comment_profile_container}>
-				<View style={styles.comment_profile_username_row}>
-
-					<Image style={styles.comment_profile} source={profile_img}/>
-					<View style={styles.comment_username_container}>
-						<Text style={styles.comment_username}>@schafferluke</Text>
+		<Animated.View style={[styles.comment_safe, {minHeight: commentMinHeight}]}
+		onLayout={( event ) => {
+			const {x, y, width, height} = event.nativeEvent.layout
+			setY(y)}}>
+			<View
+			style={[styles.comment_container, reply_count > 0 && reply_count < 2 && expand === false ? {marginBottom: 10} : reply_count > 1 && expand === false ? {marginBottom: 16} : {}]}>
+				<View style={styles.comment_profile_container}>
+					<View style={styles.comment_profile_username_row}>
+						<Image style={styles.comment_profile} source={profile_img}/>
+						<View style={styles.comment_username_container}>
+							<Text style={styles.comment_username}>@schafferluke</Text>
+						</View>
 					</View>
-					
-				</View>
-				<View style={styles.comment_end_container}>
-						<View style={styles.comment_time_container}>
-							<Text style={styles.comment_time}>20h</Text>
-						</View>
-						<View style={styles.comment_info_container}>
-							<Image style={styles.comment_info} source={info_icon}/>
-						</View>
-				</View>
-				<View style={styles.comment_content_container}>
-					<Text style={styles.comment_content}>abcdefghijklmnopqrstuvwxyz</Text>
-				</View>
-				<View style={styles.comment_interact_container}>
-					<Pressable onPress={() => votePress('upVote')} style={styles.comment_left_interact_container}>
-						<Text style={styles.comment_data}>444k</Text>
-						{voteStatus === 'upVote' ?
-						<Image style={styles.comment_up} source={arrow_up_pressed}/>
-						 :
-						<Image style={styles.comment_up} source={arrow_up_white}/>
-						}
-					</Pressable>
-					<Pressable style={styles.comment_middle_left_interact_container}>
-						<Text style={[styles.comment_data, {opacity: 0}]}>0</Text>
-
-						<Text style={styles.comment_reply}>reply</Text>
-
-					</Pressable>
-					<Pressable style={styles.comment_middle_right_interact_container}>
-						<Text style={[styles.comment_data, {opacity: 0}]}>0</Text>
-
-						<Text style={styles.comment_reply}>replies</Text>
-
-					</Pressable>
-					<Pressable onPress={() => votePress('downVote')} style={styles.comment_right_interact_container}>
-						<Text style={styles.comment_data}>444k</Text>
-						{voteStatus === 'downVote' ?
-						<Image style={styles.comment_down} source={arrow_down_pressed}/>
-						 :
-						<Image style={styles.comment_down} source={arrow_down_white}/>
-						}
-
-					</Pressable>
+					<View style={styles.comment_end_container}>
+							<View style={styles.comment_time_container}>
+								<Text style={styles.comment_time}>20h</Text>
+							</View>
+							<View style={styles.comment_info_container}>
+								<Image style={styles.comment_info} source={info_icon}/>
+							</View>
+					</View>
+					<View style={styles.comment_content_container}>
+						<Text style={styles.comment_content}>{comment}</Text>
+					</View>
+					<View style={styles.comment_interact_container}>
+						<Pressable onPress={() => votePress('upVote')} style={styles.comment_left_interact_container}>
+							<Text style={styles.comment_data}>444k</Text>
+							{voteStatus === 'upVote' ?
+							<Image style={styles.comment_up} source={arrow_up_pressed}/>
+							:
+							<Image style={styles.comment_up} source={arrow_up_white}/>
+							}
+						</Pressable>
+						<Pressable style={styles.comment_middle_left_interact_container}>
+							<Text style={[styles.comment_data, {opacity: 0}]}>0</Text>
+							<Text style={styles.comment_reply}>reply</Text>
+						</Pressable>
+						<Pressable onPress={() => expandPress()} style={styles.comment_middle_right_interact_container}>
+							<Text style={[styles.comment_data, {opacity: 0}]}>0</Text>
+							<Text style={styles.comment_reply}>replies</Text>
+						</Pressable>
+						<Pressable onPress={() => votePress('downVote')} style={styles.comment_right_interact_container}>
+							<Text style={styles.comment_data}>444k</Text>
+							{voteStatus === 'downVote' ?
+							<Image style={styles.comment_down} source={arrow_down_pressed}/>
+							:
+							<Image style={styles.comment_down} source={arrow_down_white}/>
+							}
+						</Pressable>
+					</View>
 				</View>
 			</View>
-		</View>
+			{reply_count > 0 && expand !== true ?
+			<View style={styles.reply_outline_safe}>
+				{reply_count > 1 ? <View style={styles.reply_outline_container}/> : <View/>}
+				<View style={[styles.reply_outline_container_two, reply_count > 1 ? {bottom: -21} : {}]}/>
+			</View>
+			: <View/>}
+		</Animated.View>
 	)
-}
+})
 
 export default function Comments({ navigation, route }) {
 	
+	const postCaption = route.params.content
+
 	const commentInputRef = useRef()
 	const listRef = useRef()
 
     const [comments, setComments] = useState([
-		{id: 1, comment: 'hello world'},
-		{id: 2, comment: 'hello world'},
-		{id: 3, comment: 'hello world'},
-		{id: 4, comment: 'hello world'},
-		{id: 5, comment: 'hello world'},
-		{id: 6, comment: 'hello world'},
-		{id: 7, comment: 'hello world'},
-		{id: 8, comment: 'hello world'},
-		{id: 9, comment: 'hello world'},
-		{id: 10, comment: 'hello world'},
-		{id: 11, comment: 'hello world'},
-		{id: 12, comment: 'hello world'},
-		{id: 13, comment: 'hello world'},
+		{id: 1, comment: 'hello world', reply_count: 0},
+		{id: 2, comment: 'hello world', reply_count: 0},
+		{id: 3, comment: 'hello world', reply_count: 1},
+		{id: 4, comment: 'hello world', reply_count: 4},
+		{id: 5, comment: 'hello world', reply_count: 0},
+		{id: 6, comment: 'hello world', reply_count: 0},
+		{id: 7, comment: 'hello world', reply_count: 0},
+		{id: 8, comment: 'hello world', reply_count: 0},
+		{id: 9, comment: 'hello world', reply_count: 0},
+		{id: 10, comment: 'hello world', reply_count: 0},
+		{id: 11, comment: 'hello world', reply_count: 0},
+		{id: 12, comment: 'hello world', reply_count: 0},
+		{id: 13, comment: 'hello world', reply_count: 0},
 	])
 
     const post_comment = ({ item }) => {
-
-		return(<PostComment navigation={navigation} route={route}/>)
+		return(<PostComment navigation={navigation} postCaption={postCaption}/>)
 	}
 
 	const comment = ({ item }) => {
-		return(<Comment key={item.id}/>)
+		return (<Comment comment={item.comment} reply_count={item.reply_count} scrollTo={scrollTo} id={item.id} key={item.id}/>)
 	}
 
+	// const comment = ({ item }) => {
+	// 	return useMemo(() => (<Comment comment={item.comment} reply_count={item.reply_count} scrollTo={scrollTo} id={item.id} key={item.id}/>), [item])
+	// }
 
+	// const commentMemo = useCallback(({ item }) => (
+	// 	<Comment comment={item.comment} reply_count={item.reply_count} scrollTo={scrollTo} setExpanded={setExpanded} id={item.id} key={item.id}/>
+	// ), [expanded, setExpanded])
+
+	// const commentListMemo = useMemo(() => (
+	// 	<FlatList
+	// 	ref={listRef}
+	// 	style={styles.comments_list}
+	// 	data={comments}
+	// 	ListHeaderComponent={post_comment}
+	// 	ListFooterComponent={CommentFoot}
+	// 	showsVerticalScrollIndicator={false}
+	// 	showsHorizontalScrollIndicator={false}
+	// 	CellRendererComponent={commentMemo}
+	// 	/>
+	// ), [commentMemo])
+
+	const scrollTo = (y) => {
+		listRef.current.scrollToOffset({ animated: true, offset: y })
+	}
 
     // everything in front of this
 
@@ -206,11 +246,9 @@ export default function Comments({ navigation, route }) {
             <View style={styles.comments_background}/>
             <View style={styles.comments_container}>
                 <SafeAreaView style={styles.comments_head_container}>
-
                     <CommentsClose navigation={navigation} route={route}/>
                 </SafeAreaView>
                 <FlatList
-				
                 ref={listRef}
                 style={styles.comments_list}
                 data={comments}
@@ -218,8 +256,9 @@ export default function Comments({ navigation, route }) {
                 ListFooterComponent={CommentFoot}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
-                renderItem={comment}
+                CellRendererComponent={comment}
                 />
+				{/* {commentListMemo} */}
 				
             </View>
 			<KeyboardAvoidingView keyboardVerticalOffset={7} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.comment_input_container}>
@@ -264,7 +303,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
 		height: window.height,
 		width: window.width,
-		backgroundColor: '#555555'
+		backgroundColor: '#5F5F5F'
 	},
 	comments_container: {
 		overflow: 'hidden',	
@@ -287,11 +326,13 @@ const styles = StyleSheet.create({
 		
 	},
     comments_head_container: {
+        zIndex: 2,
         alignSelf: 'flex-start',
-        zIndex: 2
     },
 	comment_head: {
+		height: '100%',
 		width: '100%',
+		backgroundColor: 'blue'
 	},
 	comment_foot: {
         height: window.height / 14
@@ -323,10 +364,11 @@ const styles = StyleSheet.create({
 	
 	comment_close_safe: {
 		position: 'absolute',
-		left: window.width / 40,
+		alignSelf: 'center',
+		top: 4,
+		left: 10,
 	},
 	comment_close_press: {
-        top: 0,
 		backgroundColor: '#5F5F5F',
 		borderRadius: 11,
         shadowColor: '#121212',
@@ -344,14 +386,54 @@ const styles = StyleSheet.create({
 		paddingLeft: window.width / 40,
 		paddingRight: window.width / 30
 	},
+	comment_safe: {
+	},
+	reply_outline_safe: {
+		bottom: 33
+	},
+	reply_outline_container: {
+		position: 'absolute',
+		zIndex: 1,
+		height: 40,
+		width: '93%',
+		bottom: -25,
+		borderBottomLeftRadius: 21,
+		borderBottomRightRadius: 21,
+		alignSelf: 'center',
+		backgroundColor: '#717171',
+		shadowColor: '#333333',
+        shadowOffset: {height: 0},
+        shadowOpacity: 1,
+        shadowRadius: 4,
+	},
+	reply_outline_container_two: {
+		position: 'absolute',
+		zIndex: 2,
+		height: 40,
+		width: '95%',
+		bottom: -27,
+		borderBottomLeftRadius: 21,
+		borderBottomRightRadius: 21,
+		alignSelf: 'center',
+		backgroundColor: '#717171',
+		shadowColor: '#333333',
+        shadowOffset: {height: 0},
+        shadowOpacity: 1,
+        shadowRadius: 4,
+	},
 	comment_container: {
+		zIndex: 3,
 		width: '97%',
 		borderRadius: 21,
-		marginBottom: window.height / 170,
+		marginBottom: 7,
 		alignSelf: 'center',
 		// alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: '#717171'
+		backgroundColor: '#717171',
+		shadowColor: '#333333',
+				shadowOffset: {height: 0},
+				shadowOpacity: 1,
+				shadowRadius: 4,
 	},
 	
 	comment_profile_container: {

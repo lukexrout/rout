@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     text_container: {
         width: window.width,
 		zIndex: 2,
-		backgroundColor: '#555555'
+		backgroundColor: '#5F5F5F'
 	},
 	text_row: {
 		flexDirection: 'row'
@@ -665,7 +665,7 @@ const styles = StyleSheet.create({
         shadowOffset: {height: 0},
         shadowOpacity: 0.5,
         shadowRadius: 4,
-		backgroundColor: '#222222',
+		backgroundColor: '#717171',
 	},
 	triangle: {
 
@@ -684,7 +684,7 @@ const styles = StyleSheet.create({
         shadowOffset: {height: 0},
         shadowOpacity: 0.4,
         shadowRadius: 4,
-		backgroundColor: '#222222'
+		backgroundColor: '#717171'
 	},
 	info_modal_background: {
 		position: 'absolute',
@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
 	modal_sep: {
 		width: '88%',
 		height: 1,
-		backgroundColor: '#333333',
+		backgroundColor: '#444444',
 		borderRadius: 50,
 		alignSelf: 'center'
 	},
@@ -705,21 +705,21 @@ const styles = StyleSheet.create({
 		width: '100%',
 	},
 	modal_share_container: {
-		backgroundColor: '#222222',
+		backgroundColor: '#717171',
 		justifyContent: 'center',
 		alignItems: 'center',
 		flex: 1,
 		borderTopLeftRadius: 10
 	},
 	modal_meta_container: {
-		backgroundColor: '#222222',
+		backgroundColor: '#717171',
 		justifyContent: 'center',
 		alignItems: 'center',
 		flex: 1,
 		borderTopLeftRadius: 10
 	},
 	modal_report_container: {
-		backgroundColor: '#222222',
+		backgroundColor: '#717171',
 		justifyContent: 'center',
 		alignItems: 'center',
 		flex: 1,

@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
 	container: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#555555'
+		backgroundColor: '#5F5F5F'
 	},
 	
 	safe_container: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
 	feed: {
 		zIndex: 1,
 		position: 'absolute',
-		backgroundColor: '#555555',
+		backgroundColor: '#5F5F5F',
 		height: window.height,
 		width: window.width,
 	},

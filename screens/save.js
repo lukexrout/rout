@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     container: {
         height: window.height,
         width: window.width,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     head_safe: {
         // flexDirection: 'row'

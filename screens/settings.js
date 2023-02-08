@@ -5,22 +5,31 @@ import { useFonts } from 'expo-font';
 const window = Dimensions.get('window')
 const back = require('../assets/img/back.png')
 
-const Setting = ({ setting }) => {
+const Setting = ({ navigation, setting, location }) => {
+
+    const navigate = (x) => {
+        navigation.navigate(x, {
+            location: 'settings'
+        })
+    }
+
     return (
-        <View style={styles.setting_container}>
+        <Pressable onPress={() => navigate(location)} style={styles.setting_container}>
             <Text style={styles.setting_text}>{setting}</Text>
-        </View>
+        </Pressable> 
     )
 }
 
 export default function Save({ navigation, route }) {
 	
     const [settings, setSettings] = useState([
-        {id: 0, setting: 'privacy'},
-        {id: 1, setting: 'data'},
-        {id: 2, setting: 'monetize'},
-        {id: 3, setting: 'password'},
-        {id: 4, setting: 'feedback'}
+        {id: 0, setting: 'privacy', location: 'privacy'},
+        {id: 1, setting: 'notifications', location: 'noti_set'},
+        {id: 2, setting: 'interests', location: 'interest_set'},
+        {id: 3, setting: 'monetize', location: 'monetize_set'},
+        {id: 4, setting: 'data', location: 'data'},
+        {id: 5, setting: 'password', location: 'password'},
+        {id: 6, setting: 'feedback', location: 'feedback'}
     ])
 
     const location = route.params.location
@@ -30,7 +39,7 @@ export default function Save({ navigation, route }) {
     }
 
     const setting = ({ item }) => {
-        return (<Setting setting={item.setting}/>)
+        return (<Setting navigation={navigation} setting={item.setting} location={item.location}/>)
     }
 
     // everything in front of this
@@ -73,7 +82,7 @@ const styles = StyleSheet.create({
     container: {
         height: window.height,
         width: window.width,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     head_safe: {
         // flexDirection: 'row'
@@ -106,19 +115,19 @@ const styles = StyleSheet.create({
     },
 
     setting_container: {
-        height: 63,
-        width: window.width / 1.1,
+        height: 55,
+        width: window.width / 1.07,
         marginBottom: 10,
         borderRadius: 21,
         alignSelf: 'center',
         justifyContent: 'center',
-        backgroundColor: '#494949'
+        backgroundColor: '#777777'
     },
     setting_text: {
         fontFamily: 'Louis',
         fontSize: 17,
         left: 21,
-        color: '#A1A1A1'
+        color: '#C2C2C2'
     },
 
     logout_container: {
@@ -130,7 +139,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#444444',
+        backgroundColor: '#555555',
     },
     logout_text: {
         fontFamily: 'Louis',
