@@ -13,11 +13,6 @@ import News from '../components/news'
 
 const profile_img = require('../assets/img/user_profile_template.png')
 
-const aws = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/353A7670-2B3B-4B7E-91CD-29640662A756_4_5005_c.jpeg'
-const aws_2 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/3B7B6670-B919-4C98-A232-9044BA65B022_4_5005_c.jpeg'
-const aws_3 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/image_lol.jpeg'
-const aws_4 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/new+found.jpeg'
-
 const window = Dimensions.get('window')
 
 const Result = ({ navigation, username, length, id }) => {
@@ -168,13 +163,6 @@ export default function Discover({ navigation }) {
 
 	const [results, setResults] = useState()
 	const [sourceList, setSourceList] = useState([
-		// {id: 0, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
-		{id: 1, type: 'image', uri: aws, content: 'hello world!'}, 
-		{id: 2, type: 'text', content: 'set for launch in exactly 2 months!'}, 
-		{id: 3, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
-		{id: 4, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
-		{id: 5, type: 'image', uri: aws, content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
-		{id: 6, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}
 	])
 	const [search, setSearch] = useState('')
 	const [count, setCount] = useState(17)

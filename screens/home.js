@@ -39,15 +39,38 @@ function Home({ navigation }) {
 	const listRef = useRef()
 
 	const [sourceList, setSourceList] = useState([
-		{id: 0, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
-		{id: 1, type: 'image', uri: aws, content: 'hello world!'}, 
-		{id: 2, type: 'text', content: 'set for launch in exactly 2 months!'}, 
-		{id: 3, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
-		{id: 4, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
-		{id: 5, type: 'image', uri: aws, content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
-		{id: 6, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}
+		
 	])
 	
+	useEffect(() => {
+		genFeed()
+	})
+
+	const genFeed = async () => {
+
+		try {
+			const response = await fetch('http://192.168.1.86:3000/download/compressed_image1675899013051.jpeg')
+			const blob = await response.blob()
+			const source = URL.createObjectURL(blob)
+
+			// setSourceList((x) => {
+			// 	x[1].uri = source
+			// 	setSourceList(x)
+			// 	console.log(x[1])
+			// })
+
+		} catch (err) {
+			console.error(err)
+		}
+
+		// fetch('http://192.168.1.86:3000/download/compressed_image1675899013051.jpeg')
+		// .then(res => res.blob())
+		// .then(blob => {
+		// 	console.log(blob)
+		// })
+		// .catch(err => console.error(err))
+	}
+
 	const scrollTo = (y) => {
 		listRef.current.scrollToOffset({ animated: true, offset: y })
 	}

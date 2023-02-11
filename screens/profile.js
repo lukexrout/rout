@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Button, View, Pressable, Image, Dimensions, SafeAreaView, FlatList, Animated } from 'react-native';
+import { StyleSheet, Text, Button, View, Pressable, Image, Dimensions, SafeAreaView, FlatList, Animated, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,30 +16,27 @@ const set_icon = require('../assets/img/cog.png')
 const dm_icon = require('../assets/img/dm_icon_2.png')
 const save_icon = require('../assets/img/save_icon_profile.png')
 
-const aws = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/353A7670-2B3B-4B7E-91CD-29640662A756_4_5005_c.jpeg'
-const aws_2 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/3B7B6670-B919-4C98-A232-9044BA65B022_4_5005_c.jpeg'
-const aws_3 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/image_lol.jpeg'
-const aws_4 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/new+found.jpeg'
-
-const Interest = ({ cent, interest }) => {
+const Interest = ({ cent, interest, pos }) => {
     return (
+        <View>
+
         <View style={styles.interest_container}>
             <View style={[styles.interest_level, {width: cent}]}/>
             <Text style={styles.interest}>{interest}</Text>
         </View>
+        {pos === 'last' ? <View style={{height: 77}}/> : <View/>}
+        </View>
     )
 }
 
-const Head = memo(({ interestOpacity, interestPress, contentOpacity, contentPress, navigate }) => {
+const Head = memo(({ interestOpacity, postOpacity, changeList, navigate }) => {
 
     return (
         <View style={styles.general_profile_container}>
             <View style={styles.head_container}>
                 <SafeAreaView style={styles.rout_container}>
-
                     <Text style={styles.rout_text}>rout</Text>
                 </SafeAreaView>
-                
             </View>
             <View style={styles.profile_container}>
                 <View style={styles.set_dm_container}>
@@ -70,7 +67,7 @@ const Head = memo(({ interestOpacity, interestPress, contentOpacity, contentPres
                                     <Text style={styles.stat_num}>1.35m</Text>
                                 </View>
                             </Pressable>
-                            <View style={{width: window.width / 20}}/>
+                            <View style={{width: 21}}/>
                             <Pressable onPress={() => navigate('following')} style={styles.stat}>
                                 <View style={styles.stat_text_container}>
                                     <Text style={styles.stat_text}>following</Text>
@@ -96,21 +93,22 @@ const Head = memo(({ interestOpacity, interestPress, contentOpacity, contentPres
                             <Text style={styles.button_text}>edit profile</Text>
                         </Pressable>
                     </View>
-                    <View style={styles.tab_container}>
-                        <Pressable onPress={() => contentPress()} style={styles.tab_text_container}>
-                            <View style={styles.tab_text_center}>
-                                <Animated.View style={[styles.tab_text_outline, {opacity: contentOpacity}]}/>
-                                <Text style={styles.tab_text}>content</Text>
-                            </View>
-                        </Pressable>
-                        <View style={styles.sep_line}/>
-                        <Pressable onPress={() => interestPress()} style={styles.tab_text_container}>
-                            <View style={styles.tab_text_center}>
-                                <Animated.View style={[styles.tab_text_outline, {opacity: interestOpacity}]}/>
-                                <Text style={styles.tab_text}>interests</Text>
-                            </View>
-                        </Pressable>
-                    </View>
+                </View>
+                <View style={styles.tab_container}>
+                    <Pressable onPress={() => changeList('posts', 'interests')} style={styles.tab_button_container}>
+                        <View style={styles.tab_button_text_container}>
+
+                            <Text style={styles.tab_button_text}>posts</Text>
+                        </View>
+                        <Animated.View style={[styles.tab_button_background, {opacity: postOpacity}]}/>
+                    </Pressable>
+                    <View style={styles.tab_sep_line}/>
+                    <Pressable onPress={() => changeList('interests', 'posts')} style={styles.tab_button_container}>
+                        <View style={styles.tab_button_text_container}>
+                            <Text style={styles.tab_button_text}>interests</Text>
+                        </View>
+                        <Animated.View style={[styles.tab_button_background, {opacity: interestOpacity}]}/>
+                    </Pressable>
                 </View>
             </View>
         </View>
@@ -127,35 +125,40 @@ const Foot = () => {
 
 export default function Profile({ navigation }) {
 
-    const contentOpacity = useRef(new Animated.Value(1)).current
+    const postOpacity = useRef(new Animated.Value(1)).current
     const interestOpacity = useRef(new Animated.Value(0)).current
 	
 	const listRef = useRef()
 
-    const [numColumns, setNumColumns] = useState(3)
-    const [state, setState] = useState('content')
+    const [state, setState] = useState('posts')
     const [username, setUsername] = useState()
+    const [postHeight, setPostHeight] = useState()
+    const [interestHeight, setInterestHeight] = useState()
     const [data, setData] = useState([
-        {id: 1, interest: 'comedy', cent: '63%'},
-        {id: 2, interest: 'animals', cent: '49%'},
-        {id: 3, interest: 'music', cent: '77%'},
-        {id: 4, interest: 'art', cent: '20%'},
-        {id: 5, interest: 'furrys', cent: '2%'},
-        {id: 6, interest: 'politics', cent: '71%'},
-        {id: 7, interest: 'memes', cent: '98%'},
-        {id: 8, interest: 'rap', cent: '51%'},
-        {id: 9, interest: 'shoes', cent: '21%'},
-        {id: 10, interest: 'business', cent: '88%'},
-        {id: 11, interest: 'startups', cent: '99%'},
+        {interest_id: 1, pos: null, interest: 'comedy', cent: '63%'},
+        {interest_id: 2, pos: null, interest: 'animals', cent: '49%'},
+        {interest_id: 3, pos: null, interest: 'music', cent: '77%'},
+        {interest_id: 4, pos: null, interest: 'art', cent: '20%'},
+        {interest_id: 5, pos: null, interest: 'furrys', cent: '2%'},
+        {interest_id: 6, pos: null, interest: 'politics', cent: '71%'},
+        {interest_id: 7, pos: null, interest: 'memes', cent: '98%'},
+        {interest_id: 8, pos: null, interest: 'rap', cent: '51%'},
+        {interest_id: 9, pos: null, interest: 'shoes', cent: '21%'},
+        {interest_id: 10, pos: null, interest: 'business', cent: '88%'},
+        {interest_id: 11, pos: 'last', interest: 'startups', cent: '99%'},
     ])
     const [sourceList, setSourceList] = useState([
-		{id: 0, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
-		{id: 1, type: 'image', uri: aws, content: 'hello world!'}, 
-		{id: 2, type: 'text', content: 'set for launch in exactly 2 months!'}, 
-		{id: 3, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
-		{id: 4, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
-		{id: 5, type: 'image', uri: aws, content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
-		{id: 6, type: 'image', uri: aws_2, content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}
+        {post_id: 1, pos: null, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
+        {post_id: 2, pos: null, type: 'text', content: 'set for launch in exactly 2 months!'}, 
+        {post_id: 3, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 4, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 5, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 6, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 7, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 8, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 9, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 10, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 11, pos: 'last', type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
 	])
 
     useEffect(() => {
@@ -170,81 +173,31 @@ export default function Profile({ navigation }) {
         })
 	}
 
-    const contentPress = () => {
-        setState('content')
-        setNumColumns(3)
-
+    const changeList = (x, y) => {
+        const changeObj = {
+            'posts': postOpacity,
+            'interests': interestOpacity
+        }
+        
         Animated.parallel([
-
-            Animated.timing(contentOpacity, {
+            Animated.timing(changeObj[x], {
                 toValue: 1,
-                duration: 277,
+                duration: 177,
                 useNativeDriver: false
             }),
-            Animated.timing(interestOpacity, {
+            Animated.timing(changeObj[y], {
                 toValue: 0,
-                duration: 277,
-                useNativeDriver: false
-            })
-
-        ]).start()
-
-    }
-
-    const interestPress = () => {
-        setState('interest')
-        setNumColumns(1)
-
-        Animated.parallel([
-
-            Animated.timing(contentOpacity, {
-                toValue: 0,
-                duration: 277,
+                duration: 177,
                 useNativeDriver: false
             }),
-            Animated.timing(interestOpacity, {
-                toValue: 1,
-                duration: 277,
-                useNativeDriver: false
-            })
-
         ]).start()
-
+        setState(x)
     }
 
     const scrollTo = (y) => {
-		listRef.current.scrollToOffset({ animated: true, offset: y })
+        const headHeight = 484
+		listRef.current.scrollTo({ animated: true, y: y + headHeight})
 	}
-
-    const content = ({ item }) => {
-		return (<Content 
-			source={item} 
-			id={item.id} 
-			key={item.id} 
-			scrollTo={scrollTo} 
-			navigation={navigation}
-            location={'profile'}
-			/>)
-    }
-
-    const interest = ({ item }) => {
-        return (<Interest interest={item.interest} cent={item.cent}/>)
-    }
-
-    const head = () => {
-        return (
-        <Head 
-        navigate={navigate}
-        interestOpacity={interestOpacity} 
-        interestPress={interestPress} 
-        contentOpacity={contentOpacity} 
-        contentPress={contentPress}/>
-        )
-    }
-
-    const foot = ({ item }) => {
-        return (<Foot/>)
-    }
     
     // everything in front of this
 
@@ -264,21 +217,52 @@ export default function Profile({ navigation }) {
                         <Image style={styles.create} source={plus_img}/>
                     </Pressable>
                 </SafeAreaView>
-                <FlatList
-                    ref={listRef}
-                    style={styles.list_container}
-                    key={data}
-				    CellRendererComponent={state === 'content' ? content : interest}
-                    data={state === 'content' ? sourceList : data}
-                    numColumns={1}
-                    contentContainerStyle={state === 'content' ? {alignItems: 'flex-start'} : {alignItems: 'center'}}
-                    ListHeaderComponent={head}
-                    ListHeaderComponentStyle={{backgroundColor: '#5F5F5F'}}
-                    ListFooterComponent={foot}
-                    keyExtractor={item => item.id}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                />
+                <ScrollView
+                ref={listRef} 
+                style={{position: 'absolute', height: window.height}}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}>
+                    <Head 
+                    navigate={navigate}
+                    changeList={changeList} 
+                    interestOpacity={interestOpacity} 
+                    postOpacity={postOpacity}/>
+                    <View 
+                    style={[styles.list_container, 
+                    state === 'posts' ? {height: postHeight} : {height: interestHeight}]}>
+                        <Animated.View 
+                        style={[styles.posts_container, 
+                        state === 'posts' ? {zIndex: 1, opacity: postOpacity} : {zIndex: 0, opacity: postOpacity}]}
+                        onLayout={( event ) => {
+                        const {x, y, width, height} = event.nativeEvent.layout
+                        setPostHeight(height)}}>
+                            {sourceList.map((item) => (
+                                <Content 
+                                source={item} 
+                                id={item.id}
+                                key={item.post_id} 
+                                scrollTo={scrollTo} 
+                                navigation={navigation}
+                                location={'profile'}
+                                pos={item.pos}/>
+                            ))}
+                        </Animated.View>
+                        <Animated.View 
+                        style={[styles.interests_container, 
+                        state === 'interests' ? {zIndex: 1, opacity: interestOpacity} : {zIndex: 0, opacity: interestOpacity}]}
+                        onLayout={( event ) => {
+                        const {x, y, width, height} = event.nativeEvent.layout
+                        setInterestHeight(height)}}>
+                            {data.map((item) => (
+                                <Interest 
+                                key={item.interest_id}
+                                interest={item.interest} 
+                                cent={item.cent}
+                                pos={item.pos}/>
+                            ))}
+                        </Animated.View>
+                    </View>
+                </ScrollView>
             </View> 
         </View>
     )
@@ -286,9 +270,8 @@ export default function Profile({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-		alignItems: 'center',
-        backgroundColor: '#555555',
+        height: window.height,
+        backgroundColor: '#5F5F5F',
     },
     create_center: {
         width: window.width / 777,
@@ -323,6 +306,7 @@ const styles = StyleSheet.create({
     },
     general_profile_container: {
         width: window.width,
+        backgroundColor: '#5F5F5F'
     },
     head_container: {
         height: 110,
@@ -356,7 +340,7 @@ const styles = StyleSheet.create({
     dm: {
         width: 32,
         height: 24,
-        right: window.width / 270
+        right: 2
     },
     set_container: {
         marginVertical: 11,
@@ -377,14 +361,15 @@ const styles = StyleSheet.create({
         height: 27
     },
     info_container: {
-        width: window.width / 1.5,
+        width: 300,
     },
     user_container: {
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: window.width / 30,
-        marginBottom: window.width / 30
+        marginTop: 10,
+        marginBottom: 10,
+        // backgroundColor: 'white'
     },
     user: {
         fontFamily: 'Louis',
@@ -403,7 +388,7 @@ const styles = StyleSheet.create({
     },
     stat_container: {
         width: '100%',
-        marginBottom: 17,
+        marginBottom: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -413,34 +398,34 @@ const styles = StyleSheet.create({
     },
     stat_text_container: {
         backgroundColor: '#595959',
-        borderRadius: window.width / 70,
-        marginBottom: window.width / 120
+        borderRadius: 7,
+        marginBottom: 4
     },
     stat_text: {
         color: '#C2C2C2',
         fontFamily: 'Louis',
         fontSize: 17,
-        marginTop: window.width / 70,
-        marginBottom: window.width / 70,
-        marginLeft: window.width / 12,
-        marginRight: window.width / 12,
+        marginTop: 7,
+        marginBottom: 7,
+        marginLeft: 40,
+        marginRight: 40,
     },
     stat_num_container: {
         backgroundColor: '#595959',
-        borderRadius: window.width / 70,
+        borderRadius: 7,
     },
     stat_num: {
         color: '#C2C2C2',
         fontFamily: 'Louis',
         fontSize: 17,
-        marginTop: window.width / 70,
-        marginBottom: window.width / 70,
-        marginLeft: window.width / 40,
-        marginRight: window.width / 40,
+        marginTop: 4,
+        marginBottom: 4,
+        marginLeft: 10,
+        marginRight: 10,
     },
     sep_stat: {
         width: '70%',
-        height: window.width / 170,
+        height: 2,
         alignSelf: 'center',
         borderRadius: 50,
         backgroundColor: '#595959'
@@ -469,60 +454,71 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#C2C2C2',
-        borderRadius: window.width / 70,
-        width: window.width / 2.8
+        borderRadius: 7,
+        width: 144
     },
     button_edit: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#C2C2C2',
-        borderRadius: window.width / 70,
-        width: window.width / 2.8
+        borderRadius: 7,
+        width: 144
     },
     button_text: {
         fontFamily: 'Louis',
         fontSize: 17,
-        marginVertical: window.width / 70,
+        marginVertical: 7,
         color: '#555555'
-        
     },
     tab_container: {
-        width: window.width,
-        height: window.height / 20,
-        backgroundColor: '#5F5F5F',
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: 44,
+        width: 400,
         flexDirection: 'row',
-        alignSelf: 'center'
+        alignItems: 'center',
     },
-    sep_line: {
-        position: 'absolute',
-        width: window.width / 170,
-        height: '59%',
-        backgroundColor: '#717171',
-        borderRadius: 50
-    },
-    tab_text_container: {
-        width: window.width / 2,
+    tab_button_container: {
+        flex: 1,
+        alignItems: 'center',
         justifyContent: 'center',
+    },
+    tab_sep_line: {
+        width: 2,
+        height: '70%',
+        borderRadius: 50,
+        backgroundColor: '#555555'
+    },
+    tab_button_text_container: {
+        zIndex: 1,
         alignItems: 'center'
     },
-    tab_text_center: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    tab_text_outline: {
-        borderRadius: window.width / 70,
-        height: window.height / 28,
-        width: window.width / 2.2,
-        backgroundColor: '#6A6A6A',
-    },
-    tab_text: {
-        position: 'absolute',
+    tab_button_text: {
         fontFamily: 'Louis',
-        fontSize: 17,
+        fontSize: 21,
         color: '#C2C2C2'
     },
+    tab_button_background: {
+        zIndex: 0,
+        position: 'absolute',
+        height: 33,
+        width: 180,
+        borderRadius: 7,
+        backgroundColor: '#555555'
+    },
+    list_container: {
+
+    },
+    list_footer: {
+    },
+    posts_container: {
+        position: 'absolute'
+    },
+    interests_container: {
+        position: 'absolute',
+        alignSelf: 'center'
+    },
+
+
+
     content_container: {
         height: window.height / 4.9,
         width: window.width,

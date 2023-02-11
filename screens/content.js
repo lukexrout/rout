@@ -33,14 +33,9 @@ const collapse = require('../assets/img/collapse_icon.png')
 const vertical_fill = require('../assets/img/vertical_fill.jpeg')
 const landscape_image = require('../assets/img/landscape_image.jpeg')
 
-const aws = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/353A7670-2B3B-4B7E-91CD-29640662A756_4_5005_c.jpeg'
-const aws_2 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/3B7B6670-B919-4C98-A232-9044BA65B022_4_5005_c.jpeg'
-const aws_3 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/image_lol.jpeg'
-const aws_4 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/new+found.jpeg'
-
 const window = Dimensions.get('window')
 
-export default function Content ({ navigation, source, id, scrollTo, location }) {
+export default function Content ({ navigation, source, id, scrollTo, location, pos }) {
 
 	const postRef = useRef().current
 	const collapseRef = useRef(new Animated.Value(0)).current
@@ -375,6 +370,7 @@ export default function Content ({ navigation, source, id, scrollTo, location })
 				</View>
 			</View>
 			}
+        	{pos === 'last' ? <View style={{height: 77}}/> : <View/>}
 			
 		</View>
 	)

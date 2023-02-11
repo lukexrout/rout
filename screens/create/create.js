@@ -62,41 +62,66 @@ export default function Create({ navigation, route }) {
 
     })
 
-    const handleURL = async () => {
+    // const handleURL = async () => {
 
-		const obj = {
-			username: "schaffer_luke"
-		}
+	// 	const obj = {
+	// 		username: "schaffer_luke"
+	// 	}
 
-		const response = await fetch('https://804qbtsf9h.execute-api.us-east-1.amazonaws.com/rout_data/upload-url', {
-			method: 'POST',
-			body: JSON.stringify(obj)
-		})
+	// 	const response = await fetch('https://804qbtsf9h.execute-api.us-east-1.amazonaws.com/rout_data/upload-url', {
+	// 		method: 'POST',
+	// 		body: JSON.stringify(obj)
+	// 	})
 	
-		const json = await response.json();
+	// 	const json = await response.json();
 
-		return json
-	}
+	// 	return json
+	// }
 
     const handleUpload = async () => {
 
-		const URL = await handleURL()
+		// const URL = 'http://192.168.1.86:3000/upload'
 
-		const imageExt = uri.split('.').pop()
+		// const imageExt = uri.split('.').pop()
 
-		let image = await fetch(uri)
-		image = await image.blob()
+		// let image = await fetch(uri)
+		// image = await image.blob()
 
-		await fetch(URL, {
-			method: 'PUT',
-			body: image,
-			headers: {
-				Accept: `image/${imageExt}`,
-				'Content-Type': `image/${imageExt}`,
-			}
-		})
-		.then((res) => console.log(JSON.parse(JSON.stringify(res))))
-		.catch((err) => console.error(err))
+		// await fetch(URL, {
+		// 	method: 'PUT',
+		// 	body: image,
+		// 	headers: {
+		// 		Accept: `image/${imageExt}`,
+		// 		'Content-Type': `image/${imageExt}`,
+		// 	}
+		// })
+		// .then((res) => console.log(JSON.parse(JSON.stringify(res))))
+		// .catch((err) => console.error(err))
+
+        const formData = new FormData()
+        formData.append('file', {
+            uri: uri,
+            type: 'image/jpeg',
+            name: 'hello_world.jpeg'
+        })
+
+        fetch ('http://192.168.1.86:3000/upload', {
+        // fetch ('http://104.156.249.69:3000/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error(res.statusText)
+            }
+            return res.json()
+        })
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
 
 	}
 
@@ -109,18 +134,8 @@ export default function Create({ navigation, route }) {
     }
 
     const findInterest = ({ item }) => {
-
-
-        return (
-            <Find interest={item.interest} key={item.id}/>
-        )
+        return (<Find interest={item.interest} key={item.id}/>)
     }
-
-    const inputScroll = () => {
-        console.log('hello world')
-        // inputRef.current.scrollTo({ animated: true, y: 0 })
-    }
-
 
     // everything in front of this
 
@@ -154,14 +169,14 @@ export default function Create({ navigation, route }) {
                     <View style={styles.caption_row}>
                         <Pressable onLayout={( event ) => {
                             const {x, y, width, height} = event.nativeEvent.layout
-                            console.log(height)
+                            // console.log(height)
                         }} 
                         onPress={() => inputRef.current.focus()} style={styles.caption_container}>
                             {/* still needs fixing when reaching text end */}
                             <TextInput
                             ref={inputRef}
                             placeholderTextColor={'#999999'}
-                            placeholder='encouraging others?'
+                            placeholder='being thruthful?'
                             keyboardAppearance='dark'
                             selectionColor={'#696969'}
                             style={styles.caption}

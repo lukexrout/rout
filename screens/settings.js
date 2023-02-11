@@ -26,10 +26,9 @@ export default function Save({ navigation, route }) {
         {id: 0, setting: 'privacy', location: 'privacy'},
         {id: 1, setting: 'notifications', location: 'noti_set'},
         {id: 2, setting: 'interests', location: 'interest_set'},
-        {id: 3, setting: 'monetize', location: 'monetize_set'},
-        {id: 4, setting: 'data', location: 'data'},
-        {id: 5, setting: 'password', location: 'password'},
-        {id: 6, setting: 'feedback', location: 'feedback'}
+        {id: 3, setting: 'data', location: 'data'},
+        {id: 4, setting: 'password', location: 'password'},
+        {id: 5, setting: 'feedback', location: 'feedback'}
     ])
 
     const location = route.params.location

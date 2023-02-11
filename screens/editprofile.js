@@ -76,24 +76,138 @@ export default function EditProfile({ navigation, route }) {
                     </View>
                     <View style={[styles.sep_stat, {width: 77}]}/>
                 </View>
+                <View style={styles.profile_buttons_filler_container}>
+                    <View style={styles.profile_button_filler_container}>
+                        <View style={styles.profile_button_filler}/>
+                    </View>
+                    <View style={styles.profile_button_filler_sep}/>
+                    <View style={styles.profile_button_filler_container}>
+                        <View style={styles.profile_button_filler}/>
+                    </View>
+                </View>
+                <View style={styles.profile_tab_filler_container}>
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={styles.profile_tab_filler}/>
+                    </View>
+                    <View style={styles.profile_tab_sep}/>
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={styles.profile_tab_filler}/>
+                    </View>
+                </View>
             </View>
+            <View style={styles.filler_container}>
+                <View style={styles.filler_text_post}>
+                    <View style={styles.filler_text_post_profile}>
+                        <View style={styles.filler_text_post_profile_img}/>
+                        <View style={styles.filler_text_post_profile_user}/>
+                    </View>
+                    <View style={styles.filler_text_post_text_container}>
 
-            <View style={styles.toggle_container}>
-                <View style={styles.promote_container}>
-                    <View style={styles.promote_text_container}>
-                        <Text style={styles.promote_text}>monetize</Text>
-                    </View>    
-                    <View style={styles.promote_toggle_container}>
-                        <View style={styles.promote_toggle}>
-                            <View style={styles.promote_circle}>
-
-                            </View>
+                        <View style={[styles.filler_text_post_text, {
+                            borderTopLeftRadius: 7,
+                            borderTopRightRadius: 7,
+                            borderBottomRightRadius: 7,
+                            
+                        }]}/>
+                        <View style={[styles.filler_text_post_text, {
+                            width: 222,
+                            borderBottomRightRadius: 7,
+                            borderBottomLeftRadius: 7,
+                        }]}/>
+                    </View>
+                    <View style={styles.filler_text_post_buttons_container}>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
                         </View>
                     </View>
                 </View>
+                <View style={styles.filler_text_post}>
+                    <View style={styles.filler_text_post_profile}>
+                        <View style={styles.filler_text_post_profile_img}/>
+                        <View style={styles.filler_text_post_profile_user}/>
+                    </View>
+                    <View style={styles.filler_text_post_text_container}>
 
+                        <View style={[styles.filler_text_post_text, {
+                            borderTopLeftRadius: 7,
+                            borderTopRightRadius: 7,
+                        }]}/>
+                        <View style={[styles.filler_text_post_text, {
+                        }]}/>
+                        <View style={[styles.filler_text_post_text, {
+                            borderBottomRightRadius: 7,
+                            
+                        }]}/>
+                        <View style={[styles.filler_text_post_text, {
+                            width: 222,
+                            borderBottomRightRadius: 7,
+                            borderBottomLeftRadius: 7,
+                        }]}/>
+                    </View>
+                    <View style={styles.filler_text_post_buttons_container}>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.filler_text_post}>
+                    <View style={styles.filler_text_post_profile}>
+                        <View style={styles.filler_text_post_profile_img}/>
+                        <View style={styles.filler_text_post_profile_user}/>
+                    </View>
+                    <View style={styles.filler_text_post_text_container}>
+
+                        <View style={[styles.filler_text_post_text, {
+                            borderTopLeftRadius: 7,
+                            borderTopRightRadius: 7,
+                            borderBottomRightRadius: 7,
+                            borderBottomLeftRadius: 7,
+                            
+                        }]}/>
+                    </View>
+                    <View style={styles.filler_text_post_buttons_container}>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                        <View style={styles.filler_text_post_button_container}>
+                            <View style={styles.filler_text_post_button}/>
+                        </View>
+                    </View>
+                </View>
             </View>
-
         </View>
     )
 }
@@ -102,7 +216,7 @@ const styles = StyleSheet.create({
     container: {
         height: window.height,
         width: window.width,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     head_safe: {
         // flexDirection: 'row'
@@ -198,7 +312,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     stat_text_container: {
-        backgroundColor: '#616161',
+        backgroundColor: '#595959',
         borderRadius: window.width / 70,
         marginBottom: window.width / 120
 
@@ -214,7 +328,7 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     stat_num_container: {
-        backgroundColor: '#616161',
+        backgroundColor: '#595959',
         borderRadius: window.width / 70,
     },
     stat_num: {
@@ -231,10 +345,9 @@ const styles = StyleSheet.create({
         height: window.width / 170,
         alignSelf: 'center',
         borderRadius: 50,
-        backgroundColor: '#616161'
+        backgroundColor: '#595959'
     },
     bio_container: {
-        // flex: 1,
         width: '110%',
         paddingVertical: 10,
         paddingHorizontal: 10,
@@ -253,54 +366,107 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: '#C2C2C2',
         textAlign: 'center'
-    },
+    },    
 
-
-
-
-    toggle_container: {
-        flex: 1
-    },
-    promote_container: {
-        height: 55,
-        width: window.width / 1.1,
-        borderRadius: 17,
+    profile_buttons_filler_container: {
+        width: '100%',
+        marginBottom: 10,
         flexDirection: 'row',
-        alignSelf: 'center',
-        alignItems: 'center',
-        backgroundColor: '#777777'
-    },
-    promote_text_container: {
-        marginLeft: 17,
-        flex: 1,
-        // backgroundColor: 'blue'
-    },
-    promote_text: {
-        fontFamily: 'Louis',
-        fontSize: 17,
-        color: '#C2C2C2',
-    },
-
-    promote_toggle_container: {
-        height: '100%',
-        width: 70,
-        alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'white'
     },
-    promote_toggle: {
-        height: 30,
-        width: 50,
-        borderRadius: 50,
+    profile_button_filler_sep: {
+        width: 49
+    },
+    profile_button_filler_container: {
         justifyContent: 'center',
+    },
+    profile_button_filler: {
+        height: 33,
+        width: 144,
+        borderRadius: 7,
         backgroundColor: '#555555'
     },
-    promote_circle: {
-        height: 26,
-        width: 26,
-        left: 2,
+    profile_tab_filler_container: {
+        height: 44,
+        width: 400,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    profile_tab_filler: {
+        height: 33,
+        width: 180,
+        borderRadius: 7,
+        backgroundColor: '#555555'
+    },
+    profile_tab_sep: {
+        // flex: 1,
+        height: '70%',
+        width: 2,
+        backgroundColor: '#555555'
+    },
+
+    filler_container: {
+        flex: 1,
+        overflow: 'hidden',
+        borderTopLeftRadius: 11,
+        borderTopRightRadius: 11,
+        width: '100%',
+    },
+    filler_text_post: {
+        // height: 144,
+        // flex: 1,
+        width: '100%',
+        backgroundColor: '#555555'
+    },
+    filler_text_post_profile: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+        marginLeft: 10,
+    },
+    filler_text_post_profile_img: {
+        height: 50,
+        width: 50,
         borderRadius: 50,
-        backgroundColor: '#C2C2C2'
+        backgroundColor: '#5F5F5F'
+    },
+    filler_text_post_profile_user: {
+        height: 25,
+        width: 100,
+        marginLeft: 10,
+        borderRadius: 7,
+        backgroundColor: '#5F5F5F'
+    },
+    filler_text_post_text_container: {
+        marginTop: 10,
+
+    },
+    filler_text_post_text: {
+        height: 21,
+        width: 400,
+        marginLeft: 10,
+        backgroundColor: '#5F5F5F'
+    },
+    filler_text_post_buttons_container: {
+        // height: 60,
+        width: '100%',
+        marginTop: 20,
+        marginBottom: 10,
+        flexDirection: 'row',
+        // backgroundColor: 'white'
+    },
+    filler_text_post_button_container: {
+        // height: '100%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: 'blue',
+    },
+    filler_text_post_button: {
+        height: 25,
+        width: 25,
+        borderRadius: 7,
+        backgroundColor: '#5F5F5F'
     }
-    
+
 })
