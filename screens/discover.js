@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, ScrollView, Keyboard, Pressable, Dimensions, Animated, SafeAreaView, Image, FlatList, useWindowDimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ScrollView, Keyboard, Pressable, Dimensions, Animated, SafeAreaView, Image, FlatList, useWindowDimensions, ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
@@ -15,7 +15,7 @@ const profile_img = require('../assets/img/user_profile_template.png')
 
 const window = Dimensions.get('window')
 
-const Result = ({ navigation, username, length, id }) => {
+const Result = ({ navigation, item }) => {
 
 	const resultsOpacity = useRef(new Animated.Value(0)).current
 
@@ -23,48 +23,51 @@ const Result = ({ navigation, username, length, id }) => {
 		navigation.navigate('_user', {
 			location: 'discover'
 		})
-
 		AsyncStorage.setItem('discover_user', username)
-
 	}
-
 	useEffect(() => {
 		Animated.timing(resultsOpacity, {
 			toValue: 1,
 			duration: 700,
 			useNativeDriver: false
 		}).start()
-
-		
 	}, [resultsOpacity])
-
 	return (
 		<Animated.View style={[styles.result_container, {opacity: resultsOpacity}]}>
 			<Pressable onPress={profilePress} style={styles.result_press}>
-				<Image style={styles.result_image} source={profile_img}/>
-				<View style={{left: window.width / 50}}>
-					<Text style={styles.result_username}>{username}</Text>
+				<View style={styles.result_row}>
+					<View style={styles.result_image_container}>
+						<Image style={styles.result_image} source={profile_img}/>
+					</View>
+					<View style={styles.result_username_container}>
+						<Text style={styles.result_username}>{item[0]}</Text>
+					</View>
+				</View>
+				<View style={styles.result_end_container}>
+					<View style={styles.result_date_container}>
+						<Text style={styles.result_date}>{item[1]}</Text>
+					</View>
+					<View style={styles.result_stat_container}>
+						<View style={styles.result_stat_text_container}>
+							<Text style={styles.result_stat_text}>{item[2]}</Text>
+						</View>
+						<View style={styles.result_stat_sep}/>
+						<View style={styles.result_stat_text_container}>
+							<Text style={styles.result_stat_text}>{item[3]}</Text>
+						</View>
+					</View>
 				</View>
 			</Pressable>
 		</Animated.View>
 	)
 }
-
-
-
-
-
-
-
 const Hash = ({ hash }) => {
-
 	return (
 		<View style={styles.hashtag_outline}>
 			<Text style={styles.hashtag_text}>{hash}</Text>
 		</View>
 	)
 }
-
 const Acc = ({ acc }) => {
 
 	return (
@@ -73,8 +76,6 @@ const Acc = ({ acc }) => {
 		</View>
 	)
 }
-
-
 const DiscHead = () => {
 
 	const [hash, setHash] = useState([
@@ -98,7 +99,6 @@ const DiscHead = () => {
 	return (
 		<View style={styles.disc_head}>
 			<View>
-
 				<SafeAreaView style={styles.disc_head_safe}>
 					
 				</SafeAreaView>
@@ -139,15 +139,6 @@ const DiscHead = () => {
 	)
 }
 
-
-
-
-
-
-
-
-
-
 const Disc = () => {
 
 	return (
@@ -160,29 +151,43 @@ const Disc = () => {
 export default function Discover({ navigation }) {
 
 	const listRef = useRef()
-
-	const [results, setResults] = useState()
-	const [sourceList, setSourceList] = useState([
-	])
-	const [search, setSearch] = useState('')
-	const [count, setCount] = useState(17)
-	const [momentum, setMomentum] = useState(false)
-	
 	const searchRef = useRef()
-	const topRef = useRef(new Animated.Value(0)).current
+	const discAnim = useRef(new Animated.Value(1)).current
+	const resultAnim = useRef(new Animated.Value(0)).current
+
+	const [sourceList, setSourceList] = useState([
+		{post_id: 1, pos: null, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
+        {post_id: 2, pos: null, type: 'text', content: 'set for launch in exactly 2 months!'}, 
+        {post_id: 3, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 4, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 5, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 6, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 7, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 8, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 9, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 10, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 11, pos: 'last', type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+	])
+	const [status, setStatus] = useState('disc')
+	const [search, setSearch] = useState('')
+	const [results, setResults] = useState([])
+	const [count, setCount] = useState(8)
+	const [offset, setOffset] = useState('0')
+	const [momentum, setMomentum] = useState(false)
+	const [resultLoading, setResultLoading] = useState(false)
 
 	const continuousResult = ({ item }) => {
-		return (<Result navigation={navigation} username={item} id={results.indexOf(item)} length={results.length} />)
+		return (
+			<Result 
+			navigation={navigation} 
+			item={item}/>)
 	}
-	
 	const discHead = ({ item }) => {
 		return (<DiscHead/>)
 	}
-
 	const scrollTo = (y) => {
 		listRef.current.scrollToOffset({ animated: true, offset: y })
 	}
-
 	const content = ({ item }) => {
 		return (<Content 
 			source={item} 
@@ -191,74 +196,111 @@ export default function Discover({ navigation }) {
 			scrollTo={scrollTo} 
 			navigation={navigation}
             location={'discover'}
-			/>)
+			pos={item.pos}/>)
     }
-
 	const headResult = () => {
 		return (<View style={styles.result_head}/>)
 	}
 	const footResult = () => {
-		return (<View style={styles.result_foot}/>)
+		return (
+			<View>
+				{resultLoading ? 
+					<View style={{top: 40}}>
+						<ActivityIndicator size="small" color="#C2C2C2"/>
+					</View>
+				 : <View style={styles.result_foot}/>}
+			</View>
+		)
 	}
-
 	const searchPress = () => {
 		searchRef.current.focus()
 	}
 
-	const initialLoad = (i) => {
-
-		if (i !== '') {
-			Animated.timing(topRef, {
-				toValue: window.height,
-				duration: 177,
-				useNativeDriver: false
-			}).start()
-		} else if (i === '') {
-			Animated.timing(topRef, {
-				toValue: 0,
-				duration: 177,
-				useNativeDriver: false
-			}).start()
-		}
-
-		setSearch(i)
-		if (search === '') {
-
-
-			const searchInput = i.toLowerCase()
-			axios.post('http://localhost:3000/search', { _user: searchInput, count: count})
-			.then((res) => {
-				setResults(res.data)
+	const handleSearchFetch = async (x, y, z) => {
+		await fetch('http://192.168.1.86:3000/search', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({
+				search: x,
+				count: y,
+				offset: z
 			})
-			.catch((err) => console.error(err.message))
-		} else {
-			loadUsers(i)
-		}
-
-	}
-
-	const loadUsers = () => {
-
-		const searchInput = search.toLowerCase()
-		axios.post('http://localhost:3000/search', { _user: 'u', count: count + 5})
+		}).then((res) => res.json())
 		.then((res) => {
-			const data = res.data
-			const addArr = []
-			let o = null
-
-			for (let i = 0; i <= data.length - 1; i++) {
-				{results.includes(data[i]) === false ? addArr.push(data[i]) : o = 0}
-			}
-
-			setResults((i) => [...i, ...addArr])
+			// setResults([...results, ...res])
+			console.log('res: ' + res)
+			setResults(res)
 			setMomentum(false)
-
+			// setOffset((parseInt(offset) + count).toString())
 		})
-		.then(() => setCount(i => i + 5))
-		.catch((err) => console.error(err))
-
+		.catch((err) => console.error(err.message))
 	}
 
+	const searchUser = async (i) => {
+		if (i === '') {
+			setOffset('0')
+			setSearch('')
+			setResults([])
+			setStatus('disc')
+			Animated.parallel([
+				Animated.timing(discAnim, {
+					toValue: 1,
+					duration: 477,
+					useNativeDriver: false
+				}),
+				Animated.timing(resultAnim, {
+					toValue: 0,
+					duration: 177,
+					useNativeDriver: false
+				}),
+			]).start()
+		} else if (i !== '') {
+			const searchInput = i.toLowerCase()
+
+			console.log('results: ' + results)
+			// const filteredArr = results !== undefined ? results.filter(arr => arr[0].startsWith(searchInput)) : []
+			const filteredArr = []
+			console.log('filteredArr: ' + filteredArr)
+			const existingDifference = results.length - filteredArr.length
+			console.log('existingDifference: ' + existingDifference)
+			const actualCount = existingDifference > 0 ? existingDifference.toString() : count
+			console.log('actualCount: ' + actualCount)
+			const actualOffset = existingDifference > 0 ? filteredArr.length.toString() : offset
+			console.log('actualOffset: ' + actualOffset)
+
+
+			// if (i.length > 1) {
+			// 	var newArr = [...results.splice(0, 4), ['hello'], ['world'], ['hello'], ['world']]
+			// 	setResults(newArr)
+			// }
+
+			setResultLoading(true)
+			setSearch(searchInput)
+			if (status !== 'result') {
+				Animated.parallel([
+					Animated.timing(discAnim, {
+						toValue: 0,
+						duration: 0,
+						useNativeDriver: false
+					}),
+					Animated.timing(resultAnim, {
+						toValue: 1,
+						duration: 477,
+						useNativeDriver: false
+					}),
+				]).start(() => setStatus('result'))
+			}
+			handleSearchFetch(searchInput, count, actualOffset)
+
+			// if (i.length === 1) {
+			// 	handleSearchFetch(searchInput, actualCount, actualOffset)
+			// } else if (i.length > 1) {
+			// 	handleSearchFetch(searchInput, actualCount, actualOffset)
+			// }
+			setResultLoading(false)
+		}
+	}
+	
 	// everything in front of this
 
 	const [loaded] = useFonts({
@@ -271,154 +313,125 @@ export default function Discover({ navigation }) {
 	
 	return (
 		<View style={styles.container}>			
-
 				<SafeAreaView style={styles.search_safe}>
 					<Pressable onPress={searchPress} style={styles.search_press}>
 						<TextInput
+						// value={search}
 						ref={searchRef}
-						value={search}
+						returnKeyType='done'
 						placeholder='search'
 						placeholderTextColor={'#595959'}
 						selectionColor={'#696969'}
 						keyboardAppearance='dark'
-						onChangeText={i => initialLoad(i)}
-						style={styles.search}
-						/>
+						onChangeText={i => searchUser(i)}
+						style={styles.search}/>
 					</Pressable>
 				</SafeAreaView>
-
-					
-
-
-
-				<Animated.View style={[styles.disc_safe, {top: topRef}]}>
-
+				<Animated.View style={[styles.disc_safe, {zIndex: discAnim, opacity: discAnim}]}>
 					<FlatList
 					ref={listRef}
+					initialNumToRender={1}
+					maxToRenderPerBatch={2}
+					removeClippedSubviews={true}
 					style={styles.disc_list}
 					data={sourceList}
 					CellRendererComponent={content}
 					ListHeaderComponent={discHead}
 					showsVerticalScrollIndicator={false}
-					showsHorizontalScrollIndicator={false}
-					/>
+					showsHorizontalScrollIndicator={false}/>
 				</Animated.View>
-
-
-				{search !== '' ? 
-				<View style={[styles.result_safe]}>
+				<Animated.View style={[styles.result_safe, {zIndex: resultAnim, opacity: resultAnim}]}>
 					<FlatList 
 					data={results}
+					initialNumToRender={1}
+					maxToRenderPerBatch={1}
+					disableVirtualization={true}
+					removeClippedSubviews={true}
 					ListHeaderComponent={headResult}
 					ListFooterComponent={footResult}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
 					renderItem={continuousResult}
 					onMomentumScrollBegin={() => setMomentum(true)}
-					onEndReached={momentum === true ? loadUsers() : null}
-					onEndReachedThreshold={0}
-					/>
-				</View>
-				
-				: <View/>}
-			
+					onEndReached={momentum === true ? searchUser(search) : null}
+					onEndReachedThreshold={0}/>
+				</Animated.View>
 		</View>
 	);
 }
 
-
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: '#5F5F5F',
-        height: window.width,
+        height: window.height,
         width: window.width,
 	},
 	search_safe: {
 		zIndex: 2,
-		// width: 1
 	},
 	search_press: {
-		// position: 'absolute',
 		alignSelf: 'center',
 		backgroundColor: '#C2C2C2',
-		height: window.height / 24,
+		height: 37,
 		width: window.width / 1.1,
 		justifyContent: 'center',
-		borderRadius: window.width / 70,
+		borderRadius: 11,
 		shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.5,
-        shadowRadius: window.width / 70,
-
+        shadowRadius: 4,
 	},
 	search: {
-		left: window.width / 40,
+		width: '95%',
+		left: 10,
 		fontFamily: 'Louis',
 		fontSize: 17
 	},
-
-
-
-
-
-
-
 	disc_safe: {
-
 		position: 'absolute',
 		height: window.height,
 		width: window.width,
 	},
 	disc_list: {
-
 		zIndex: 1,
-		// position: 'absolute',
 		height: window.height,
 		width: window.width,
 		alignSelf: 'center',
 		backgroundColor: '#5F5F5F',
 	},
 	disc_head: {
-		height: window.height / 2.3,
+		height: 377,
 		width: window.width,
 		alignItems: 'center',
 		backgroundColor: '#5F5F5F',
 	},
 	disc_head_safe: {
-
 	},
-	
 	disc_trending: {
-		// marginTop: 47,
 		width: window.width / 1.1,
 		flex: 1,
-		borderRadius: window.width / 40,
+		borderRadius: 11,
 		backgroundColor: '#696969',
 		shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.2,
-        shadowRadius: window.width / 70,
+        shadowRadius: 4,
 	},
 	trending_container: { 
 		height: 28,
-		// flex: 1,
 		width: '100%',
 		backgroundColor: '#888888',
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
-		borderTopRightRadius: window.width / 40,
-		borderTopLeftRadius: window.width / 40,
+		borderTopRightRadius: 11,
+		borderTopLeftRadius: 11,
 	},
 	trending_text: {
 		fontFamily: 'Louis',
 		fontSize: 17,
 		color: '#C2C2C2'
 	},
-	
-
-
-
 	interact_container: {
 		flex: 1,
 		flexDirection: 'row'
@@ -461,13 +474,11 @@ const styles = StyleSheet.create({
 		flexDirection: 'column'
 	},
 	sep: {
-		// position: 'absolute',
 		flex: 1,
 		width: 1,
 		alignSelf: 'center',
 		backgroundColor: '#494949'
 	},
-
 	account_container: {
 		flex: 1
 	},
@@ -502,23 +513,19 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 		color: '#C2C2C2'
 	},
-
-
-
-
 	trend_post: {
 		height: 28,
 		width: window.width / 1.04,
 		backgroundColor: '#888888',
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginTop: window.height / 77,
-		marginBottom: window.height / 77,
-		borderRadius: window.width / 70,
+		marginTop: 10,
+		marginBottom: 10,
+		borderRadius: 11,
 		shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.2,
-        shadowRadius: window.width / 70,
+        shadowRadius: 4,
 	},
 	trend_post_text: {
 		fontFamily: 'Louis',
@@ -526,28 +533,17 @@ const styles = StyleSheet.create({
 		color: '#C2C2C2'
 	},
 	disc_container: {
-		width: '100.07%',
-		height: window.height * 2,
-		borderTopLeftRadius: window.width / 70,
-		borderTopRightRadius: window.width / 70,
+		width: '100%',
+		height: window.height,
+		borderTopLeftRadius: 11,
+		borderTopRightRadius: 11,
 		backgroundColor: 'black'
 	},
-
-
-
-
-
-
-
-
-
-
-
 	result_head: {
-		height: window.width / 4,
+		height: 88
 	},
 	result_foot: {
-		height: window.width / 4
+		height: 77
 	},
 	result_safe: {
 		position: 'absolute',
@@ -555,41 +551,83 @@ const styles = StyleSheet.create({
 		width: window.width,
 		justifyContent: 'center',
 		alignItems: 'center',
-		backgroundColor: '#555555',
+		backgroundColor: '#5F5F5F',
 	},	
 	result_container: {
-		marginTop: window.width / 70,
+		marginTop: 4,
 	},
 	result: {
 		width: window.width,
-
 		justifyContent: 'center',
 		alignItems: 'center',
 	},	
 	result_press: {
-		height: window.width / 7,
+		height: 55,
 		width: window.width / 1.04,
-		backgroundColor: '#333333',
-		borderRadius: window.width / 30,
-		alignItems: 'center',
-		flexDirection: 'row'
+		backgroundColor: '#777777',
+		borderRadius: 14,
+	},
+	result_row: {
+		height: '100%',
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+	result_image_container: {
+		marginLeft: 10
 	},
 	result_image: {
-		width: window.width / 9,
-		height: window.width / 9,
+		width: 40,
+		height: 40,
 		borderRadius: 50,
-		marginLeft: window.width / 70
+	},
+	result_username_container: {
+		left: 10
 	},
 	result_username: {
-		color: '#A6A6A6',
+		color: '#C2C2C2',
 		fontFamily: 'Louis',
-		fontSize: window.width / 23
+		fontSize: 17
 	},
-	result_status: {
-		color: '#777777',
-		marginTop: window.width / 170,
+	result_end_container: {
+		position: 'absolute',
+		height: '100%',
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'flex-end'
+	},
+	result_date_container: {
+		marginRight: 10,
+		alignItems: 'center'
+	},
+	result_date: {
+		color: '#444444',
 		fontFamily: 'Louis',
-		fontSize: window.width / 27
+		fontSize: 17
+	},
+	result_stat_container: {
+		flexDirection: 'row',
+		marginRight: 10,
+		paddingTop: 7,
+		paddingBottom: 7,
+		paddingLeft: 10,
+		paddingRight: 10,
+		borderRadius: 7,
+		backgroundColor: '#888888'
+	},
+	result_stat_sep: {
+		width: 2,
+		marginLeft: 10,
+		marginRight: 10,
+		borderRadius: 50,
+		backgroundColor: '#777777'
+	},
+	result_stat_text_container: {
+
+	},
+	result_stat_text: {
+		color: '#444444',
+		fontFamily: 'Louis',
+		fontSize: 17
 	}
 
 });

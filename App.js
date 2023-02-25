@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
-// import Constants from 'expo-constants'
-// import * as Notifications from 'expo-notifications';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import userJSON from './user.json'
 
 import Bottom_Nav from './navs/bottom_nav';
 import Content from './screens/content';
@@ -31,8 +26,7 @@ import Data from './screens/set/data'
 import Feedback from './screens/set/feedback'
 import InterestSet from './screens/set/interest_set'
 import NotificationSet from './screens/set/noti_set'
-import Password from './screens/set/password'
-import Privacy from './screens/set/privacy'
+import Account from './screens/set/account'
 
 const Stack = createNativeStackNavigator();
 
@@ -41,18 +35,22 @@ export default function App() {
 	const [state, setState] = useState(null)
 
 	useEffect(() => {
-		AsyncStorage.getItem('state', (err, res) => {
-			if (res === undefined || res === 'out' || res === null) {
-				AsyncStorage.setItem('state', 'out')
-				// console.log(res)
+		AsyncStorage.getItem('user_id', (err, res) => {
+			if (res === undefined || res === null) {
 				setState('out')
 			} else {
-				console.log(res)
 				setState('in')
-				console.log(state)
+				console.log(`res: ${res}`)
+				console.log(`state: ${state}`)
 			}
 		})
 	})
+
+	const fadeConfig = ({ current }) => ({
+		cardStyle: {
+			opacity: current.progress,
+		},
+	});
 
 	return (
 		<NavigationContainer independent={true}>
@@ -69,13 +67,16 @@ export default function App() {
 					<Stack.Screen name='rerout' component={Rerout}/>
 					<Stack.Screen name='comments' component={Comments}/>
 					<Stack.Screen name='save' component={Save}/>
-					<Stack.Screen name='settings' component={Settings}/>
+					<Stack.Screen name='settings' component={Settings}
+					options={{
+						animationTypeForReplace: 'push',
+						gestureDirection: 'horizontal'
+					  }}/>
 					<Stack.Screen name='data' component={Data}/>
 					<Stack.Screen name='feedback' component={Feedback}/>
 					<Stack.Screen name='interest_set' component={InterestSet}/>
 					<Stack.Screen name='noti_set' component={NotificationSet}/>
-					<Stack.Screen name='password' component={Password}/>
-					<Stack.Screen name='privacy' component={Privacy}/>
+					<Stack.Screen name='account' component={Account}/>
 					<Stack.Screen name='dm' component={DM}/>
 					<Stack.Screen name='active_chat' component={ActiveChat}/>
 					<Stack.Screen name='wallet' component={Wallet}/>

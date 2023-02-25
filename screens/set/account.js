@@ -11,15 +11,19 @@ export default function Privacy({ navigation, route }) {
     const location = route.params.location
     
     const toggleOneRight = useRef(new Animated.Value(20)).current
-
     const toggleOneOpacity = useRef(new Animated.Value(0)).current
+    const toggleTwoRight = useRef(new Animated.Value(20)).current
+    const toggleTwoOpacity = useRef(new Animated.Value(0)).current
+    const toggleThreeRight = useRef(new Animated.Value(20)).current
+    const toggleThreeOpacity = useRef(new Animated.Value(0)).current
 
-    const [monetizeSettings, setMonetizeSettings] = useState({
-        'one': {
-            status: false,
-            setting: 'private'
-        }
-    })
+
+    const [settings, setSettings] = useState([
+        {id: 0, setting: 'private', settingText: 'private?', toggleName: 'one', toggleRight: toggleOneRight, toggleOpacity: toggleOneOpacity, status: false},
+        {id: 1, setting: 'email-phone', settingText: 'email & phone', toggleName: 'two', toggleRight: toggleTwoRight, toggleOpacity: toggleTwoOpacity, status: false},
+        {id: 2, setting: 'password', settingText: 'change password', toggleName: 'three', toggleRight: toggleThreeRight, toggleOpacity: toggleThreeOpacity, status: false},
+
+    ])
 
     const navigate = (x) => {
         navigation.navigate(x, {
@@ -30,8 +34,12 @@ export default function Privacy({ navigation, route }) {
     const handleToggle = (x, y) => {
         const toggleObj = {
             'one': [toggleOneRight, toggleOneOpacity],
+            'two': [toggleTwoRight, toggleTwoOpacity],
+            'three': [toggleThreeRight, toggleThreeOpacity],
         }
-        if (monetizeSettings[x].status === false) {
+        if (settings[y].status === false) {
+            var newObj = settings
+            newObj[y].status = true
             Animated.parallel([
                 Animated.timing(toggleObj[x][0], {
                     toValue: 0,
@@ -44,9 +52,9 @@ export default function Privacy({ navigation, route }) {
                     useNativeDriver: false
                 })
             ]).start()
-            var newObj = monetizeSettings
-            newObj[x].status = true
         } else {
+            var newObj = settings
+            newObj[y].status = false
             Animated.parallel([
                 Animated.timing(toggleObj[x][0], {
                     toValue: 20,
@@ -59,12 +67,31 @@ export default function Privacy({ navigation, route }) {
                     useNativeDriver: false
                 })
             ]).start()
-            var newObj = monetizeSettings
-            newObj[x].status = false
         }
-            
-        
-        setMonetizeSettings(newObj)
+        setSettings(newObj)
+    }
+
+    const Setting = ({ item }) => {
+        return (
+            <View style={styles.setting_toggle_container}>
+                <View style={styles.setting_toggle_text_container}>
+                    <Text style={styles.setting_toggle_text}>{item.settingText}</Text>
+                </View>
+                <View style={styles.setting_toggle_end_container}>
+                    <Pressable style={styles.info_container}>
+                        <Image source={info} style={styles.info}/>
+                    </Pressable>
+                    <Pressable onPress={() => handleToggle(item.toggleName, item.id)} style={styles.toggle_press}>
+                        <View style={styles.toggle_safe}>
+                            <Animated.View style={[styles.toggle_background, {opacity: item.toggleOpacity}]}/>
+                            <View style={styles.toggle_container}>
+                                <Animated.View style={[styles.toggle, {right: item.toggleRight}]}/>
+                            </View>
+                        </View>
+                    </Pressable>
+                </View>
+            </View>
+        )
     }
 
     // everything in front of this
@@ -85,28 +112,17 @@ export default function Privacy({ navigation, route }) {
                         <Image style={styles.back} source={back}/>
                     </Pressable>
                 </SafeAreaView>
-                <SafeAreaView style={styles.privacy_container}>
-                    <Text style={styles.privacy}>privacy</Text>
+                <SafeAreaView style={styles.account_container}>
+                    <Text style={styles.account}>account</Text>
                 </SafeAreaView>
             </View>
-
-            <View style={styles.privacy_toggle_container}>
-                <View style={styles.privacy_toggle_text_container}>
-                    <Text style={styles.privacy_toggle_text}>private?</Text>
-                </View>
-                <View style={styles.privacy_toggle_end_container}>
-                    <Pressable style={styles.info_container}>
-                        <Image source={info} style={styles.info}/>
-                    </Pressable>
-                    <Pressable onPress={() => handleToggle('one')} style={styles.toggle_safe}>
-                        <Animated.View style={[styles.toggle_background, {opacity: toggleOneOpacity}]}/>
-                        <View style={styles.toggle_container}>
-                            <Animated.View style={[styles.toggle, {right: toggleOneRight}]}/>
-                        </View>
-                    </Pressable>
-                </View>
+            <View>
+                {settings.map((item) => (
+                    <Setting
+                    key={item.id}
+                    item={item}/>
+                ))}
             </View>
-
         </View>
     )
 }
@@ -118,12 +134,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#5F5F5F'
     },
     head_safe: {
-        // flexDirection: 'row'
+        marginBottom: 21
     },
-    privacy_container: {
+    account_container: {
         alignSelf: 'center'
     },
-    privacy: {
+    account: {
         fontFamily: 'Louis',
         fontSize: 30,
         color: '#C2C2C2'
@@ -136,7 +152,6 @@ const styles = StyleSheet.create({
         width: 70,
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: 'blue'
     },
     back: {
         width: 12,
@@ -145,41 +160,38 @@ const styles = StyleSheet.create({
 
 
     
-    privacy_toggle_container: {
+    setting_toggle_container: {
         width: '95%',
-        marginTop: 21,
-        marginBottom: 10,
-        borderRadius: 11,
+        marginTop: 0,
+        marginBottom: 7,
+        borderRadius: 17,
         flexDirection: 'row',
         alignItems: 'center',
         alignSelf: 'center',
-        backgroundColor: '#888888'
+        backgroundColor: '#777777'
+
     },
-    privacy_toggle_text_container: {
+    setting_toggle_text_container: {
         paddingTop: 17,
         paddingLeft: 10,
         paddingBottom: 17,
-        // backgroundColor: 'blue'
     },
-    privacy_toggle_text: {
+    setting_toggle_text: {
         fontFamily: 'Louis',
         fontSize: 17,
         color: '#C2C2C2' 
     },
-    privacy_toggle_end_container: {
+    setting_toggle_end_container: {
         position: 'absolute',
         height: '100%',
         right: 0,
         flexDirection: 'row',
         alignItems: 'center'
     },
-
-
-
-
-
-
-
+    toggle_press: {
+        height: '100%',
+        justifyContent: 'center',
+    },
     toggle_safe: {
         height: 25,
         width: 45,

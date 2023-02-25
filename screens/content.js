@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, Dimensions, SafeAreaView, FlatList, Animated } from 'react-native';
+import { StyleSheet, Text, View, Image, Pressable, Dimensions, SafeAreaView, FlatList, Animated, ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient'; 
@@ -10,28 +10,17 @@ import axios from 'axios'
 const file = require('../../rout/user.json')
 
 // images
-const plus_img = require('../assets/img/plus_sign.png')
 const profile_img = require('../assets/img/user_profile_template.png')
-const arrow_up = require('../assets/img/arrow_up.png')
 const arrow_up_white = require('../assets/img/arrow_up_white.png')
 const arrow_up_pressed = require('../assets/img/arrow_up_pressed.png')
-const arrow_down = require('../assets/img/arrow_down.png')
 const arrow_down_white = require('../assets/img/arrow_down_white.png')
 const arrow_down_pressed = require('../assets/img/arrow_down_pressed.png')
 const comment_icon_white = require('../assets/img/comment_icon_white.png')
-const comment_icon = require('../assets/img/comment_icon.png')
-const bookmark_icon = require('../assets/img/bookmark_icon.png')
 const bookmark_icon_white = require('../assets/img/bookmark_icon_white.png')
 const bookmark_icon_pressed = require('../assets/img/bookmark_icon_filled.png')
 const info_icon = require('../assets/img/info_icon.png')
-const share_icon = require('../assets/img/share_icon.png')
-const share_icon_white = require('../assets/img/share_icon_white.png')
-const slider_icon = require('../assets/img/slider_icon.png')
 const rerout = require('../assets/img/rerout.png')
 const collapse = require('../assets/img/collapse_icon.png')
-
-const vertical_fill = require('../assets/img/vertical_fill.jpeg')
-const landscape_image = require('../assets/img/landscape_image.jpeg')
 
 const window = Dimensions.get('window')
 
@@ -50,22 +39,26 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 	const [saveStatus, setSaveStatus] = useState(null)
 	const [infoStatus, setInfoStatus] = useState(null)
 	const [contentHeight, setContentHeight] = useState(null)
+	// const [imageLoaded, setImageLoaded] = useState(false)
 
+	// const imageSource = Image.resolveAssetSource(profile_img).uri
+	
 	useEffect(() => {
 
+		// const prefetchImage = async () => {
+		// 	await Image.prefetch(imageSource)
+		// 	setImageLoaded(true)
+		// }
+		// prefetchImage()
 		if (source.type === 'image') {
 		Image.getSize(source.uri, (width, height) => {
 			setImageRatio(window.width / width)
 			setImageHeight(height)
 		})}
-
 	}, [])
-
 	const collapsePress = (x) => {
-
 		if (x !== collapseStatus) {
 			setCollapseStatus(x)
-
 			Animated.parallel([
 				Animated.timing(collapseRef, {
 					toValue: 1,
@@ -77,12 +70,9 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 					duration: 177,
 					useNativeDriver: false
 				})
-
 			]).start()
-
 		} else {
 			setCollapseStatus(null)
-
 			Animated.timing(collapseRef, {
 				toValue: 0,
 				duration: 77,
@@ -94,21 +84,15 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 		inputRange: [0, 1],
 		outputRange: ["0deg", "180deg"]
 	})
-	
 	const infoPress = (x) => {
-		
 		if (x !== infoStatus) {
 			setInfoStatus(x)
-		
 			Animated.timing(infoOpacity, {
 				toValue: 1,
 				duration: 177,
 				useNativeDriver: false
 			}).start()
-
 		} else {
-			
-
 			Animated.timing(infoOpacity, {
 				toValue: 0,
 				duration: 77,
@@ -116,45 +100,30 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 			}).start(() => {
 				setInfoStatus(null)
 			})
-
 		}
-
 	}
-
 	const votePress = (x) => {
 		if (x !== voteStatus) {
 			setVoteStatus(x)
 		} else {
 			setVoteStatus(null)
 		}
-
 	}
-
 	const reroutPress = () => {
-
 		navigate('rerout')
         scrollTo(y - window.height / 7)
-
 	}
-	
 	const commentsPress = () => {
-		
 		navigate('comments')
         scrollTo(y - window.height / 7)
-	
-
 	}
-
 	const savePress = (x) => {
-
 		if (x !== saveStatus) {
 			setSaveStatus(x)
 		} else {
 			setSaveStatus(null)
 		}
-
 	}
-
 	const navigate = (x) => {
 		navigation.navigate(x, {
 			location: location,
@@ -162,19 +131,26 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 		})
 	}
 
+	// everything in front of this
+
+	const [loaded] = useFonts({
+		'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+	})
+	if (!loaded) {
+		return null;
+	}
+
 	return (
 		<View ref={postRef} onLayout={( event ) => {
 			const {x, y, width, height} = event.nativeEvent.layout
 			setY(y)
 		}}>
-
-
 			{source.type === 'text' ?
 			<View style={styles.text_container}>
 				<View style={styles.text_top_container}>
 					<View style={styles.text_top_row}>
 						<View style={styles.text_user_image_container}>
-							<Image style={styles.text_user_image} source={profile_img} />
+							<Image style={styles.text_user_image} source={profile_img}/>
 						</View>
 						<View style={styles.text_username_container}>
 							<Text style={styles.text_username}>schafferluke</Text>
@@ -185,13 +161,10 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 							<Text style={styles.text_time}>1h</Text>
 						</View>
 						<Pressable onPress={() => infoPress(true)} style={styles.text_info_container}>
-							
 							<View>
 								<Image style={styles.text_info} source={info_icon} />
 							</View>
 						</Pressable>
-						
-						
 					</View>
 				</View>
 				{infoStatus === true ?

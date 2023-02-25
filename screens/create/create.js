@@ -174,6 +174,7 @@ export default function Create({ navigation, route }) {
                         onPress={() => inputRef.current.focus()} style={styles.caption_container}>
                             {/* still needs fixing when reaching text end */}
                             <TextInput
+                            // onEndEditing={}
                             ref={inputRef}
                             placeholderTextColor={'#999999'}
                             placeholder='being thruthful?'

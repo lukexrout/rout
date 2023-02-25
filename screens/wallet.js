@@ -209,10 +209,12 @@ export default function Wallet({ navigation, route }) {
                         <Pressable style={styles.info_container}>
                             <Image source={info} style={styles.info}/>
                         </Pressable>
-                        <Pressable onPress={() => handleToggle('one')} style={styles.toggle_safe}>
-                            <Animated.View style={[styles.toggle_background, {opacity: toggleOneOpacity}]}/>
-                            <View style={styles.toggle_container}>
-                                <Animated.View style={[styles.toggle, {right: toggleOneRight}]}/>
+                        <Pressable onPress={() => handleToggle('one')} style={styles.toggle_press}>
+                            <View style={styles.toggle_safe}>
+                                <Animated.View style={[styles.toggle_background, {opacity: toggleOneOpacity}]}/>
+                                <View style={styles.toggle_container}>
+                                    <Animated.View style={[styles.toggle, {right: toggleOneRight}]}/>
+                                </View>
                             </View>
                         </Pressable>
                     </View>
@@ -225,10 +227,12 @@ export default function Wallet({ navigation, route }) {
                         <Pressable style={styles.info_container}>
                             <Image source={info} style={styles.info}/>
                         </Pressable>
-                        <Pressable onPress={() => handleToggle('two')} style={styles.toggle_safe}>
-                            <Animated.View style={[styles.toggle_background, {opacity: toggleTwoOpacity}]}/>
-                            <View style={styles.toggle_container}>
-                                <Animated.View style={[styles.toggle, {right: toggleTwoRight}]}/>
+                        <Pressable onPress={() => handleToggle('two')} style={styles.toggle_press}>
+                            <View style={styles.toggle_safe}>
+                                <Animated.View style={[styles.toggle_background, {opacity: toggleTwoOpacity}]}/>
+                                <View style={styles.toggle_container}>
+                                    <Animated.View style={[styles.toggle, {right: toggleTwoRight}]}/>
+                                </View>
                             </View>
                         </Pressable>
                     </View>
@@ -244,10 +248,12 @@ export default function Wallet({ navigation, route }) {
                         <Pressable style={styles.info_container}>
                             <Image source={info} style={styles.info}/>
                         </Pressable>
-                        <Pressable onPress={() => handleToggle('three')} style={styles.toggle_safe}>
-                            <Animated.View style={[styles.toggle_background, {opacity: toggleThreeOpacity}]}/>
-                            <View style={styles.toggle_container}>
-                                <Animated.View style={[styles.toggle, {right: toggleThreeRight}]}/>
+                        <Pressable onPress={() => handleToggle('three')} style={styles.toggle_press}>
+                            <View style={styles.toggle_safe}>
+                                <Animated.View style={[styles.toggle_background, {opacity: toggleThreeOpacity}]}/>
+                                <View style={styles.toggle_container}>
+                                    <Animated.View style={[styles.toggle, {right: toggleThreeRight}]}/>
+                                </View>
                             </View>
                         </Pressable>
                     </View>
@@ -260,10 +266,12 @@ export default function Wallet({ navigation, route }) {
                         <Pressable style={styles.info_container}>
                             <Image source={info} style={styles.info}/>
                         </Pressable>
-                        <Pressable onPress={() => handleToggle('four')} style={styles.toggle_safe}>
-                            <Animated.View style={[styles.toggle_background, {opacity: toggleFourOpacity}]}/>
-                            <View style={styles.toggle_container}>
-                                <Animated.View style={[styles.toggle, {right: toggleFourRight}]}/>
+                        <Pressable onPress={() => handleToggle('four')} style={styles.toggle_press}>
+                            <View style={styles.toggle_safe}>
+                                <Animated.View style={[styles.toggle_background, {opacity: toggleFourOpacity}]}/>
+                                <View style={styles.toggle_container}>
+                                    <Animated.View style={[styles.toggle, {right: toggleFourRight}]}/>
+                                </View>
                             </View>
                         </Pressable>
                     </View>
@@ -450,6 +458,7 @@ const styles = StyleSheet.create({
         color: '#C2C2C2' 
     },
     monetize_ad_toggle_container: {
+        height: 49,
         width: '95%',
         marginBottom: 10,
         borderRadius: 7,
@@ -519,8 +528,10 @@ const styles = StyleSheet.create({
         color: '#C2C2C2' 
     },
 
-
-
+    toggle_press: {
+        height: '100%',
+        justifyContent: 'center'
+    },
     toggle_safe: {
         height: 25,
         width: 45,

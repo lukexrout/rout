@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     container: {
         height: window.height,
         width: window.width,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     head_safe: {
         zIndex: 2,
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
     },
     followers_container: {
-        // backgroundColor: 'blue',
         alignSelf: 'center',
     },
     followers: {
@@ -182,7 +181,6 @@ const styles = StyleSheet.create({
         color: '#C2C2C2'
     },
     back_safe: {
-        // backgroundColor: 'white',
         position: 'absolute'
     },
     back_press: {
@@ -201,7 +199,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     list_head_container: {
-        height: window.height / 5.5
+        height: 155
     },
     user_search_container: {
         flex: 1,
@@ -225,9 +223,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Louis',
     },
     user_container: {
-        height: 64,
+        height: 55,
         width: window.width / 1.1,
-        marginBottom: 10,
+        marginBottom: 4,
         borderRadius: 14,
         flexDirection: 'row',
         alignSelf: 'center',

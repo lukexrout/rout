@@ -43,7 +43,7 @@ function Home({ navigation }) {
 	])
 	
 	useEffect(() => {
-		genFeed()
+		// genFeed()
 	})
 
 	const genFeed = async () => {

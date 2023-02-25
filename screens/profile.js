@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Button, View, Pressable, Image, Dimensions, SafeAreaView, FlatList, Animated, ScrollView } from 'react-native';
+import { StyleSheet, Text, Button, View, Pressable, Image, Dimensions, SafeAreaView, FlatList, Animated, ScrollView, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 import Content from './content.js'
 
 const window = Dimensions.get('window')
+
+const portFile = require('../port.json')
 
 const profile_img = require('../assets/img/user_profile_template.png')
 const plus_img = require('../assets/img/plus_sign.png')
@@ -29,7 +30,7 @@ const Interest = ({ cent, interest, pos }) => {
     )
 }
 
-const Head = memo(({ interestOpacity, postOpacity, changeList, navigate }) => {
+const Head = memo(({ username, follower_cnt, following_cnt, interestOpacity, postOpacity, changeList, navigate }) => {
 
     return (
         <View style={styles.general_profile_container}>
@@ -55,7 +56,7 @@ const Head = memo(({ interestOpacity, postOpacity, changeList, navigate }) => {
                         <Image style={styles.pic} source={profile_img}/>
                     </View>
                     <View style={styles.user_container}>
-                        <Text style={styles.user}>schafferluke</Text>
+                        <Text style={styles.user}>{username}</Text>
                     </View>
                     <View style={styles.stat_container}>
                         <View style={{flexDirection: 'row'}}>
@@ -64,7 +65,7 @@ const Head = memo(({ interestOpacity, postOpacity, changeList, navigate }) => {
                                     <Text style={styles.stat_text}>followers</Text>
                                 </View>
                                 <View style={styles.stat_num_container}>
-                                    <Text style={styles.stat_num}>1.35m</Text>
+                                    <Text style={styles.stat_num}>{follower_cnt}</Text>
                                 </View>
                             </Pressable>
                             <View style={{width: 21}}/>
@@ -73,11 +74,10 @@ const Head = memo(({ interestOpacity, postOpacity, changeList, navigate }) => {
                                     <Text style={styles.stat_text}>following</Text>
                                 </View>
                                 <View style={styles.stat_num_container}>
-                                    <Text style={styles.stat_num}>5000</Text>
+                                    <Text style={styles.stat_num}>{following_cnt}</Text>
                                 </View>
                             </Pressable>
                         </View>
-                        
                     </View>
                     <View style={styles.sep_stat}/>
                     <View style={styles.bio_container}>
@@ -97,7 +97,6 @@ const Head = memo(({ interestOpacity, postOpacity, changeList, navigate }) => {
                 <View style={styles.tab_container}>
                     <Pressable onPress={() => changeList('posts', 'interests')} style={styles.tab_button_container}>
                         <View style={styles.tab_button_text_container}>
-
                             <Text style={styles.tab_button_text}>posts</Text>
                         </View>
                         <Animated.View style={[styles.tab_button_background, {opacity: postOpacity}]}/>
@@ -115,14 +114,6 @@ const Head = memo(({ interestOpacity, postOpacity, changeList, navigate }) => {
     )
 })
 
-const Foot = () => {
-    return(
-        <View style={styles.foot}>
-
-        </View>
-    )
-}
-
 export default function Profile({ navigation }) {
 
     const postOpacity = useRef(new Animated.Value(1)).current
@@ -130,8 +121,13 @@ export default function Profile({ navigation }) {
 	
 	const listRef = useRef()
 
+	const [isLoading, setIsLoading] = useState(true)
     const [state, setState] = useState('posts')
+    const [asyncStatus, setAsyncStatus] = useState(false)
     const [username, setUsername] = useState()
+    const [follower_cnt, setFollower_cnt] = useState()
+    const [following_cnt, setFollowing_cnt] = useState()
+    const [user_id, setUser_id] = useState()
     const [postHeight, setPostHeight] = useState()
     const [interestHeight, setInterestHeight] = useState()
     const [data, setData] = useState([
@@ -162,10 +158,76 @@ export default function Profile({ navigation }) {
 	])
 
     useEffect(() => {
-        AsyncStorage.getItem('user', (err, res) => {
-            setUsername(res)
+        AsyncStorage.getItem('user_id', (err, res) => {
+            setUser_id(res)
         })
-    })
+        if (!asyncStatus) {
+            AsyncStorage.getItem('profile', (err, rawRes) => {
+                setAsyncStatus(true)
+                if (rawRes === null || rawRes === undefined) {
+                    reqProfile()
+                } else {
+                    const res = JSON.parse(rawRes)
+                    console.log(`asyncRes: ${res}`)
+    
+                    const currentTime = new Date()
+                    const hourMili = 60 * 60 * 1000 // hour
+                    // const hourMili = 100
+                    const dif = currentTime.getTime() - new Date(res[0]).getTime()
+                    const comp = dif >= hourMili
+                    // console.log(`compare: ${comp}`)
+    
+                    if (comp) {
+                        reqProfile()
+                        return
+                    } else  {
+                        setProfile(res.slice(-res.length + 1))
+                    }
+                }
+            })
+        }
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 444); // delay
+    
+        return () => clearTimeout(timer);
+    }, [asyncStatus, user_id])
+
+    const setProfile = (res) => {
+        console.log(`profileRes: ${res}`)
+        setUsername(res[0])
+        const res_follower_cnt = res[1][0]['follower_cnt']
+        // adding nice formating for thousands and millions
+        const finalFollower_cnt = res_follower_cnt < 9999 ? res_follower_cnt : 
+        res_follower_cnt > 9999 && res_follower_cnt < 999999 ? Math.floor(res_follower_cnt / 100) / 10 + 'k' :
+        res_follower_cnt > 999999 && Math.floor(res_follower_cnt / 100000) / 10 + 'm'
+        setFollower_cnt(finalFollower_cnt)
+        setFollowing_cnt(res[1][0]['following_cnt'])
+        // console.log(res[2])
+    }
+
+    const reqProfile = () => {
+        console.log(user_id)
+        fetch(`http://${portFile.HOST}:3000/profile/self`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'user_id': user_id
+            })
+        }).then(res => res.json())
+        .then(res => {
+            console.log(`serverRes: ${res}`)
+            if (!res.error) {
+                setProfile(res)
+                res.unshift(new Date())
+                AsyncStorage.setItem('profile', JSON.stringify(res))
+                // AsyncStorage.setItem('profile', null)
+            }
+        })
+        .catch(err => console.error(err))
+    }
 
     const navigate = (i) => {
 		navigation.navigate(i, {
@@ -221,12 +283,23 @@ export default function Profile({ navigation }) {
                 ref={listRef} 
                 style={{position: 'absolute', height: window.height}}
                 showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}>
-                    <Head 
+                showsHorizontalScrollIndicator={false}
+                initialNumToRender={1}
+                maxToRenderPerBatch={2}
+				removeClippedSubviews={true}>
+                    <Head
+                    username={username}
+                    follower_cnt={follower_cnt}
+                    following_cnt={following_cnt}
                     navigate={navigate}
                     changeList={changeList} 
                     interestOpacity={interestOpacity} 
                     postOpacity={postOpacity}/>
+                    {isLoading ? 
+                    <View style={{marginTop: 111}}>
+					    <ActivityIndicator size="large" color="#C2C2C2"/>
+				    </View>
+                     :
                     <View 
                     style={[styles.list_container, 
                     state === 'posts' ? {height: postHeight} : {height: interestHeight}]}>
@@ -262,6 +335,7 @@ export default function Profile({ navigation }) {
                             ))}
                         </Animated.View>
                     </View>
+                    }
                 </ScrollView>
             </View> 
         </View>
@@ -516,16 +590,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         alignSelf: 'center'
     },
-
-
-
-    content_container: {
-        height: window.height / 4.9,
-        width: window.width,
-        borderColor: 'black',
-        borderWidth: window.width / 470,
-        backgroundColor: 'white'
-    },
     interest_container: {
         marginBottom: 7,
         height: window.height / 20,
@@ -545,9 +609,5 @@ const styles = StyleSheet.create({
         left: 14,
         fontFamily: 'Louis',
         fontSize: 17
-    },
-    foot: {
-        height: window.height / 11
     }
-    
 })

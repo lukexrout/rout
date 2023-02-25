@@ -22,10 +22,7 @@ export default function Bottom_Nav() {
 		<Tab.Navigator 
 		screenOptions={{
 			tabBarShowLabel: false,
-			tabBarStyle: [styles.container],
-
-
-		}} >
+			tabBarStyle: [styles.container]}} >
 			
 			<Tab.Screen name="home" component={Home} options={{ headerStyle: {height: 0}, animationEnabled: false,
 			tabBarIcon: ({ focused }) => (
@@ -41,12 +38,10 @@ export default function Bottom_Nav() {
 				</View>
 			)}} />
 			<Tab.Group>
-
 				<Tab.Screen name="discover_nav" component={Discover_Nav} options={{ 
 				tabBarHideOnKeyboard: true, 
 				headerStyle: {height: 0}, 
 				animationEnabled: false,
-				
 				tabBarIcon: ({ focused }) => (
 					<View style={styles.icon_flow}>
 						{focused ? <Image 
@@ -76,7 +71,6 @@ export default function Bottom_Nav() {
 				</View>
 			)}} />
 			<Tab.Group>
-
 				<Tab.Screen name="profile" component={Profile} options={{ headerStyle: {height: 0}, animationEnabled: false,
 				tabBarIcon: ({ focused }) => (
 					<View style={styles.icon_flow}>
@@ -91,7 +85,6 @@ export default function Bottom_Nav() {
 					</View>
 				)}} />
 			</Tab.Group>
-
 		</Tab.Navigator>
 	)
 }

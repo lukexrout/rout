@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, TextInput, KeyboardAvoidingView, Platform, Keyboard, Animated, Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+
+const portFile = require('../../port.json')
 
 const back = require('../../assets/img/go_back_icon.png')
 
@@ -10,73 +11,235 @@ const window = Dimensions.get('window')
 
 export default function Out({ navigation, route }) {
 	
-    const [state, setState] = useState('out')
-    const [outBottom, setOutBottom] = useState(window.width / 3)
-    const [userInput, setUserInput] = useState('')
-    const [passInput, setPassInput] = useState('')
-
     const userRef = useRef()
     const passRef = useRef()
-
+    const usernameRef = useRef()
+    const confirmPassRef = useRef()
     const outOpacity = useRef(new Animated.Value(1)).current
     const registerOpacity = useRef(new Animated.Value(0)).current
     const loginOpacity = useRef(new Animated.Value(0)).current
     const register_opacity = useRef(new Animated.Value(0)).current
+    const errorOpacity = useRef(new Animated.Value(0)).current
+    const backAnim = useRef(new Animated.Value(0)).current
+    const usernameOpacity = useRef(new Animated.Value(0)).current
 
-    const nextPress = () => {
-        
-        axios.post('http://localhost:3000/login', {username: userInput, password: passInput})
-        .then((res) => {
-            setUserInput('')
-            setPassInput('')
-            AsyncStorage.setItem('state', res.data)
-            AsyncStorage.setItem('user', userInput)
-            navigation.navigate('bottom_nav')
-        })
-        .catch((err) => {console.error(err)})
-    }
+    const [state, setState] = useState('out')
+    const [outBottom, setOutBottom] = useState(window.width / 3)
+    const [userInput, setUserInput] = useState('')
+    const [passInput, setPassInput] = useState('')
+    const [confirmPassInput, setConfirmPassInput] = useState('')
+    const [username, setUsername] = useState('')
+    const [type, setType] = useState('')
+    const [error, setError] = useState('')
 
-    const backPress = (x) => {
-
-
-        Animated.timing(x, {
-            toValue: 0,
-            duration: 77,
-            useNativeDriver: false
-        }).start(() => {
-            setState('out')
-
-            Animated.timing(outOpacity, {
+    const handleRegister = () => {
+        const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInput)
+        const phoneTest = /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/.test(userInput)
+        const type = emailTest ? 'email' : phoneTest && 'phone'
+        if (!userInput || !passInput || !confirmPassInput) {
+            setError(`cannot have empty fields.`)
+            Animated.timing(errorOpacity, {
                 toValue: 1,
-                duration: 170,
+                duration: 177,
                 useNativeDriver: false
             }).start()
-
-        })
-
+            return
+        } else if (!emailTest && !phoneTest) {
+            setError(`email or phone format incorrect.`)
+            Animated.timing(errorOpacity, {
+                toValue: 1,
+                duration: 177,
+                useNativeDriver: false
+            }).start()
+            return
+        } else if (confirmPassInput !== passInput) {
+            setError(`passwords do not match.`)
+            Animated.timing(errorOpacity, {
+                toValue: 1,
+                duration: 177,
+                useNativeDriver: false
+            }).start()
+            return
+        } else {
+            setType(type)
+            setError('')
+            Animated.parallel([
+                Animated.timing(usernameOpacity, {
+                    toValue: 1,
+                    duration: 177,
+                    useNativeDriver: false
+                }),
+                error !== '' && 
+                Animated.timing(errorOpacity, {
+                    toValue: 0,
+                    duration: 0,
+                    useNativeDriver: false
+                })
+            ]).start(() => setState('username'))
+        }
     }
-
+    const registerReq = () => {
+        let reqObj = {}
+        reqObj['username'] = username
+        reqObj[type] = type === 'email' ? userInput : userInput.replace(/\D/g, '') // phone number to string of int - 1231231234
+        reqObj['password'] = passInput
+        fetch(`http://${portFile.HOST}:3000/register/${type}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reqObj)
+        }).then((res) => res.json())
+        .then((res) => {
+            if (res.error === 'email' || res.error === 'phone') {
+                backPress(usernameOpacity, registerOpacity, 'register')
+                if (!error) {
+                    setError(`${type} already exists.`)
+                    Animated.timing(errorOpacity, {
+                        toValue: 1,
+                        duration: 177,
+                        useNativeDriver: false
+                    }).start()
+                    return
+                }
+            } else if (res.error === 'username') {
+                if (!error) {
+                    setError(`username already exists.`)
+                    Animated.timing(errorOpacity, {
+                        toValue: 1,
+                        duration: 177,
+                        useNativeDriver: false
+                    }).start()
+                    return
+                }
+            } else {
+                setError('')
+                setUserInput('')
+                setPassInput('')
+                setConfirmPassInput('')
+                AsyncStorage.setItem('user_id', res.user_id)
+                navigation.navigate('bottom_nav')
+            }
+        })
+        .catch((err) => console.error(err))
+    }
+    const handleLogin = () => {
+        console.log(portFile.HOST)
+        const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInput)
+        const phoneTest = /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/.test(userInput)
+        const type = emailTest ? 'email' : phoneTest && 'phone'
+        if (!userInput || !passInput) {
+            setError(`cannot have empty fields.`)
+            Animated.timing(errorOpacity, {
+                toValue: 1,
+                duration: 177,
+                useNativeDriver: false
+            }).start()
+            return
+        } else if (!emailTest && !phoneTest) {
+            setError(`email or phone format incorrect.`)
+            Animated.timing(errorOpacity, {
+                toValue: 1,
+                duration: 177,
+                useNativeDriver: false
+            }).start()
+            return
+        }
+        setType(type)
+        const reqObj = {}
+        reqObj[type] = type === 'email' ? userInput : userInput.replace(/\D/g, '')
+        reqObj['password'] = passInput
+        fetch(`http://${portFile.HOST}:3000/login/${type}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reqObj)
+        }).then((res) => res.json())
+        .then((res) => {
+            console.log(res.error)
+            if (res.error === 'password') {
+                setError(`incorrect password.`)
+                Animated.timing(errorOpacity, {
+                    toValue: 1,
+                    duration: 177,
+                    useNativeDriver: false
+                }).start()
+                return
+            } else if (res.error === 'email' || res.error === 'phone') {
+                setError(`${res.error} doesn't exist.`)
+                Animated.timing(errorOpacity, {
+                    toValue: 1,
+                    duration: 177,
+                    useNativeDriver: false
+                }).start()
+                return
+            } else {
+                setError('')
+                setUserInput('')
+                setPassInput('')
+                AsyncStorage.setItem('user_id', res[0])
+                navigation.navigate('bottom_nav')
+            }
+        })
+        .catch(err => console.error(err))
+        
+        
+    }
+    const backPress = (x, y, z) => {
+        if (z !== 'register') {
+            setUserInput('')
+            setPassInput('')
+            setConfirmPassInput('')
+        }
+        Animated.parallel([
+            Animated.timing(x, {
+                toValue: 0,
+                duration: 77,
+                useNativeDriver: false
+            }),
+            error !== '' && 
+            Animated.timing(errorOpacity, {
+                toValue: 0,
+                duration: 0,
+                useNativeDriver: false
+            }),
+            (state !== 'username' && state !== 'username') && 
+            Animated.timing(backAnim, {
+                toValue: 0,
+                duration: 77,
+                useNativeDriver: false
+            })
+        ]).start(() => {
+            setState(z)
+            {error !== '' && setError('')}
+            Animated.timing(y, {
+                toValue: 1,
+                duration: 177,
+                useNativeDriver: false
+            }).start()
+        })
+    }
     const selectPress = (x, y) => {
-
         Animated.timing(outOpacity, {
             toValue: 0,
             duration: 77,
             useNativeDriver: false
         }).start(() => {
             setState(y)
-
-            Animated.timing(x, {
-                toValue: 1,
-                duration: 170,
-                useNativeDriver: false
-            }).start()
-
+            Animated.parallel([
+                Animated.timing(backAnim, {
+                    toValue: 2,
+                    duration: 177,
+                    useNativeDriver: false
+                }),
+                Animated.timing(x, {
+                    toValue: 1,
+                    duration: 177,
+                    useNativeDriver: false
+                })
+            ]).start()
         })
-
-        
-            
-
-
     }
 
     // everything in front of this
@@ -97,16 +260,22 @@ export default function Out({ navigation, route }) {
             <KeyboardAvoidingView 
             style={styles.out_center_container}
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
-            keyboardVerticalOffset={-200} 
-            >
+            keyboardVerticalOffset={-140}>
                 <View style={styles.out_container}>
+                    <Animated.View style={[styles.back_safe, {opacity: backAnim, zIndex: backAnim}]}>
+                        <Pressable style={styles.back_press} onPress={() => backPress(
+                        state === 'login' ? loginOpacity : state ==='register' ? registerOpacity : state === 'username' && usernameOpacity, 
+                        state === 'login' || state === 'register' ? outOpacity : state === 'username' && registerOpacity,
+                        state === 'login' || state === 'register' ? 'out' : state === 'username' && 'register')}>
+                            <Image style={styles.back} source={back}/>
+                        </Pressable>
+                    </Animated.View>
                     {state === 'out' ?
-
                     <Animated.View style={[styles.conditional_out]}>
                         <View style={styles.welcome_container}>
                             <Text style={styles.welcome_text}>welcome to rout!</Text>
                             <View style={styles.description_container}>
-                                <Text style={styles.description_text}>the <Text style={styles.free}>free</Text> social network</Text>
+                                <Text style={styles.description_text}>made for <Text style={styles.free}>creators</Text>.</Text>
                             </View>
                         </View>
                         <View style={styles.button_container}>
@@ -119,60 +288,11 @@ export default function Out({ navigation, route }) {
                             </Pressable>
                         </View>
                     </Animated.View>
-
-                     : state === 'login' ?
-
-                    <Animated.View style={[styles.login_container, {opacity: loginOpacity}]}>
-                        
-
-                        <View style={styles.login_head}>
-                            <Pressable style={styles.back_press} onPress={() => backPress(loginOpacity)}>
-                                <Image style={styles.back} source={back}/>
-                            </Pressable>
-                            <View style={styles.login_text_container}>
-                                <Text style={styles.login_text}>login</Text>
-                            </View>
-                        </View>
-                        <View style={styles.login_input_container}>
-                            <Pressable onPress={() => userRef.current.focus()} style={styles.login_email_input_press}>
-                                <TextInput
-                                value={userInput}
-                                placeholder='email or phone'
-                                placeholderTextColor={'#444444'}
-                                keyboardAppearance='dark'
-                                selectionColor={'#696969'}
-                                ref={userRef}
-                                style={styles.login_email_input}
-                                autoCapitalize='none'
-                                onChangeText={i => setUserInput(i)}
-                                />
-                            </Pressable>
-                            <Pressable onPress={() => passRef.current.focus()} style={styles.login_pass_input_press}>
-                                <TextInput
-                                value={passInput}
-                                placeholder='password'
-                                placeholderTextColor={'#444444'}
-                                keyboardAppearance='dark'
-                                selectionColor={'#696969'}
-                                ref={passRef}
-                                style={styles.login_pass_input}
-                                autoCapitalize='none'
-                                onChangeText={i => setPassInput(i)}
-                                />
-                            </Pressable>
-                        </View>
-                        <Pressable onPress={() => nextPress()} style={styles.login_submit_press}>
-                            <Text style={styles.login_submit_text}>submit</Text>
-                        </Pressable>
-                    </Animated.View>
-                     : state === 'register' ?
-                     <Animated.View style={[styles.register_container, {opacity: registerOpacity}]}>
-                        
-
+                    
+                    : state === 'register' ?
+                    <Animated.View style={[styles.register_container, {opacity: registerOpacity}]}>
                         <View style={styles.register_head}>
-                            <Pressable style={styles.back_press} onPress={() => backPress(registerOpacity)}>
-                                <Image style={styles.back} source={back}/>
-                            </Pressable>
+                            
                             <View style={styles.register_text_container}>
                                 <Text style={styles.register_text}>register</Text>
                             </View>
@@ -180,6 +300,7 @@ export default function Out({ navigation, route }) {
                         <View style={styles.register_input_container}>
                             <Pressable onPress={() => userRef.current.focus()} style={styles.register_email_input_press}>
                                 <TextInput
+                                returnKeyType='next'
                                 value={userInput}
                                 placeholder='email or phone'
                                 placeholderTextColor={'#444444'}
@@ -189,10 +310,12 @@ export default function Out({ navigation, route }) {
                                 style={styles.register_email_input}
                                 autoCapitalize='none'
                                 onChangeText={i => setUserInput(i)}
-                                />
+                                onSubmitEditing={() => passRef.current.focus()}/>
                             </Pressable>
                             <Pressable onPress={() => passRef.current.focus()} style={styles.register_pass_input_press}>
                                 <TextInput
+                                secureTextEntry={true}
+                                returnKeyType='next'
                                 value={passInput}
                                 placeholder='password'
                                 placeholderTextColor={'#444444'}
@@ -202,36 +325,116 @@ export default function Out({ navigation, route }) {
                                 style={styles.register_pass_input}
                                 autoCapitalize='none'
                                 onChangeText={i => setPassInput(i)}
-                                />
+                                onSubmitEditing={() => confirmPassRef.current.focus()}/>
                             </Pressable>
-                            <Pressable onPress={() => passRef.current.focus()} style={styles.register_pass_confirm_press}>
+                            <Pressable onPress={() => confirmPassRef.current.focus()} style={styles.register_pass_confirm_press}>
                                 <TextInput
-                                value={passInput}
+                                secureTextEntry={true}
+                                returnKeyType='next'
+                                value={confirmPassInput}
                                 placeholder='confirm password'
                                 placeholderTextColor={'#444444'}
                                 keyboardAppearance='dark'
                                 selectionColor={'#696969'}
-                                ref={passRef}
+                                ref={confirmPassRef}
                                 style={styles.register_pass_confirm}
                                 autoCapitalize='none'
-                                onChangeText={i => setConfirmInput(i)}
-                                />
+                                onChangeText={i => setConfirmPassInput(i)}
+                                onSubmitEditing={() => handleRegister()}/>
                             </Pressable>
                         </View>
-                        <Pressable onPress={() => nextPress()} style={styles.register_submit_press}>
-                            <Text style={styles.register_submit_text}>submit</Text>
+                        <View style={styles.error_container}>
+                            <Animated.Text style={[styles.error, {opacity: errorOpacity}]}>{error}</Animated.Text>
+                        </View>
+                        <Pressable onPress={() => handleRegister()} style={styles.register_submit_press}>
+                            <Text style={styles.register_submit_text}>next</Text>
                         </Pressable>
                     </Animated.View>
-                     :
-                    <View/>
-                    }
-
+                     : state === 'login' ?
+                    <Animated.View style={[styles.login_container, {opacity: loginOpacity}]}>
+                        <View style={styles.login_head}>
+                            <View style={styles.login_text_container}>
+                                <Text style={styles.login_text}>login</Text>
+                            </View>
+                        </View>
+                        <View style={styles.login_input_container}>
+                            <Pressable onPress={() => userRef.current.focus()} style={styles.login_email_input_press}>
+                                <TextInput
+                                returnKeyType='next'
+                                value={userInput}
+                                placeholder='email or phone'
+                                placeholderTextColor={'#444444'}
+                                keyboardAppearance='dark'
+                                selectionColor={'#696969'}
+                                ref={userRef}
+                                style={styles.login_email_input}
+                                autoCapitalize='none'
+                                onChangeText={i => setUserInput(i)}
+                                onSubmitEditing={() => passRef.current.focus()}/>
+                            </Pressable>
+                            <Pressable onPress={() => passRef.current.focus()} style={styles.login_pass_input_press}>
+                                <TextInput
+                                secureTextEntry={true}
+                                returnKeyType='go'
+                                value={passInput}
+                                placeholder='password'
+                                placeholderTextColor={'#444444'}
+                                keyboardAppearance='dark'
+                                selectionColor={'#696969'}
+                                ref={passRef}
+                                style={styles.login_pass_input}
+                                autoCapitalize='none'
+                                onChangeText={i => setPassInput(i)}
+                                onSubmitEditing={() => handleLogin()}/>
+                            </Pressable>
+                        </View>
+                        <View style={styles.error_container}>
+                            <Animated.Text style={[styles.error, {opacity: errorOpacity}]}>{error}</Animated.Text>
+                        </View>
+                        <Pressable onPress={() => handleLogin()} style={styles.login_submit_press}>
+                            <Text style={styles.login_submit_text}>ok</Text>
+                        </Pressable>
+                    </Animated.View>
+                     : state === 'username' &&
+                    <Animated.View style={[styles.username_container, {opacity: usernameOpacity}]}>
+                    <View style={styles.username_head}>
+                        <View style={styles.username_text_container}>
+                            <Text style={styles.username_text}>username</Text>
+                        </View>
+                    </View>
+                    
+                    <View style={styles.username_input_container}>
+                        <View style={styles.username_title_container}>
+                            <Text style={styles.username_title}>rout username.</Text>
+                        </View>
+                        <Pressable onPress={() => usernameRef.current.focus()} style={styles.username_input_press}>
+                            <TextInput
+                            secureTextEntry={false}
+                            returnKeyType='join'
+                            value={username}
+                            placeholder='username'
+                            placeholderTextColor={'#444444'}
+                            keyboardAppearance='dark'
+                            selectionColor={'#696969'}
+                            ref={usernameRef}
+                            style={styles.username_input}
+                            autoCapitalize='none'
+                            onChangeText={i => setUsername(i)}
+                            onSubmitEditing={() => registerReq()}/>
+                        </Pressable>
+                    </View>
+                    <View style={styles.error_container}>
+                        <Animated.Text style={[styles.error, {opacity: errorOpacity}]}>{error}</Animated.Text>
+                    </View>
+                    <Pressable onPress={() => registerReq()} style={styles.username_submit_press}>
+                        <Text style={styles.username_submit_text}>join</Text>
+                    </Pressable>
+                </Animated.View>}
                 </View>
                 <View style={[styles.terms_container, {}]}>
                     <Text style={styles.terms_text}>inhumanity will not be welcomed.</Text>
                 </View>
             </KeyboardAvoidingView>
-            
         </View>
     )
 }
@@ -240,7 +443,7 @@ const styles = StyleSheet.create({
     container: {
         height: window.height,
         width: window.width,
-        backgroundColor: '#555555',
+        backgroundColor: '#5F5F5F',
         alignItems: 'center'
     },
     rout_container: {
@@ -259,8 +462,8 @@ const styles = StyleSheet.create({
         bottom: window.width / 4
     },
     out_container: {
-        width: window.width / 1.2,
-        height: window.height / 2.8,
+        width: 350,
+        height: 300,
         borderRadius: 17,
         shadowColor: 'black',
         shadowOffset: {height: 0},
@@ -272,8 +475,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#777777'
     },
     conditional_out: {
+        zIndex: 1,
+        height: '100%',
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+        // backgroundColor: 'white'
     },
     welcome_container: {
         flex: 1,
@@ -297,6 +504,22 @@ const styles = StyleSheet.create({
     free: {
         color: '#171717'
     },
+    back_safe: {
+        position: 'absolute',
+        height: 70,
+        top: 0,
+        left: 0,
+    },
+    back_press: {
+        height: '100%',
+        width: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    back: {
+        width: 12,
+        height: 21
+    },
     
     
     button_container: {
@@ -313,7 +536,7 @@ const styles = StyleSheet.create({
         // shadowOffset: {height: 0},
         // shadowOpacity: 0.7,
         // shadowRadius: 4,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     register_button_text: {
         fontFamily: 'Louis',
@@ -331,7 +554,7 @@ const styles = StyleSheet.create({
         // shadowOffset: {height: 0},
         // shadowOpacity: 0.7,
         // shadowRadius: 4,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     login_button_text: {
         fontFamily: 'Louis',
@@ -340,6 +563,7 @@ const styles = StyleSheet.create({
     },
 
     login_container: {
+        zIndex: 1,
         overflow: 'hidden',
         position: 'absolute',
         width: '100%',
@@ -353,17 +577,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#5F5F5F'
     },
-    back_press: {
-        position: 'absolute',
-        height: '100%',
-        width: 70,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    back: {
-        width: 14,
-        height: 24,
-    },
+    
     login_text_container: {
         alignSelf: 'center'
     },
@@ -387,6 +601,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#A1A1A1'
     },
     login_email_input: {
+        width: '95%',
         fontFamily: 'Louis',
         fontSize: 17,
         color: 'black'
@@ -400,6 +615,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#A1A1A1'
     },
     login_pass_input: {
+        width: '95%',
         fontFamily: 'Louis',
         fontSize: 17,
         color: 'black'
@@ -415,7 +631,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 4,
         borderBottomLeftRadius: 12,
         borderBottomRightRadius: 12,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     login_submit_text: {
         fontFamily: 'Louis',
@@ -426,6 +642,7 @@ const styles = StyleSheet.create({
 
 
     register_container: {
+        zIndex: 1,
         overflow: 'hidden',
         position: 'absolute',
         width: '100%',
@@ -438,17 +655,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#5F5F5F'
-    },
-    back_press: {
-        position: 'absolute',
-        height: '100%',
-        width: 70,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    back: {
-        width: 14,
-        height: 24,
     },
     register_text_container: {
         alignSelf: 'center'
@@ -473,6 +679,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#A1A1A1'
     },
     register_email_input: {
+        width: '95%',
         fontFamily: 'Louis',
         fontSize: 17,
         color: 'black'
@@ -487,6 +694,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#A1A1A1'
     },
     register_pass_input: {
+        width: '95%',
         fontFamily: 'Louis',
         fontSize: 17,
         color: 'black'
@@ -500,6 +708,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#A1A1A1'
     },
     register_pass_confirm: {
+        width: '95%',
         fontFamily: 'Louis',
         fontSize: 17,
         color: 'black'
@@ -515,7 +724,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 4,
         borderBottomLeftRadius: 12,
         borderBottomRightRadius: 12,
-        backgroundColor: '#555555'
+        backgroundColor: '#5F5F5F'
     },
     register_submit_text: {
         fontFamily: 'Louis',
@@ -524,7 +733,91 @@ const styles = StyleSheet.create({
     },
     
 
+    username_container: {
+        zIndex: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        borderRadius: 17
+    },
+    username_head: {
+        height: 70,
+        width: '100%',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#5F5F5F'
+    },
+    
+    username_text_container: {
+        alignSelf: 'center'
+    },
+    username_text: {
+        fontFamily: 'Louis',
+        fontSize: 28,
+        color: '#C2C2C2'
+    },
+    username_input_container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    username_title_container: {
+        marginBottom: 10
+    },
+    username_title: {
+        fontFamily: 'Louis',
+        fontSize: 21,
+        color: '#C2C2C2'
+    },
+    username_input_press: {
+        height: 33,
+        width: 210,
+        marginBottom: 10,
+        borderRadius: 7,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#A1A1A1'
+    },
+    username_input: {
+        width: '95%',
+        fontFamily: 'Louis',
+        fontSize: 17,
+        color: 'black'
+    },
+    username_submit_press: {
+        height: 44,
+        width: '97%',
+        marginBottom: 5,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopLeftRadius: 4,
+        borderTopRightRadius: 4,
+        borderBottomLeftRadius: 12,
+        borderBottomRightRadius: 12,
+        backgroundColor: '#5F5F5F'
+    },
+    username_submit_text: {
+        fontFamily: 'Louis',
+        fontSize: 21,
+        color: '#C2C2C2'
+    },
 
+
+
+    error_container: {
+        position: 'absolute',
+        bottom: 55,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+    },
+    error: {
+        fontFamily: 'Louis',
+        fontSize: 17,
+        color: '#b91d25'
+    },
 
 
 
