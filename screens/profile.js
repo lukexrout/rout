@@ -30,7 +30,7 @@ const Interest = ({ cent, interest, pos }) => {
     )
 }
 
-const Head = memo(({ username, follower_cnt, following_cnt, interestOpacity, postOpacity, changeList, navigate }) => {
+const Head = memo(({ username, bio, follower_cnt, following_cnt, interestOpacity, postOpacity, changeList, navigate }) => {
 
     return (
         <View style={styles.general_profile_container}>
@@ -79,11 +79,14 @@ const Head = memo(({ username, follower_cnt, following_cnt, interestOpacity, pos
                             </Pressable>
                         </View>
                     </View>
-                    <View style={styles.sep_stat}/>
-                    <View style={styles.bio_container}>
-                        <Text style={styles.bio}>this is my bio currently. what do you think? I hope you like it considerably.</Text>
-                    </View>
-                    <View style={[styles.sep_stat, {width: 77}]}/>
+                    {bio !== '' &&
+                    <View>
+                        <View style={styles.sep_stat}/>
+                        <View style={styles.bio_container}>
+                            <Text style={styles.bio}>{bio}</Text>
+                        </View>
+                        <View style={[styles.sep_stat, {width: 77}]}/>
+                    </View>}
                     <View style={styles.button_container}>
                         <Pressable onPress={() => navigate('wallet')} style={styles.button_wallet}>
                             <Text style={styles.button_text}>wallet</Text>
@@ -114,7 +117,7 @@ const Head = memo(({ username, follower_cnt, following_cnt, interestOpacity, pos
     )
 })
 
-export default function Profile({ navigation }) {
+export default function Profile({ navigation, route }) {
 
     const postOpacity = useRef(new Animated.Value(1)).current
     const interestOpacity = useRef(new Animated.Value(0)).current
@@ -127,6 +130,7 @@ export default function Profile({ navigation }) {
     const [username, setUsername] = useState()
     const [follower_cnt, setFollower_cnt] = useState()
     const [following_cnt, setFollowing_cnt] = useState()
+    const [bio, setBio] = useState()
     const [user_id, setUser_id] = useState()
     const [postHeight, setPostHeight] = useState()
     const [interestHeight, setInterestHeight] = useState()
@@ -161,7 +165,7 @@ export default function Profile({ navigation }) {
         AsyncStorage.getItem('user_id', (err, res) => {
             setUser_id(res)
         })
-        if (!asyncStatus) {
+        if (!asyncStatus || route.params) {
             AsyncStorage.getItem('profile', (err, rawRes) => {
                 setAsyncStatus(true)
                 if (rawRes === null || rawRes === undefined) {
@@ -169,18 +173,14 @@ export default function Profile({ navigation }) {
                 } else {
                     const res = JSON.parse(rawRes)
                     console.log(`asyncRes: ${res}`)
-    
                     const currentTime = new Date()
                     const hourMili = 60 * 60 * 1000 // hour
-                    // const hourMili = 100
                     const dif = currentTime.getTime() - new Date(res[0]).getTime()
                     const comp = dif >= hourMili
-                    // console.log(`compare: ${comp}`)
-    
                     if (comp) {
                         reqProfile()
                         return
-                    } else  {
+                    } else {
                         setProfile(res.slice(-res.length + 1))
                     }
                 }
@@ -191,23 +191,22 @@ export default function Profile({ navigation }) {
         }, 444); // delay
     
         return () => clearTimeout(timer);
-    }, [asyncStatus, user_id])
+    }, [asyncStatus, user_id, route])
 
     const setProfile = (res) => {
-        console.log(`profileRes: ${res}`)
+        // console.log(res)
         setUsername(res[0])
-        const res_follower_cnt = res[1][0]['follower_cnt']
-        // adding nice formating for thousands and millions
+        setBio(res[1])
+        const res_follower_cnt = res[4][0]['follower_cnt']
         const finalFollower_cnt = res_follower_cnt < 9999 ? res_follower_cnt : 
         res_follower_cnt > 9999 && res_follower_cnt < 999999 ? Math.floor(res_follower_cnt / 100) / 10 + 'k' :
         res_follower_cnt > 999999 && Math.floor(res_follower_cnt / 100000) / 10 + 'm'
         setFollower_cnt(finalFollower_cnt)
-        setFollowing_cnt(res[1][0]['following_cnt'])
-        // console.log(res[2])
+        setFollowing_cnt(res[4][0]['following_cnt'])
     }
 
     const reqProfile = () => {
-        console.log(user_id)
+        // console.log(user_id)
         fetch(`http://${portFile.HOST}:3000/profile/self`, {
             method: 'POST',
             headers: {
@@ -218,21 +217,31 @@ export default function Profile({ navigation }) {
             })
         }).then(res => res.json())
         .then(res => {
-            console.log(`serverRes: ${res}`)
+            // console.log(`serverRes: ${res}`)
             if (!res.error) {
+
                 setProfile(res)
                 res.unshift(new Date())
                 AsyncStorage.setItem('profile', JSON.stringify(res))
-                // AsyncStorage.setItem('profile', null)
+                //// AsyncStorage.setItem('profile', null)
             }
         })
         .catch(err => console.error(err))
     }
 
+    const editProfileObj = {
+        location: 'profile',
+        username: username,
+        bio: bio,
+        follower_cnt: follower_cnt,
+        following_cnt: following_cnt
+    }
+    const walletObj = {
+        location: 'profile',
+    }
+
     const navigate = (i) => {
-		navigation.navigate(i, {
-            location: 'profile'
-        })
+		navigation.navigate(i, i === 'edit_profile' ? editProfileObj : walletObj)
 	}
 
     const changeList = (x, y) => {
@@ -289,6 +298,7 @@ export default function Profile({ navigation }) {
 				removeClippedSubviews={true}>
                     <Head
                     username={username}
+                    bio={bio}
                     follower_cnt={follower_cnt}
                     following_cnt={following_cnt}
                     navigate={navigate}

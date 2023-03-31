@@ -304,6 +304,7 @@ export default function Out({ navigation, route }) {
                                 value={userInput}
                                 placeholder='email or phone'
                                 placeholderTextColor={'#444444'}
+                                keyboardType='email-address'
                                 keyboardAppearance='dark'
                                 selectionColor={'#696969'}
                                 ref={userRef}
@@ -363,6 +364,7 @@ export default function Out({ navigation, route }) {
                                 returnKeyType='next'
                                 value={userInput}
                                 placeholder='email or phone'
+                                keyboardType='email-address'
                                 placeholderTextColor={'#444444'}
                                 keyboardAppearance='dark'
                                 selectionColor={'#696969'}

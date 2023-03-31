@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     setting_container: {
         height: 55,
         width: window.width / 1.07,
-        marginBottom: 10,
+        marginBottom: 7,
         borderRadius: 21,
         alignSelf: 'center',
         justifyContent: 'center',

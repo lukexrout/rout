@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, Animated, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, Animated } from 'react-native';
 import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
@@ -7,19 +7,26 @@ const back = require('../../assets/img/back.png')
 const info = require('../../assets/img/info.png')
 const go_to = require('../../assets/img/go_to.png')
 
-export default function InterestSet({ navigation, route }) {
+export default function Standards({ navigation, route }) {
 	
     const location = route.params.location
     
-    const num_ref = useRef()
     const toggleOneRight = useRef(new Animated.Value(0)).current
     const toggleOneOpacity = useRef(new Animated.Value(1)).current
+    const toggleTwoRight = useRef(new Animated.Value(0)).current
+    const toggleTwoOpacity = useRef(new Animated.Value(1)).current
+    const toggleThreeRight = useRef(new Animated.Value(0)).current
+    const toggleThreeOpacity = useRef(new Animated.Value(1)).current
+    const toggleFourRight = useRef(new Animated.Value(0)).current
+    const toggleFourOpacity = useRef(new Animated.Value(1)).current
 
     const [settings, setSettings] = useState([
-        {id: 0, setting: 'private', settingText: 'private?', toggleName: 'one', toggleRight: toggleOneRight, toggleOpacity: toggleOneOpacity, status: true},
+        {id: 0, setting: 'not_following', settingText: 'from: not following', toggleName: 'one', toggleRight: toggleOneRight, toggleOpacity: toggleOneOpacity, status: true},
+        {id: 1, setting: 'following_you', settingText: 'from: following you', toggleName: 'two', toggleRight: toggleTwoRight, toggleOpacity: toggleTwoOpacity, status: true},
+        {id: 2, setting: 'new_account', settingText: 'from: new account', toggleName: 'three', toggleRight: toggleThreeRight, toggleOpacity: toggleThreeOpacity, status: true},
+        {id: 3, setting: 'default_prof_photo', settingText: 'from: default profile photo', toggleName: 'four', toggleRight: toggleFourRight, toggleOpacity: toggleFourOpacity, status: true},
 
     ])
-    const [blockList, setBlockList] = useState()
 
     const navigate = (x, y) => {
         navigation.navigate(x, {
@@ -30,6 +37,9 @@ export default function InterestSet({ navigation, route }) {
     const handleToggle = (x, y) => {
         const toggleObj = {
             'one': [toggleOneRight, toggleOneOpacity],
+            'two': [toggleTwoRight, toggleTwoOpacity],
+            'three': [toggleThreeRight, toggleThreeOpacity],
+            'four': [toggleFourRight, toggleFourOpacity],
         }
         if (settings[y].status === false) {
             var newObj = settings
@@ -65,6 +75,29 @@ export default function InterestSet({ navigation, route }) {
         setSettings(newObj)
     }
 
+    const Setting = ({ item }) => {
+        return (
+            <View style={styles.setting_toggle_container}>
+                <View style={styles.setting_toggle_text_container}>
+                    <Text style={styles.setting_toggle_text}>{item.settingText}</Text>
+                </View>
+                <View style={styles.setting_toggle_end_container}>
+                    <Pressable style={styles.info_container}>
+                        <Image source={info} style={styles.info}/>
+                    </Pressable>
+                    <Pressable onPress={() => handleToggle(item.toggleName, item.id)} style={styles.toggle_press}>
+                        <View style={styles.toggle_safe}>
+                            <Animated.View style={[styles.toggle_background, {opacity: item.toggleOpacity}]}/>
+                            <View style={styles.toggle_container}>
+                                <Animated.View style={[styles.toggle, {right: item.toggleRight}]}/>
+                            </View>
+                        </View>
+                    </Pressable>
+                </View>
+            </View>
+        )
+    }
+
     // everything in front of this
 
     const [loaded] = useFonts({
@@ -84,46 +117,15 @@ export default function InterestSet({ navigation, route }) {
                     </Pressable>
                 </SafeAreaView>
                 <SafeAreaView style={styles.account_container}>
-                    <Text style={styles.account}>interests</Text>
+                    <Text style={styles.account}>standards</Text>
                 </SafeAreaView>
             </View>
             <View>
-                <View style={styles.setting_toggle_container}>
-                    <View style={styles.setting_toggle_text_container}>
-                        <Text style={styles.setting_toggle_text}>auto alter interests.</Text>
-                    </View>
-                    <View style={styles.setting_toggle_end_container}>
-                        <Pressable style={styles.info_container}>
-                            <Image source={info} style={styles.info}/>
-                        </Pressable>
-                        <Pressable onPress={() => handleToggle('one', 0)} style={styles.toggle_press}>
-                            <View style={styles.toggle_safe}>
-                                <Animated.View style={[styles.toggle_background, {opacity: toggleOneOpacity}]}/>
-                                <View style={styles.toggle_container}>
-                                    <Animated.View style={[styles.toggle, {right: toggleOneRight}]}/>
-                                </View>
-                            </View>
-                        </Pressable>
-                    </View>
-                </View>
-                <Pressable onPress={() => num_ref.current.focus()} style={styles.setting_toggle_container}>
-                    <View style={styles.setting_toggle_text_container}>
-                        <Text style={styles.setting_toggle_text}>number of interests</Text>
-                    </View>
-                    <View style={styles.num_container}>
-                        <TextInput
-                        ref={num_ref}
-                        style={styles.num}
-                        returnKeyType='done'
-                        keyboardType='number-pad'
-                        // value={#}
-                        placeholder='#'
-                        placeholderTextColor={'#444444'}
-                        selectionColor={'#696969'}
-                        keyboardAppearance='dark'/>
-                    </View>
-                </Pressable>
-                
+                {settings.map((item) => (
+                    <Setting
+                    key={item.id}
+                    item={item}/>
+                ))}
             </View>
         </View>
     )
@@ -234,21 +236,23 @@ const styles = StyleSheet.create({
         height: 17,
         width: 17,
     },
-    num_container: {
+    setting_go_to_end_container: {
         position: 'absolute',
-        height: '70%',
-        aspectRatio: 1,
-        right: 10,
-        borderRadius: 11,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#888888'
+        height: '100%',
+        width: '100%',
+        right: 0,
     },
-    num: {
-        fontFamily: 'Louis',
-        fontSize: 16,
-        color: '#222222' 
+    setting_go_to_container: {
+        height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        // backgroundColor: 'white'
+    },
+    setting_go_to: {
+        height: 17,
+        width: 9,
+        right: 20,
     }
-    
     
 })

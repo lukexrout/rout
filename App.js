@@ -27,8 +27,13 @@ import Feedback from './screens/set/feedback'
 import InterestSet from './screens/set/interest_set'
 import NotificationSet from './screens/set/noti_set'
 import Account from './screens/set/account'
+import EmailPhone from './screens/set/email-phone';
+import Password from './screens/set/password';
+import NotificationAccounts from './screens/set/noti_acc';
+import Standards from './screens/set/standards';
 
 const Stack = createNativeStackNavigator();
+const portFile = require('./port.json')
 
 export default function App() {
 
@@ -39,9 +44,25 @@ export default function App() {
 			if (res === undefined || res === null) {
 				setState('out')
 			} else {
-				setState('in')
-				console.log(`res: ${res}`)
-				console.log(`state: ${state}`)
+				fetch(`http://${portFile.HOST}:3000/check_user_id`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						'user_id': res
+					})
+				}).then(res => res.json())
+				.then(res => {
+					if(res['error']) {
+						setState('out')
+					} else {
+						setState('in')
+						console.log(`res: ${res}`)
+						console.log(`state: ${state}`)
+					}
+				})
+				
 			}
 		})
 	})
@@ -72,10 +93,14 @@ export default function App() {
 						animationTypeForReplace: 'push',
 						gestureDirection: 'horizontal'
 					  }}/>
+					<Stack.Screen name='password' component={Password}/>
+					<Stack.Screen name='email-phone' component={EmailPhone}/>
 					<Stack.Screen name='data' component={Data}/>
 					<Stack.Screen name='feedback' component={Feedback}/>
 					<Stack.Screen name='interest_set' component={InterestSet}/>
 					<Stack.Screen name='noti_set' component={NotificationSet}/>
+					<Stack.Screen name='noti_acc' component={NotificationAccounts}/>
+					<Stack.Screen name='standards' component={Standards}/>
 					<Stack.Screen name='account' component={Account}/>
 					<Stack.Screen name='dm' component={DM}/>
 					<Stack.Screen name='active_chat' component={ActiveChat}/>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View, Image, Dimensions } from 'react-native';
+import React, { useState, useEffect} from 'react';
+import { AppState, StyleSheet, View, Image, Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -17,6 +17,19 @@ const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
 export default function Bottom_Nav() {
+
+	const [appState, setAppState] = useState(AppState.currentState);
+
+	useEffect(() => {
+		const state = AppState.addEventListener('change', handleAppStateChange)
+		return () => {
+			state.remove()
+		};
+	}, []);
+	const handleAppStateChange = (nextAppState) => {
+		setAppState(nextAppState)
+		console.log('App state changed to: ', nextAppState)
+	}
 
 	return (
 		<Tab.Navigator 

@@ -6,10 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 
 import Content from './content.js';
-
-import Recommended from '../components/recommended'
-import Trending from '../components/trending'
-import News from '../components/news'
+const portFile = require('../port.json')
 
 const profile_img = require('../assets/img/user_profile_template.png')
 
@@ -201,15 +198,16 @@ export default function Discover({ navigation }) {
 	const headResult = () => {
 		return (<View style={styles.result_head}/>)
 	}
+	const loadResult = () => {
+		return (
+			<View style={{top: 40}}>
+				<ActivityIndicator size="small" color="#C2C2C2"/>
+			</View>
+		)
+	}
 	const footResult = () => {
 		return (
-			<View>
-				{resultLoading ? 
-					<View style={{top: 40}}>
-						<ActivityIndicator size="small" color="#C2C2C2"/>
-					</View>
-				 : <View style={styles.result_foot}/>}
-			</View>
+			<View style={styles.result_foot}/>
 		)
 	}
 	const searchPress = () => {
@@ -217,7 +215,8 @@ export default function Discover({ navigation }) {
 	}
 
 	const handleSearchFetch = async (x, y, z) => {
-		await fetch('http://192.168.1.86:3000/search', {
+		setResultLoading(true)
+		await fetch(`http://${portFile.HOST}:3000/search`, {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
@@ -274,7 +273,6 @@ export default function Discover({ navigation }) {
 			// 	setResults(newArr)
 			// }
 
-			setResultLoading(true)
 			setSearch(searchInput)
 			if (status !== 'result') {
 				Animated.parallel([
@@ -355,6 +353,7 @@ export default function Discover({ navigation }) {
 					onMomentumScrollBegin={() => setMomentum(true)}
 					onEndReached={momentum === true ? searchUser(search) : null}
 					onEndReachedThreshold={0}/>
+					{resultLoading && loadResult}
 				</Animated.View>
 		</View>
 	);
