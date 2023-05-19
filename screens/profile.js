@@ -20,12 +20,12 @@ const save_icon = require('../assets/img/save_icon_profile.png')
 const Interest = ({ cent, interest, pos }) => {
     return (
         <View>
-
-        <View style={styles.interest_container}>
-            <View style={[styles.interest_level, {width: cent}]}/>
-            <Text style={styles.interest}>{interest}</Text>
-        </View>
-        {pos === 'last' ? <View style={{height: 77}}/> : <View/>}
+            
+            <View style={styles.interest_container}>
+                <View style={[styles.interest_level, {width: cent}]}/>
+                <Text style={styles.interest}>{interest}</Text>
+            </View>
+            {pos === 'last' ? <View style={{height: 77}}/> : <View/>}
         </View>
     )
 }
@@ -79,7 +79,7 @@ const Head = memo(({ username, bio, follower_cnt, following_cnt, interestOpacity
                             </Pressable>
                         </View>
                     </View>
-                    {bio !== '' &&
+                    {bio &&
                     <View>
                         <View style={styles.sep_stat}/>
                         <View style={styles.bio_container}>
@@ -162,6 +162,7 @@ export default function Profile({ navigation, route }) {
 	])
 
     useEffect(() => {
+        console.log(bio)
         AsyncStorage.getItem('user_id', (err, res) => {
             setUser_id(res)
         })
@@ -191,7 +192,7 @@ export default function Profile({ navigation, route }) {
         }, 444); // delay
     
         return () => clearTimeout(timer);
-    }, [asyncStatus, user_id, route])
+    }, [asyncStatus, user_id, route, username, bio])
 
     const setProfile = (res) => {
         // console.log(res)
@@ -217,7 +218,7 @@ export default function Profile({ navigation, route }) {
             })
         }).then(res => res.json())
         .then(res => {
-            // console.log(`serverRes: ${res}`)
+            console.log(`serverRes: ${res}`)
             if (!res.error) {
 
                 setProfile(res)
@@ -336,6 +337,9 @@ export default function Profile({ navigation, route }) {
                         onLayout={( event ) => {
                         const {x, y, width, height} = event.nativeEvent.layout
                         setInterestHeight(height)}}>
+                            <Pressable style={styles.edit_container}>
+                                <Text style={styles.edit}>edit interests.</Text>
+                            </Pressable>
                             {data.map((item) => (
                                 <Interest 
                                 key={item.interest_id}
@@ -599,6 +603,25 @@ const styles = StyleSheet.create({
     interests_container: {
         position: 'absolute',
         alignSelf: 'center'
+    },
+    edit_container: {
+        width: window.width / 1.1,
+        marginVertical: 7,
+        paddingVertical: 4,
+        borderRadius: 7,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#777777',
+        shadowColor: '#222222',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+    },
+    edit: {
+        fontFamily: 'Louis',
+        fontSize: 21,
+        color: '#C2C2C2'
     },
     interest_container: {
         marginBottom: 7,

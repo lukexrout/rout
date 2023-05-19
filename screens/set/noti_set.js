@@ -34,58 +34,59 @@ export default function NotificationSet({ navigation, route }) {
     // still need to refactor the copied the code from the account page
 
     useEffect(() => {
-        AsyncStorage.getItem('profile', (err, rawRes) => {
-            const res = JSON.parse(rawRes)
-            const privateToggle = res[6][0]['privacy']['private']
-            if (privateToggle) {
-                Animated.parallel([
-                    Animated.timing(toggleOneRight, {
-                        toValue: 0,
-                        duration: 0,
-                        useNativeDriver: false
-                    }),
-                    Animated.timing(toggleOneOpacity, {
-                        toValue: 1,
-                        duration: 0,
-                        useNativeDriver: false
-                    })
-                ]).start()
-            }
-            const settingsArr = settings
-            settingsArr[0].status = privateToggle
-            settingsArr[1].status = privateToggle
-        })
+        // AsyncStorage.getItem('profile', (err, rawRes) => {
+        //     const res = JSON.parse(rawRes)
+        //     const privateToggle = res[6][0]['privacy']['private']
+        //     if (privateToggle) {
+        //         Animated.parallel([
+        //             Animated.timing(toggleOneRight, {
+        //                 toValue: 0,
+        //                 duration: 0,
+        //                 useNativeDriver: false
+        //             }),
+        //             Animated.timing(toggleOneOpacity, {
+        //                 toValue: 1,
+        //                 duration: 0,
+        //                 useNativeDriver: false
+        //             })
+        //         ]).start()
+        //     }
+        //     const settingsArr = settings
+        //     settingsArr[0].status = privateToggle
+        //     settingsArr[1].status = privateToggle
+        // })
     }, [])
     const navigate = (x, y, z) => {
         if (updateStatus === []) {
-            AsyncStorage.getItem('user_id', (err, asyncRes) => {
-                fetch(`http://${portFile.HOST}:${portFile.PORT}/setting`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'user_id': asyncRes,
-                        'setting': 'privacy-private'
-                    })
-                }).then(res => res.json())
-                .then(async res => {
-                    if (res.error) {
-                        console.error(res.error)
-                    } else {
-                        await AsyncStorage.getItem('profile', (err, rawRes) => {
-                            let res = JSON.parse(rawRes)
-                            res[6][0]['privacy']['private'] = settings[1].status
-                            AsyncStorage.setItem('profile', JSON.stringify(res))
-                        })
-                        setUpdateStatus(false)
-                    }
-                })
-                .catch(err => console.error(err))
-            })
+            // AsyncStorage.getItem('user_id', (err, asyncRes) => {
+            //     fetch(`http://${portFile.HOST}:${portFile.PORT}/setting`, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify({
+            //             'user_id': asyncRes,
+            //             'setting': 'privacy-private'
+            //         })
+            //     }).then(res => res.json())
+            //     .then(async res => {
+            //         if (res.error) {
+            //             console.error(res.error)
+            //         } else {
+            //             await AsyncStorage.getItem('profile', (err, rawRes) => {
+            //                 let res = JSON.parse(rawRes)
+            //                 res[6][0]['privacy']['private'] = settings[1].status
+            //                 AsyncStorage.setItem('profile', JSON.stringify(res))
+            //             })
+            //             setUpdateStatus(false)
+            //         }
+            //     })
+            //     .catch(err => console.error(err))
+            // })
         }
         navigation.navigate(x, {
-            location: y
+            location: y,
+            base: z
         })
     }
     const handleToggle = (x, y) => {
@@ -189,7 +190,7 @@ export default function NotificationSet({ navigation, route }) {
                     <Text style={styles.setting_toggle_text}>accounts.</Text>
                 </View>
                 <View style={styles.setting_go_to_end_container}>
-                    <Pressable onPress={() => navigate('noti_acc', 'noti_set')} style={styles.setting_go_to_container}>
+                    <Pressable onPress={() => navigate('noti_acc', 'noti_set', location)} style={styles.setting_go_to_container}>
                         <Image source={go_to} style={styles.setting_go_to}/>
                     </Pressable>
                 </View>
@@ -199,7 +200,7 @@ export default function NotificationSet({ navigation, route }) {
                     <Text style={styles.setting_toggle_text}>standards.</Text>
                 </View>
                 <View style={styles.setting_go_to_end_container}>
-                    <Pressable onPress={() => navigate('standards', 'noti_set')} style={styles.setting_go_to_container}>
+                    <Pressable onPress={() => navigate('standards', 'noti_set', location)} style={styles.setting_go_to_container}>
                         <Image source={go_to} style={styles.setting_go_to}/>
                     </Pressable>
                 </View>

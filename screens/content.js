@@ -50,11 +50,13 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 		// 	setImageLoaded(true)
 		// }
 		// prefetchImage()
-		if (source.type === 'image') {
-		Image.getSize(source.uri, (width, height) => {
-			setImageRatio(window.width / width)
-			setImageHeight(height)
-		})}
+		// if (source.type === 'image') {
+		// 	console.log(source.uri)
+		// 	Image.getSize(source.uri, (width, height) => {
+		// 		setImageRatio(window.width / width)
+		// 		setImageHeight(height)
+		// 	})
+		// }
 	}, [])
 	const collapsePress = (x) => {
 		if (x !== collapseStatus) {
@@ -167,7 +169,7 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 						</Pressable>
 					</View>
 				</View>
-				{infoStatus === true ?
+				{infoStatus === true &&
 				<Animated.View style={[styles.info_modal_safe, {opacity: infoOpacity}]}>
 					<Pressable onPress={() => infoPress(true)} style={styles.info_modal_background}/>
 					<View style={styles.info_modal_container}>
@@ -187,22 +189,17 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 							</Pressable>
 						</View>
 					</View>	
-				</Animated.View>
-					:
-				<View/>
-				}
+				</Animated.View>}
 				<View style={styles.text_content_container}>
 					<Text style={styles.text_content}>{source.content}</Text>
 				</View>
 				<View style={styles.text_interact_container}>
 					<Pressable onPress={() => votePress('upVote')} style={styles.text_interact_icon}>
 						<Text style={styles.text_data}>107k</Text>
-
 						{voteStatus === 'upVote' ?
 						<Image style={styles.text_down} source={arrow_up_pressed}/>
 						 :
-						<Image style={styles.text_up} source={arrow_up_white}/>
-						}
+						<Image style={styles.text_up} source={arrow_up_white}/>}
 					</Pressable>
 					<Pressable onPress={() => reroutPress()} style={styles.text_interact_icon}>
 						<Text style={styles.text_data}>1.4m</Text>
@@ -217,16 +214,14 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 						{saveStatus === 'save' ?
 						<Image style={styles.text_save} source={bookmark_icon_pressed}/>
 						 :
-						<Image style={styles.text_save} source={bookmark_icon_white}/>
-						}
+						<Image style={styles.text_save} source={bookmark_icon_white}/>}
 					</Pressable>
 					<Pressable onPress={() => votePress('downVote')} style={styles.text_interact_icon}>
 						<Text style={styles.text_data}>1777</Text>
 						{voteStatus === 'downVote' ?
 						<Image style={styles.text_down} source={arrow_down_pressed}/>
 						 :
-						<Image style={styles.text_down} source={arrow_down_white}/>
-						}
+						<Image style={styles.text_down} source={arrow_down_white}/>}
 					</Pressable>
 				</View>
 			</View>	
@@ -234,11 +229,10 @@ export default function Content ({ navigation, source, id, scrollTo, location, p
 			<View style={styles.image_container}>
 				<View style={styles.image}>
 					<Image
-					source={{uri: source.uri}}
+					source={source.uri}
 					resizeMode='stretch'
-					style={
-						{height: imageHeight * imageRatio}
-					}/>
+					// style={{height: imageHeight * imageRatio}}/>
+					style={{height: 400, width: window.width}}/>
 				</View>
 				<View style={styles.image_overlay_container}>
 					<Pressable onPress={() => infoPress(true)} style={styles.image_info_container}>

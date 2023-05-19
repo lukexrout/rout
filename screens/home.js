@@ -7,6 +7,10 @@ import axios from 'axios'
 
 import Content from './content.js'
 
+const img = require('../assets/IMG_0781.jpeg')
+
+const portFile = require('../port.json')
+
 // images
 const plus_img = require('../assets/img/plus_sign.png')
 const slider_icon = require('../assets/img/slider_icon.png')
@@ -27,49 +31,66 @@ const Head = () => {
 		</View>
 	)
 }
-const Foot = () => {
-	return (
-		<View style={styles.foot_container}>
-		</View>
-	)
-}
 
 function Home({ navigation }) {
 	
 	const listRef = useRef()
 
 	const [sourceList, setSourceList] = useState([
-		
+        {post_id: 1, pos: null, type: 'text', content: 'This is a test post. This should be generally working as an expandable text post that can be ever expanding unlike my competitors; twitter.'}, 
+        {post_id: 2, pos: null, type: 'text', content: 'set for launch in exactly 2 months!'}, 
+        {post_id: 3, pos: null, type: 'image', uri: img, content: 'set for launch in exactly 2 months!'}, 
+        {post_id: 4, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 5, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 6, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 7, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 8, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 9, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 10, pos: null, type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
+        {post_id: 11, pos: 'last', type: 'text', content: 'This is another update on my demo... They have just scrolled down and read more and more of my pre-made content... lol do they even know? who knows haha'}, 
 	])
+
 	
 	useEffect(() => {
 		// genFeed()
-	})
+	}, [sourceList])
 
-	const genFeed = async () => {
+	// const genFeed = async () => {
 
-		try {
-			const response = await fetch('http://192.168.1.86:3000/download/compressed_image1675899013051.jpeg')
-			const blob = await response.blob()
-			const source = URL.createObjectURL(blob)
+	// 	try {
+	// 		const response = await fetch(`http://${portFile.HOST}:${portFile.PORT}/download/compressed-file-1675898409284.jpeg`)
+	// 		const blob = await response.blob()
+	// 		const reader = new FileReader()
+	// 		reader.readAsDataURL(blob)
+	// 		reader.onloadend = () => {
+	// 			const source = reader.result
+	// 			// console.log(source)
 
-			// setSourceList((x) => {
-			// 	x[1].uri = source
-			// 	setSourceList(x)
-			// 	console.log(x[1])
-			// })
+	// 			const defText = {post_id: null, pos: null, type: null, content: null}
+	// 			const defImage = {post_id: null, pos: null, type: null, uri: null, content: null}
 
-		} catch (err) {
-			console.error(err)
-		}
+	// 			setSourceList((x) => {
+	// 				const finImg = defImage
+	// 				finImg.post_id = 3
+	// 				finImg.type = 'image'
+	// 				finImg.uri = source
+	// 				finImg.content = 'hello world.'
+	// 				x.splice(2, 0, finImg)
+	// 				setSourceList(x)
+	// 			})
+	// 		}
 
-		// fetch('http://192.168.1.86:3000/download/compressed_image1675899013051.jpeg')
-		// .then(res => res.blob())
-		// .then(blob => {
-		// 	console.log(blob)
-		// })
-		// .catch(err => console.error(err))
-	}
+	// 	} catch (err) {
+	// 		console.error(err)
+	// 	}
+
+	// 	// fetch('http://192.168.1.86:3000/download/compressed_image1675899013051.jpeg')
+	// 	// .then(res => res.blob())
+	// 	// .then(blob => {
+	// 	// 	console.log(blob)
+	// 	// })
+	// 	// .catch(err => console.error(err))
+	// }
 
 	const scrollTo = (y) => {
 		listRef.current.scrollToOffset({ animated: true, offset: y })
@@ -83,7 +104,7 @@ function Home({ navigation }) {
 			scrollTo={scrollTo} 
 			navigation={navigation}
 			location={'home'}
-			/>)
+			pos={item.pos}/>)
 	}
 
 	const navigate = (i) => {
@@ -119,7 +140,6 @@ function Home({ navigation }) {
 				style={styles.feed}
 				data={sourceList}
 				ListHeaderComponent={Head}
-				ListFooterComponent={Foot}
 				showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
 				CellRendererComponent={continuousPost}
@@ -197,9 +217,9 @@ const styles = StyleSheet.create({
         fontSize: 40,
         color: '#C2C2C2'
 	},
-	foot_container: {
-		height: window.width / 2.8
-	},
+	// foot_container: {
+	// 	height: 
+	// },
 
 	post_container: {
 		width: window.width,

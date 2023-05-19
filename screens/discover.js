@@ -216,7 +216,7 @@ export default function Discover({ navigation }) {
 
 	const handleSearchFetch = async (x, y, z) => {
 		setResultLoading(true)
-		await fetch(`http://${portFile.HOST}:3000/search`, {
+		await fetch(`http://${portFile.HOST}:${portFile.PORT}/search`, {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'black'
 	},
 	result_head: {
-		height: 88
+		height: 99
 	},
 	result_foot: {
 		height: 77

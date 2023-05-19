@@ -18,7 +18,6 @@ export default function Out({ navigation, route }) {
     const outOpacity = useRef(new Animated.Value(1)).current
     const registerOpacity = useRef(new Animated.Value(0)).current
     const loginOpacity = useRef(new Animated.Value(0)).current
-    const register_opacity = useRef(new Animated.Value(0)).current
     const errorOpacity = useRef(new Animated.Value(0)).current
     const backAnim = useRef(new Animated.Value(0)).current
     const usernameOpacity = useRef(new Animated.Value(0)).current
@@ -35,6 +34,11 @@ export default function Out({ navigation, route }) {
     const handleRegister = () => {
         const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userInput)
         const phoneTest = /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/.test(userInput)
+        const numberRegex = /\d/.test(passInput)
+        const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/.test(passInput)
+        const caseRegex = /[A-Z]/.test(passInput)
+        const lengthRegex = /^.{7,}$/.test(passInput)
+        const spaceRegex = /\s/.test(passInput)
         const type = emailTest ? 'email' : phoneTest && 'phone'
         if (!userInput || !passInput || !confirmPassInput) {
             setError(`cannot have empty fields.`)
@@ -54,6 +58,30 @@ export default function Out({ navigation, route }) {
             return
         } else if (confirmPassInput !== passInput) {
             setError(`passwords do not match.`)
+            Animated.timing(errorOpacity, {
+                toValue: 1,
+                duration: 177,
+                useNativeDriver: false
+            }).start()
+            return
+        } else if (spaceRegex) {
+            setError(`password can't contain spaces.`)
+            Animated.timing(errorOpacity, {
+                toValue: 1,
+                duration: 177,
+                useNativeDriver: false
+            }).start()
+            return
+        } else if (!numberRegex || !symbolRegex || !caseRegex || !lengthRegex) {
+            const testObj = {
+                numTest: numberRegex,
+                symTest: symbolRegex,
+                casTest: caseRegex,
+                lenTest: lengthRegex
+            }
+            const testArr = [!testObj.numTest ? ' number' : 0, !testObj.symTest ? ' symbol' : 0, !testObj.casTest ? ' upperCase': 0, !testObj.lenTest ? ' length 7+' : 0]
+            const newArr = testArr.filter((i) => i !== 0).join(',')
+            setError(`needs: ${newArr}`)
             Animated.timing(errorOpacity, {
                 toValue: 1,
                 duration: 177,

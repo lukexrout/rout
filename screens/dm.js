@@ -7,7 +7,7 @@ const back = require('../assets/img/back.png')
 const plus = require('../assets/img/plus.png')
 const profile = require('../assets/img/user_profile_template.png')
 
-const Chat = ({ navigation, route, status, user, last_dm }) => {
+const Chat = ({ navigation, navigate, route, status, user, last_dm }) => {
 
     const condenseSample = () => {
         if (last_dm.length > 17) {
@@ -22,7 +22,7 @@ const Chat = ({ navigation, route, status, user, last_dm }) => {
     }
 
     return (
-        <View style={[styles.chat_container, status === 'read' ? {backgroundColor: '#777777'} : {backgroundColor: '#999999'}]}>
+        <Pressable onPress={() => navigate('active_chat', 'dm', user)} style={[styles.chat_container, status === 'read' ? {backgroundColor: '#777777'} : {backgroundColor: '#999999'}]}>
             <View style={styles.chat_img_container}>
                 <Image style={styles.chat_img} source={profile}/>
             </View>
@@ -38,7 +38,7 @@ const Chat = ({ navigation, route, status, user, last_dm }) => {
                 <Text style={[styles.chat_status, status === 'read' ? {color: '#B4B4B4'} : {color: '#444444'}]}>{status} | 77w</Text>
             </View>
 
-        </View>
+        </Pressable>
     )
 }
 
@@ -62,12 +62,23 @@ export default function DM({ navigation, route }) {
         {id: 4, status: 'read', user: 'schafferluke', last_dm: 'samplesamplesamplesamplesamplesamplesample'},
     ])
 
-    const navigate = (x) => {
-        navigation.navigate(x)
+    const navigate = (x, y, z) => {
+        navigation.navigate(x, {
+            location: y,
+            user: z
+        })
     }
 
     const chat = ({item}) => {
-        return (<Chat navigation={navigation} route={route} status={item.status} user={item.user} last_dm={item.last_dm} key={item.id}/>)
+        return (
+            <Chat 
+            navigation={navigation} 
+            navigate={navigate}
+            route={route} 
+            status={item.status} 
+            user={item.user} 
+            last_dm={item.last_dm} 
+            key={item.id}/>)
     }
     const chatHead = ({item}) => {
         return(<ChatHead/>)

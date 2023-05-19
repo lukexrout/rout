@@ -10,6 +10,7 @@ const go_to = require('../../assets/img/go_to.png')
 export default function Standards({ navigation, route }) {
 	
     const location = route.params.location
+    const base = route.params.base
     
     const toggleOneRight = useRef(new Animated.Value(0)).current
     const toggleOneOpacity = useRef(new Animated.Value(1)).current
@@ -112,7 +113,7 @@ export default function Standards({ navigation, route }) {
         <View style={styles.container}>
             <View style={styles.head_safe}>
                 <SafeAreaView style={styles.back_safe}>
-                    <Pressable onPress={() => navigate(location, 'profile')} style={styles.back_press}>
+                    <Pressable onPress={() => navigate(location, base)} style={styles.back_press}>
                         <Image style={styles.back} source={back}/>
                     </Pressable>
                 </SafeAreaView>

@@ -10,9 +10,9 @@ export default function Rerout({ navigation, route }) {
     const location = route.params.location
     
     const repostOpacity = useRef(new Animated.Value(1)).current
-    const captionOpacity = useRef(new Animated.Value(0)).current
+    const referenceOpacity = useRef(new Animated.Value(0)).current
     const repostTextOpacity = useRef(new Animated.Value(1)).current
-    const captionTextOpacity = useRef(new Animated.Value(0)).current
+    const referenceTextOpacity = useRef(new Animated.Value(0)).current
 
     const [reroutSelection, setReroutSelection] = useState('repost')
 
@@ -25,17 +25,17 @@ export default function Rerout({ navigation, route }) {
 
         setReroutSelection(x)
         const animObj = {
-            'caption': [
-                captionOpacity,
+            'reference': [
+                referenceOpacity,
                 repostOpacity,
-                captionTextOpacity,
+                referenceTextOpacity,
                 repostTextOpacity
             ],
             'repost': [
                 repostOpacity,
-                captionOpacity,
+                referenceOpacity,
                 repostTextOpacity,
-                captionTextOpacity
+                referenceTextOpacity
             ]
         }
         
@@ -93,14 +93,14 @@ export default function Rerout({ navigation, route }) {
             <View style={styles.rerout_select}>
                 <Pressable onPress={() => reroutSelect('repost')} style={styles.repost_select}>
                     <Animated.View style={[styles.repost_anim, {opacity: repostOpacity}]}></Animated.View>
-                    <Animated.Text style={[styles.repost_text, {opacity: captionTextOpacity}]}>repost</Animated.Text>
+                    <Animated.Text style={[styles.repost_text, {opacity: referenceTextOpacity}]}>repost</Animated.Text>
                     <Animated.Text style={[styles.repost_text_selected, {opacity: repostTextOpacity}]}>repost</Animated.Text>
                 </Pressable>
                 <View style={styles.sep}/>
-                <Pressable onPress={() => reroutSelect('caption')} style={styles.caption_select}>
-                    <Animated.View style={[styles.caption_anim, {opacity: captionOpacity}]}></Animated.View>
-                    <Animated.Text style={[styles.caption_text, {opacity: repostTextOpacity}]}>caption</Animated.Text>
-                    <Animated.Text style={[styles.caption_text_selected, {opacity: captionTextOpacity}]}>caption</Animated.Text>
+                <Pressable onPress={() => reroutSelect('reference')} style={styles.reference_select}>
+                    <Animated.View style={[styles.reference_anim, {opacity: referenceOpacity}]}></Animated.View>
+                    <Animated.Text style={[styles.reference_text, {opacity: repostTextOpacity}]}>reference</Animated.Text>
+                    <Animated.Text style={[styles.reference_text_selected, {opacity: referenceTextOpacity}]}>reference</Animated.Text>
                 </Pressable>
             </View>
 
@@ -198,24 +198,24 @@ const styles = StyleSheet.create({
         width: 1,
         backgroundColor: '#333333',
     },
-    caption_select: {
+    reference_select: {
         width: 110,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#444444'
     },
-    caption_anim: {
+    reference_anim: {
         position: 'absolute',
         height: '100%',
         width: '100%',
         backgroundColor: '#999999',
     },
-    caption_text: {
+    reference_text: {
         color: '#C2C2C2',
         fontFamily: 'Louis',
         fontSize: 17
     }, 
-    caption_text_selected: {
+    reference_text_selected: {
         position: 'absolute',
         color: '#111111',
         fontFamily: 'Louis',

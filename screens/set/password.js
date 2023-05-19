@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, TextInput, EventSubscriptionVendor } from 'react-native';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,32 +15,52 @@ export default function Password({ navigation, route }) {
     const [password, setPassword] = useState()
     const [confirm, setConfirm] = useState()
     const [error, setError] = useState()
+    const [success, setSuccess] = useState()
+
+    // infinite loop changing password
 
     const navigate = (x) => {
         if (password) {
-            passChange()
+            passChange(x)
+        } else {
+            navigation.navigate(x, {
+                location: 'settings'
+            })
         }
-        navigation.navigate(x, {
-            location: 'settings'
-        })
     }
 
     // need to finish regex implementation
 
-    const passChange = () => {
+    const passChange = (x) => {
         const numberRegex = /\d/
         const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/
         const caseRegex = /[A-Z]/
         const lengthRegex = /^.{7,}$/
         const spaceRegex = /\s/
-        if (!numberRegex && !symbolRegex && !caseRegex && !lengthRegex) {
-
-            setError('needs atleast one: ')
-        } else if (spaceRegex) {
+        if (!password || !confirm) {
+            setError('fields cannot be empty.')
+            return
+        } else if (password !== confirm) {
+            setError('passwords must match.')
+            return
+        } else if (spaceRegex.test(password)) {
             setError('no spaces.')
+            return
+        } else if (!numberRegex.test(password) || !symbolRegex.test(password) || !caseRegex.test(password) || !lengthRegex.test(password)) {
+            const testObj = {
+                numTest: numberRegex.test(password),
+                symTest: symbolRegex.test(password),
+                casTest: caseRegex.test(password),
+                lenTest: lengthRegex.test(password)
+            }
+            const testArr = [!testObj.numTest ? 'number ' : 0, !testObj.symTest ? ' symbol ' : 0, !testObj.casTest ? ' upperCase ': 0, !testObj.lenTest ? ' length 7+' : 0]
+            const newArr = testArr.filter((i) => i !== 0).join('-')
+            setError(`needs one: ${newArr}`)
+            return
         }
+        console.log('test')
         AsyncStorage.getItem('user_id', (err, asyncRes) => {
-            fetch(`http://${portFile.HOST}:${portFile.PORT}/profile_change/${password}`, {
+            fetch(`http://${portFile.HOST}:${portFile.PORT}/profile_change/password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -55,7 +75,18 @@ export default function Password({ navigation, route }) {
                     console.error(res.error)
                 } else {
                     console.log(res)
+                    setPassword('')
+                    setConfirm('')
+                    setError('')
+                    setSuccess('password changed!!')
                 }
+            })
+            .then(() => {
+                setTimeout(() => {
+                    navigation.navigate(x, {
+                        location: 'settings'
+                    })
+                }, 777)
             })
             .catch(err => console.error(err))
         })
@@ -90,16 +121,19 @@ export default function Password({ navigation, route }) {
                         style={styles.password_chg}
                         autoCapitalize='none'
                         autoCorrect="off"
-                        
+                        value={password}
                         secureTextEntry={true}
                         placeholder='change password'
                         placeholderTextColor={'#444444'}
                         selectionColor={'#696969'}
                         keyboardAppearance='dark'
-                        onChangeText={i => setPassword(i)}/>
+                        onChangeText={i => {
+                            setPassword(i)
+                            !i ? setError('') : (i.length > 0 && success) && setSuccess('')
+                        }}/>
                     </Pressable>
                 </View>
-                {password &&
+                {(password || confirm) &&
                 <View>
                     <View style={styles.password_chg_container}>
                         <Pressable style={styles.password_chg_press}>
@@ -108,20 +142,27 @@ export default function Password({ navigation, route }) {
                             autoCapitalize='none'
                             autoCorrect="off"
                             secureTextEntry={true}
+                            value={confirm}
                             placeholder='confirm password'
                             placeholderTextColor={'#444444'}
                             selectionColor={'#696969'}
                             keyboardAppearance='dark'
-                            onChangeText={i => setConfirm(i)}/>
+                            onChangeText={i => {
+                                setConfirm(i)
+                                !i && setError('')
+                            }}/>
                         </Pressable>
                     </View>
-                    <Pressable style={styles.password_chg_confirm_container}>
+                    <Pressable onPress={() => passChange()} style={styles.password_chg_confirm_container}>
                         <Text style={styles.password_chg_confirm_text}>set password.</Text>
                     </Pressable>
                     <View style={styles.error_container}>
                         <Text style={styles.error}>{error}</Text>
                     </View>
                 </View>}
+                <View style={styles.susccess_container}>
+                    <Text style={styles.success}>{success}</Text>
+                </View>
             </View>
             
         </View>
@@ -216,5 +257,13 @@ const styles = StyleSheet.create({
         fontFamily: 'Louis',
         fontSize: 17,
         color: '#b91d25'
-    }
+    },
+    susccess_container: {
+        alignSelf: 'center'
+    },
+    success: {
+        fontFamily: 'Louis',
+        fontSize: 17,
+        color: '#3fa9f5'
+    },
 })

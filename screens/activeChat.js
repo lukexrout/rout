@@ -15,7 +15,6 @@ const Chat = ({ pack, edit }) => {
         console.log('nice one dude')
     }
 
-
     // everything in front of this
 
     const [loaded] = useFonts({
@@ -26,14 +25,11 @@ const Chat = ({ pack, edit }) => {
 	}
 
     return (
-
-        
         <View style={[styles.message_container, pack.content.status === 'sender' ? {alignItems: 'flex-end',} : {alignItems: 'flex-start',}]}>
             <View style={[styles.message_bubble, pack.content.status === 'sender' ? {right: window.width / 30, backgroundColor: '#C2C2C2',} : {left: window.width / 30, backgroundColor: '#424242',}]}>
                 <Text style={[styles.message_text, pack.content.status === 'sender' ? {color: '#424242',} : {color: '#C2C2C2',}]}>{pack.content.message}</Text>
             </View>
         </View>
-
     )
 }
 
@@ -41,6 +37,9 @@ export default function ActiveChat({ navigation, route }) {
 
     const scrollRef = useRef()
     const inputRef = useRef()
+
+    const location = route.params.location
+    const user = route.params.user
 
     const [chat00, setChat00] = useState([
         {id: 17, edit: false, position: 'last', content: {status: 'sender', message: 'Okay cool, we will see you then :)'}}, 
@@ -76,18 +75,8 @@ export default function ActiveChat({ navigation, route }) {
     
     ])
     const [input, setInput] = useState('')
-    const [username, setUsername] = useState(null)
 
-    
-
-	const location = route.params.location
-    const user = route.params.user
-    
     useEffect(() => {
-        AsyncStorage.getItem('discover_user', (err, res) => {
-            setUsername(res)
-        })
-
         const show = Keyboard.addListener('keyboardDidShow', () => {
             scrollRef.current.scrollToOffset({ animated: true, offset: 0 });
             }
@@ -122,7 +111,7 @@ export default function ActiveChat({ navigation, route }) {
         return(
             <View style={{
             height: window.height / 6, 
-            backgroundColor: '#555555', 
+            backgroundColor: '#5F5F5F', 
             width: window.width}}/>
         )
     }
@@ -132,19 +121,14 @@ export default function ActiveChat({ navigation, route }) {
         return(
             <View style={{
             height: window.height / 12, 
-            backgroundColor: '#555555', 
+            backgroundColor: '#5F5F5F', 
             width: window.width}}/>
         )
     }
 
-
-    //// new
-
     const inputPress = () => {
         inputRef.current.focus()
     }
-
-    
 
     // everything in front of this
 
@@ -157,9 +141,7 @@ export default function ActiveChat({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-
             <StatusBar style='light' />
-
             <SafeAreaView style={styles.header_safe_container}>
                 <View style={styles.header_container}>
                     <Pressable onPress={() => goBack()} style={styles.back_container}>
@@ -169,11 +151,9 @@ export default function ActiveChat({ navigation, route }) {
                         <Text style={styles.username_text}>{user}</Text>
                     </View>
                 </View>
-                
             </SafeAreaView>
             <View style={styles.chat_center_container}>
                 <KeyboardAvoidingView keyboardVerticalOffset={-55} behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.chat_container}>
-
                     <FlatList
                     ref={scrollRef}
                     // onScroll={() => Keyboard.dismiss()}
@@ -187,11 +167,9 @@ export default function ActiveChat({ navigation, route }) {
                     keyboardDismissMode='none'
                     style={styles.chat_list_container}
                     ListHeaderComponent={Foot}
-                    ListFooterComponent={Head}
-                    />
+                    ListFooterComponent={Head}/>
                     <Pressable onPress={() => inputPress(scrollRef)} style={styles.input_container}>
                         <View style={styles.input_safe}>
-
                             <TextInput
                             ref={inputRef}
                             // value={userInput}
@@ -202,22 +180,17 @@ export default function ActiveChat({ navigation, route }) {
                             onChangeText={() => inputRef.current.scrollToOffset({ animated: true, offset: 0 })}
                             // ref={userRef}
                             style={styles.input}
-                            multiline={true}
                             // onChangeText={i => setUserInput(i)}
-                            />
+                            multiline={true}/>
                         </View>
                         <View style={styles.send_safe}>
-
                             <Pressable style={styles.send_container}>
                                 <Image style={styles.send} source={send_icon} />
                             </Pressable>
                         </View>
-                        
                     </Pressable>
-
                 </KeyboardAvoidingView>
             </View>
-            
         </View>
     )
 }
@@ -226,55 +199,48 @@ const styles = StyleSheet.create({
     container: {
         width: window.width,
         height: window.height,
-        backgroundColor: '#555555',
+        backgroundColor: '#5F5F5F',
     },
-
     header_safe_container: {
         position: 'absolute',
         zIndex: 2,
-
-        
     },
     header_container: {
-        // flexDirection: 'row',
         width: window.width,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'white'
     },
     back_container: {
         position: 'absolute',
         alignSelf: 'flex-start',
-        borderRadius: 50,
-        height: window.width / 12,
-        width: window.width / 12,
-        left: window.width / 25,
+        borderRadius: 11,
+        height: 35,
+        width: 35,
+        left: 17,
         shadowColor: 'black',
         shadowOffset: {height: 0},
         shadowOpacity: 0.3,
         shadowRadius: window.width / 70,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#424242'
+        backgroundColor: '#777777'
     },
     back: {
-        width: 14,
-        height: 24,
-        right: window.width / 170
+        width: 12,
+        height: 21,
+        right: 2
     },
 
     username_container: {
-        height: window.width / 10,
-        // width: window.width / 4,
-        // top: window.width / 20,
-        borderRadius: window.width / 40,
+        height: 40,
+        borderRadius: 11,
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: 'black',
         shadowOffset: {height: 0},
         shadowOpacity: 0.3,
         shadowRadius: window.width / 70,
-        backgroundColor: '#424242'
+        backgroundColor: '#777777'
     },
     username_text: {
         fontFamily: 'Louis',

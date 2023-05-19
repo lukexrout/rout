@@ -140,36 +140,25 @@ export default function CreatePost({ navigation, route }) {
 	}
 
 	const handlePreview = async () => {
-
 		let photo = await photoRef.current.takePictureAsync({ skipProcessing: true })
-
 		if (cameraStatus === 'front') {
-
 			await manip(photo.uri)
-
 		} else {
-
 			setImagePreview(photo.uri)
 		}
-
 		setPreviewIndex(2)
-
 		Image.getSize(photo.uri, (width, height) => {
 			setPreviewRatio((window.height / 1.25) / height)
 			setPreviewWidth(width)
 		})
-
 	}
 
 	const manip = async (uri) => {
-		
 		const newUri = await manipulateAsync(
 			uri,
 			[{flip: FlipType.Horizontal}]
 		)
-
 		setImagePreview(newUri.uri)
-
 	}
 
 	// const handleURL = async () => {
@@ -213,12 +202,10 @@ export default function CreatePost({ navigation, route }) {
 	// }
 
 	const handleUpload = async () => {
-
 		navigation.navigate('create', {
 			location: location,
 			uri: imagePreview
 		})
-
 	}
 
 	const selectPostType = async (i) => {
@@ -455,15 +442,13 @@ export default function CreatePost({ navigation, route }) {
 				<View style={[styles.type_image_camera_container, {zIndex: previewIndex}]}>
 					<Camera ref={photoRef} style={styles.type_image_camera} flashMode={flash} type={type}>
 						<SafeAreaView style={styles.imgae_interact_container}>
-							<SafeAreaView>
-							<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
-									<Image style={styles.image_pick} source={pick}/>
-							</Pressable>
+							<SafeAreaView style={styles.image_pick_safe}>
+								<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
+										<Image style={styles.image_pick} source={pick}/>
+								</Pressable>
 							</SafeAreaView>
 							<View style={styles.type_image_button_container}>
-								
 								<Pressable  onPress={handlePreview} style={styles.type_image_button_outer}>
-									{/* <View style={styles.type_image_button_inner}/> */}
 								</Pressable>
 								<Pressable onPress={toggle_flash} style={styles.lightniing_bolt_icon_container}>
 									<View style={styles.lightniing_bolt_icon_background}/>
@@ -477,33 +462,21 @@ export default function CreatePost({ navigation, route }) {
 						</SafeAreaView>
 						{ imagePreview !== null ? 
 							<View style={{zIndex: previewIndex}}>
-									
 								<View style={styles.image_prev_outline}/>
 								<View style={styles.image_prev_container}>
-			
 									<SafeAreaView style={styles.image_prev_top}/>
-
-
 									<Image style={styles.image_prev} source={{uri: imagePreview}}/>
-
-									
-
 								</View>
 								<SafeAreaView style={styles.preview_interact}>
 									<SafeAreaView style={styles.back_safe}>
-
 										<Pressable onPress={() => closeMedia()} style={styles.back_container}>
 											<Image style={styles.back} source={x}/>
 										</Pressable>
 									</SafeAreaView>
-
-
 									<Pressable onPress={handleUpload} style={styles.image_rout_press}>
 										<Text style={styles.image_rout_text}>rout</Text>
 									</Pressable>
 								</SafeAreaView>
-								
-								
 							</View>
 						 : <View/>}
 						
@@ -514,14 +487,13 @@ export default function CreatePost({ navigation, route }) {
 					<Camera ref={photoRef} style={styles.type_image_camera} flashMode={flash} type={type}>
 						<SafeAreaView style={styles.imgae_interact_container}>
 							<SafeAreaView>
-							<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
-									<Image style={styles.image_pick} source={pick}/>
-							</Pressable>
+								<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
+										<Image style={styles.image_pick} source={pick}/>
+								</Pressable>
 							</SafeAreaView>
 							<View style={styles.type_image_button_container}>
 								
 								<Pressable  onPress={handlePreview} style={styles.type_image_button_outer}>
-									{/* <View style={styles.type_image_button_inner}/> */}
 								</Pressable>
 								<Pressable onPress={toggle_flash} style={styles.lightniing_bolt_icon_container}>
 									<View style={styles.lightniing_bolt_icon_background}/>
@@ -535,36 +507,23 @@ export default function CreatePost({ navigation, route }) {
 						</SafeAreaView>
 						{ imagePreview !== null ? 
 							<View style={{zIndex: previewIndex}}>
-									
 								<View style={styles.image_prev_outline}/>
 								<View style={styles.image_prev_container}>
-			
 									<SafeAreaView style={styles.image_prev_top}/>
-
-
 									<Image style={styles.image_prev} source={{uri: imagePreview}}/>
-
-									
-
 								</View>
 								<SafeAreaView style={styles.preview_interact}>
 									<SafeAreaView style={styles.back_safe}>
-
 										<Pressable onPress={() => closeMedia()} style={styles.back_container}>
 											<Image style={styles.back} source={x}/>
 										</Pressable>
 									</SafeAreaView>
-
-
 									<Pressable onPress={handleUpload} style={styles.image_rout_press}>
 										<Text style={styles.image_rout_text}>rout</Text>
 									</Pressable>
 								</SafeAreaView>
-								
-								
 							</View>
 						 : <View/>}
-						
 					</Camera>
 				</View>
 			 : <View/>}
@@ -949,6 +908,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		alignSelf: 'flex-end'
 	},
+	image_pick_safe: {
+		shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 7,
+	},
 	image_pick_press: {
 		position: 'absolute',
 		// backgroundColor: 'blue', 
@@ -1071,15 +1036,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10,
-		borderBottomLeftRadius: 20,
-		borderBottomRightRadius: 20,
+		borderRadius: 50,
 		backgroundColor: '#888888',
-		shadowColor: '#121212',
+		shadowColor: 'black',
         shadowOffset: {height: 0},
-        shadowOpacity: 0.4,
-        shadowRadius: window.width / 110,
+        shadowOpacity: 1,
+        shadowRadius: 17,
 	},
 	image_rout_text: {
 		color: '#C2C2C2',
@@ -1099,12 +1061,7 @@ const styles = StyleSheet.create({
 
 
 
-	type_image_button_inner: {
-		width: window.width / 4.7,
-		height: window.width / 4.7,
-		backgroundColor: '#717171',
-		borderRadius: 100,
-	},
+
 	open_library: {
 		position: 'absolute',
 		alignItems: 'center',

@@ -55,13 +55,13 @@ export default function Filter({ navigation, route }) {
 	const searchRef = useRef().current
 
     const [interests, setInterests] = useState([
-        {id: 0, interest: 'startup0', description: 'description'},
-        {id: 1, interest: 'startup1', description: 'description'},
-        {id: 2, interest: 'startup2', description: 'description'},
-        {id: 3, interest: 'startup3', description: 'description'},
-        {id: 4, interest: 'startup4', description: 'description'},
-        {id: 5, interest: 'startup5', description: 'description'},
-        {id: 6, interest: 'startup6', description: 'description'},
+        {id: 0, interest: 'following', description: 'description'},
+        {id: 1, interest: 'recommended', description: 'description'},
+        {id: 2, interest: 'finance', description: 'description'},
+        {id: 3, interest: 'politics', description: 'description'},
+        {id: 4, interest: 'memes', description: 'description'},
+        {id: 5, interest: 'music', description: 'description'},
+        {id: 6, interest: 'startups', description: 'description'},
     ])
 
     const location = route.params.location

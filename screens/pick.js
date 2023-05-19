@@ -50,7 +50,7 @@ export default function Pick({ navigation, route }) {
                 setStatus(false)
             } else {
                 setStatus(true)
-                let media = await MediaLibrary.getAssetsAsync({first: count})
+                let media = await MediaLibrary.getAssetsAsync({first: count, sortBy: 'creationTime'})
     
                 const media_arr = []
         
@@ -112,7 +112,7 @@ export default function Pick({ navigation, route }) {
                 style={styles.gall_list}
                 renderItem={media}
                 data={data}
-                numColumns={4}
+                numColumns={3}
                 keyExtractor={item => item.id}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -221,11 +221,12 @@ const styles = StyleSheet.create({
 
     },
     media_container: {
-        width: '25%'
+        // width: '33.3333333%'
+        flex: 1
     },
     media: {
         width: '100%',
-        height: 140
+        height: 170
     }
     
 })
