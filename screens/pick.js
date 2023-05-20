@@ -7,11 +7,18 @@ const window = Dimensions.get('window')
 const back = require('../assets/img/back.png')
 const alert = require('../assets/img/alert.png')
 
-const Media = ({ uri }) => {
+const Media = ({ uri, select }) => {
+    const [tapped, setTapped] = useState()
+
+    useEffect(() => {
+        setTapped(undefined)
+    }, [select])
+
     return (
-        <View style={styles.media_container}>
+        <Pressable onPress={() => {!tapped && select ? setTapped(true) : setTapped(undefined)}} style={styles.media_container}>
             <Image style={styles.media} source={{uri: uri}}/>
-        </View>
+            {select && <View style={[styles.select_circle, tapped && {backgroundColor: '#C2C2C2'}]}/>}
+        </Pressable>
     )
 }
 
@@ -21,6 +28,7 @@ export default function Pick({ navigation, route }) {
     const [data, setData] = useState()
     const [count, setCount] = useState(40)
     const [momentum, setMomentum] = useState(false)
+    const [select, setSelect] = useState()
 
     const location = route.params.location
 
@@ -29,54 +37,40 @@ export default function Pick({ navigation, route }) {
             location: 'home'
         })
     }
-
     const navigate = (x) => {
         navigation.navigate(x, {
             location: 'pick'
         })
     }
-
+    useEffect(() => {
+        fetchData()
+    }, [select])
     const end = () => {
         setMomentum(false)
         setCount(i => i + 40)
     }
-
-    useEffect(() => {
-
-        const fetchData = async () => {
-
-            const { status } = await MediaLibrary.requestPermissionsAsync()
-            if (status !== 'granted') {
-                setStatus(false)
-            } else {
-                setStatus(true)
-                let media = await MediaLibrary.getAssetsAsync({first: count, sortBy: 'creationTime'})
-    
-                const media_arr = []
-        
-                for (let i = 0; i < media.assets.length; i++) {
-                    media_arr.push({
-                        id: i + 1,
-                        uri: media.assets[i].uri
-                    })
-                }
-                
-                if (!media.cancelled) {
-                
-                    setData(media_arr)
-                }
+    const fetchData = async () => {
+        const { status } = await MediaLibrary.requestPermissionsAsync()
+        if (status !== 'granted') {
+            setStatus(false)
+        } else {
+            setStatus(true)
+            let media = await MediaLibrary.getAssetsAsync({first: count, sortBy: 'creationTime'})
+            const media_arr = []
+            for (let i = 0; i < media.assets.length; i++) {
+                media_arr.push({
+                    id: i + 1,
+                    uri: media.assets[i].uri,
+                    select: select
+                })
             }
-    
-            
+            if (!media.cancelled) {
+                setData(media_arr)
+            }
         }
-
-        fetchData()
-
-        
-    })
-
+    }
     const media = ({ item }) => {
-        return(<Media uri={item.uri}/>)
+        return(<Media uri={item.uri} select={item.select}/>)
     }
 
     // everything in front of this
@@ -101,7 +95,7 @@ export default function Pick({ navigation, route }) {
                     <Text style={styles.pick}>pick</Text>
                 </SafeAreaView>
                 <SafeAreaView style={styles.select_container}>
-                    <Pressable style={styles.select_press}>
+                    <Pressable onPress={() => {!select ? setSelect(true) : setSelect(undefined)}} style={styles.select_press}>
                         <Text style={styles.select}>select</Text>
                     </Pressable>
                 </SafeAreaView>
@@ -132,6 +126,9 @@ export default function Pick({ navigation, route }) {
                 </Pressable>
                 }
             </View>
+            {select && <View style={styles.rout_sub_container}>
+                <Text style={styles.rout_sub_text}>rout</Text>
+            </View>}
         </View>
     )
 }
@@ -183,6 +180,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#888888'
     },
+    
 
     alert_safe: {
         height: '100%',
@@ -221,12 +219,50 @@ const styles = StyleSheet.create({
 
     },
     media_container: {
-        // width: '33.3333333%'
         flex: 1
     },
     media: {
         width: '100%',
         height: 170
+    },
+    select_circle: {
+        position: 'absolute',
+        height: 20,
+        width: 20,
+        bottom: 10,
+        right: 10,
+        borderWidth: 1,
+        borderRadius: 50,
+        borderColor: '#C2C2C2',
+        shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+    },
+    select_circle_filled: {
+        zIndex: 1,
+        height: '100%',
+        width: '100%',
+        borderRadius: 50,
+        backgroundColor: '#C2C2C2'
+    },
+    rout_sub_container: {
+        height: 49,
+        width: window.width / 1.1,
+        bottom: 21,
+        borderRadius: 50,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#C2C2C2',
+        shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 7,
+    },
+    rout_sub_text: {
+        color: '#444444',
+        fontFamily: 'Louis',
+		fontSize: 28,
+        alignSelf: 'center'
     }
-    
 })

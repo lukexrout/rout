@@ -439,20 +439,20 @@ export default function CreatePost({ navigation, route }) {
 				</KeyboardAvoidingView>
 			</View>
 			 : postType === 'image' ? 
-				<View style={[styles.type_image_camera_container, {zIndex: previewIndex}]}>
-					<Camera ref={photoRef} style={styles.type_image_camera} flashMode={flash} type={type}>
+				<View style={[styles.camera_container, {zIndex: previewIndex}]}>
+					<Camera ref={photoRef} style={styles.camera} flashMode={flash} type={type}>
 						<SafeAreaView style={styles.imgae_interact_container}>
 							<SafeAreaView style={styles.image_pick_safe}>
 								<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
 										<Image style={styles.image_pick} source={pick}/>
 								</Pressable>
 							</SafeAreaView>
-							<View style={styles.type_image_button_container}>
-								<Pressable  onPress={handlePreview} style={styles.type_image_button_outer}>
+							<View style={styles.button_container}>
+								<Pressable onPress={toggle_flash} style={styles.lightning_bolt_icon_container}>
+									<View style={styles.lightning_bolt_icon_background}/>
+									<Image style={styles.lightning_bolt_icon} source={flashIcon}/>
 								</Pressable>
-								<Pressable onPress={toggle_flash} style={styles.lightniing_bolt_icon_container}>
-									<View style={styles.lightniing_bolt_icon_background}/>
-									<Image style={styles.lightniing_bolt_icon} source={flashIcon}/>
+								<Pressable  onPress={handlePreview} style={styles.button_outer}>
 								</Pressable>
 								<Pressable onPress={change_camera} style={styles.chagne_icon_container}>
 									<View style={styles.change_icon_background}/>
@@ -483,21 +483,20 @@ export default function CreatePost({ navigation, route }) {
 					</Camera>
 				</View>
 			 : postType === 'video' ? 
-			 <View style={[styles.type_image_camera_container, {zIndex: previewIndex}]}>
-					<Camera ref={photoRef} style={styles.type_image_camera} flashMode={flash} type={type}>
+			 <View style={[styles.camera_container, {zIndex: previewIndex}]}>
+					<Camera ref={photoRef} style={styles.camera} flashMode={flash} type={type}>
 						<SafeAreaView style={styles.imgae_interact_container}>
 							<SafeAreaView>
 								<Pressable onPress={() => navigate('pick')} style={styles.image_pick_press}>
 										<Image style={styles.image_pick} source={pick}/>
 								</Pressable>
 							</SafeAreaView>
-							<View style={styles.type_image_button_container}>
-								
-								<Pressable  onPress={handlePreview} style={styles.type_image_button_outer}>
+							<View style={styles.button_container}>
+								<Pressable onPress={toggle_flash} style={styles.lightning_bolt_icon_container}>
+									<View style={styles.lightning_bolt_icon_background}/>
+									<Image style={styles.lightning_bolt_icon} source={flashIcon}/>
 								</Pressable>
-								<Pressable onPress={toggle_flash} style={styles.lightniing_bolt_icon_container}>
-									<View style={styles.lightniing_bolt_icon_background}/>
-									<Image style={styles.lightniing_bolt_icon} source={flashIcon}/>
+								<Pressable  onPress={handlePreview} style={styles.button_outer}>
 								</Pressable>
 								<Pressable onPress={change_camera} style={styles.chagne_icon_container}>
 									<View style={styles.change_icon_background}/>
@@ -531,16 +530,12 @@ export default function CreatePost({ navigation, route }) {
     )
 }
 
-
-
 const styles = StyleSheet.create({
     container: {
 		height: '100%',
 		width: window.width,
 		backgroundColor: '#5F5F5F'
 	},
-
-
 	back_icon_safeArea: {
 		zIndex: 2,
 		right: window.width / 4.5
@@ -562,7 +557,6 @@ const styles = StyleSheet.create({
 		zIndex: 2,
 		position: 'absolute',
 		justifyContent: 'center',
-
 	},
 	type_selection_animation_container: {
 		flexDirection: 'row',
@@ -581,7 +575,11 @@ const styles = StyleSheet.create({
 	},
 	type_selection_text: {
 		fontFamily: 'Louis',
-		color: '#C2C2C2'
+		color: '#C2C2C2',
+		shadowColor: 'black',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
 	},
 	type_selection_underline: {
 		alignSelf: 'center',
@@ -629,7 +627,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		flexDirection: 'row',
 		bottom: 30,
-
 	},
 	post_button_post_container: {
 		width: window.width / 4,
@@ -649,26 +646,14 @@ const styles = StyleSheet.create({
 		fontFamily: 'Louis',
 		fontSize: window.width / 22
 	},
-	type_image_camera_container: {
+	camera_container: {
 		position: 'absolute',
-
 	},
-	type_image_camera: {
+	camera: {
 		height: window.height,
 		width: window.width
 	},
-
-
-
-
-
-	
-
-
-
-	
-
-	type_image_preview_container: {
+	preview_container: {
 		zIndex: 1,
 		width: window.width,
 		justifyContent: 'center',
@@ -676,25 +661,22 @@ const styles = StyleSheet.create({
 		top: window.height / 8.5,
 		
 	},
-	type_image_preview_image_container: {
-		shadowOffset: {height: 0},
-		shadowColor: '#333333',
-		shadowOpacity: 1,
-		shadowRadius: window.width / 100,
+	preview_image_container: {
+		shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 7,
 	},
-	type_image_preview_image: {
+	preview_image: {
 		zIndex: 2,
 		borderRadius: window.width / 25,
 		width: window.width / 1.1
 	},
-	type_image_preview_button_container: {
+	preview_button_container: {
 		height: window.width / 1.2,
 		width: window.width / 1.1
 	},
-
-
-
-	type_image_preview_x_icon_container: {
+	preview_x_icon_container: {
 		top: window.height / 2,
 		left: window.width / 45,
 		position: 'absolute',
@@ -703,9 +685,8 @@ const styles = StyleSheet.create({
 		height: window.width  / 12,
 		alignItems: 'center',
 		justifyContent: 'center'
-
 	},
-	type_image_preview_x_icon_press: {
+	preview_x_icon_press: {
 		zIndex: 5,
 		width: window.width / 12,
 		height: window.width / 12,
@@ -713,7 +694,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		position: 'absolute'
 	},
-	type_image_preview_x_icon_background: {
+	preview_x_icon_background: {
 		position: 'absolute',
 		backgroundColor: 'black',
 		opacity: 0.6,
@@ -721,19 +702,17 @@ const styles = StyleSheet.create({
 		height: window.width / 12,
 		borderRadius: window.width / 40
 	},
-	type_image_preview_x_icon_image_container: {
+	preview_x_icon_image_container: {
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: window.width / 12,
 		height: window.width / 12
 	},
-	type_image_preview_x_icon_image: {
+	preview_x_icon_image: {
 		width: window.width / 21,
 		height: window.width / 21
 	},
-
-
-	type_image_preview_edit_icon_container: {
+	preview_edit_icon_container: {
 		top: window.width / 45,
 		left: window.width / 1.1 - window.width / 45 - window.width / 12,
 		position: 'absolute',
@@ -742,9 +721,8 @@ const styles = StyleSheet.create({
 		height: window.width  / 12,
 		alignItems: 'center',
 		justifyContent: 'center'
-
 	},
-	type_image_preview_edit_icon_press: {
+	preview_edit_icon_press: {
 		zIndex: 5,
 		width: window.width / 12,
 		height: window.width / 12,
@@ -752,7 +730,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		position: 'absolute'
 	},
-	type_image_preview_edit_icon_background: {
+	preview_edit_icon_background: {
 		position: 'absolute',
 		backgroundColor: 'black',
 		opacity: 0.6,
@@ -760,20 +738,17 @@ const styles = StyleSheet.create({
 		height: window.width / 12,
 		borderRadius: window.width / 40
 	},
-	type_image_preview_edit_icon_image_container: {
+	preview_edit_icon_image_container: {
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: window.width / 12,
 		height: window.width / 12
 	},
-	type_image_preview_edit_icon_image: {
+	preview_edit_icon_image: {
 		width: window.width / 25,
 		height: window.width / 17
 	},
-
-
-
-	type_image_preview_save_container: {
+	preview_save_container: {
 		top: window.width / 45,
 		position: 'absolute',
 		zIndex: 4,
@@ -782,7 +757,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
 	},	
-	type_image_preview_save_press: {
+	preview_save_press: {
 		zIndex: 4,
 		width: window.width / 3,
 		height: window.width / 12,
@@ -790,7 +765,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		position: 'absolute'
 	},
-	type_image_preview_save_background: {
+	preview_save_background: {
 		position: 'absolute',
 		backgroundColor: 'black',
 		opacity: 0.6,
@@ -798,33 +773,28 @@ const styles = StyleSheet.create({
 		height: window.width / 12,
 		borderRadius: window.width / 40
 	},
-	type_image_preview_save_text_container: {
+	preview_save_text_container: {
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: window.width / 3,
 		height: window.width / 12,
 	},
-	type_image_preview_save_text: {
+	preview_save_text: {
 		fontSize: window.width / 17,
 		fontFamily: 'Louis',
 		color: '#C2C2C2',
 		bottom: window.width / 200
 	},
-
-	
-	type_image_preview_rout_container: {
-		
-
-		
+	preview_rout_container: {
 		top: window.height / 1.2 - window.width / 10 - window.width / 45, 
 		position: 'absolute',
 		zIndex: 4,
 		width: window.width / 1.1,
-		height: window.width / 10,
+		height: 49,
 		justifyContent: 'flex-end',
 		alignItems: 'center'
 	},
-	type_image_preview_rout_press: {
+	preview_rout_press: {
 		zIndex: 4,
 		width: window.width / 1.1,
 		height: window.width / 10,
@@ -832,7 +802,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		position: 'absolute',
 	},
-	type_image_preview_rout_background: {
+	preview_rout_background: {
 		position: 'absolute',
 		backgroundColor: 'black',
 		opacity: 0.6,
@@ -843,70 +813,26 @@ const styles = StyleSheet.create({
 		borderBottomRightRadius: window.width / 30,
 		borderBottomLeftRadius: window.width / 30,
 	},
-	
-	type_image_preview_rout_row: {
+	preview_rout_row: {
 		justifyContent: 'center',
 		alignItems: 'center',
 		height: '100%',
 		flexDirection: 'row',
-
 	},
-	type_image_preview_rout_text: {
+	preview_rout_text: {
 		color: '#C2C2C2',
 		fontFamily: 'Louis',
 		fontSize: window.width / 17
 	},
-	type_image_preview_white_arrow: {
+	preview_white_arrow: {
 		width: window.width / 21,
         height: window.width / 25
 	},
-	type_image_preview_background: {
+	preview_background: {
 		position: 'absolute',
 		width: window.width,
 		height: window.height + window.height / 2,
 		backgroundColor: '#555555',
-	},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////
-
-
-
-
-
-
-
-
-
-
-
-	imgae_interact_container: {
-		flexDirection: 'row',
-		height: '100%',
-		width: '100%',
-		position: 'absolute'
-	},
-	type_image_button_container: {
-		position: 'absolute',
-		flexDirection: 'row',
-		width: window.width,
-		bottom: 40,
-		justifyContent: 'center',
-		alignItems: 'center',
-		alignSelf: 'flex-end'
 	},
 	image_pick_safe: {
 		shadowColor: '#121212',
@@ -928,45 +854,43 @@ const styles = StyleSheet.create({
 		height: 31,
 		width: 28
 	},
-	lightniing_bolt_icon_container: {
-		left: window.width / 5,
+	imgae_interact_container: {
+		height: '100%',
+		width: '100%',
+		position: 'absolute'
+	},
+	button_container: {
+		flex: 1,
 		position: 'absolute',
-		width: window.width / 9,
-		height: window.width / 9,
+		width: '70%',
+		bottom: 40,
+		flexDirection: 'row',
+		alignSelf: 'center',
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
-	lightniing_bolt_icon_background: {
+	lightning_bolt_icon_container: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',		
+		shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 7,
+	},
+	lightning_bolt_icon_background: {
 		position: 'absolute',
 		backgroundColor: 'white',
 		opacity: .07,
 		width: 33,
 		height: 40,
-		borderRadius: window.width / 25
+		borderRadius: 12
 	},
-	lightniing_bolt_icon: {
+	lightning_bolt_icon: {
 		width: 14,
 		height: 21
 	},
-	chagne_icon_container: {
-		right: window.width / 4.6,
-		justifyContent: 'center',
-		alignItems: 'center',
-		position: 'absolute',
-	},
-	change_icon_background: {
-		backgroundColor: 'white',
-		opacity: 0.07,
-		width: 40,
-		height: 40,
-		position: 'absolute',
-		borderRadius: window.width / 25
-	},
-	change_icon: {
-		width: 21,
-		height: 21
-	},
-	type_image_button_outer: {
+	button_outer: {
 		width: 100,
 		height: 100,
 		borderColor: '#C2C2C2',
@@ -974,14 +898,32 @@ const styles = StyleSheet.create({
 		borderRadius: 100,
 		justifyContent: 'center',
 		alignItems: 'center',
+		shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 7,
 	},
-
-	///////
-
-
-
-
-	
+	chagne_icon_container: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',		
+		shadowColor: '#121212',
+        shadowOffset: {height: 0},
+        shadowOpacity: 0.5,
+        shadowRadius: 7,
+	},
+	change_icon_background: {
+		backgroundColor: 'white',
+		opacity: 0.07,
+		width: 40,
+		height: 40,
+		position: 'absolute',
+		borderRadius: 12
+	},
+	change_icon: {
+		width: 21,
+		height: 21
+	},
 	image_prev_container: {
 		position: 'absolute',
 		zIndex: 4,
@@ -990,7 +932,6 @@ const styles = StyleSheet.create({
 		width: window.width,
 		borderRadius: 21,
 		backgroundColor: 'black'
-
 	},
 	image_prev_outline: {
 		zIndex: 4,
@@ -999,13 +940,11 @@ const styles = StyleSheet.create({
 		height: '100%'
 	},
 	image_prev_safe: {
-		// height: '100%',
 		width: '100%',
 	},
 	image_prev: {
 		height: '100%',
 		width: '100%',
-		
 	},
 	preview_interact: {
 		zIndex: 5,
@@ -1020,7 +959,6 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		height:	33,
 		width: 33,
-		
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
@@ -1049,19 +987,7 @@ const styles = StyleSheet.create({
 		fontSize: 28,
 		paddingVertical: 10,
 		paddingHorizontal: 10,
-
 	},
-
-
-
-
-
-	///////////
-
-
-
-
-
 	open_library: {
 		position: 'absolute',
 		alignItems: 'center',
@@ -1103,7 +1029,6 @@ const styles = StyleSheet.create({
 		height: window.height / 3,
 		top: window.height - (window.height / 3),
 		backgroundColor: 'black',
-		
 	},
 	media: {
 		width: window.width / 5,

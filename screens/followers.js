@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     },
     user_text: { 
         fontFamily: 'Louis',
-        fontSize: 20,
+        fontSize: 14,
         color: '#222222'
     },
     user_stats_safe: {

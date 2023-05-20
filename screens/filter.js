@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     interest_container: {
         height: 49,
         width: '95%',
-        marginBottom: 10,
+        marginBottom: 4,
         borderRadius: 11,
         flexDirection: 'row',
         alignSelf: 'center',
