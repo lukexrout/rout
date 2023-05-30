@@ -6,18 +6,18 @@ import * as MediaLibrary from 'expo-media-library';
 const window = Dimensions.get('window')
 const back = require('../assets/img/back.png')
 const alert = require('../assets/img/alert.png')
+const check = require('../assets/img/check.png')
 
-const Media = ({ uri, select }) => {
+const Media = ({ uri }) => {
     const [tapped, setTapped] = useState()
 
-    useEffect(() => {
-        setTapped(undefined)
-    }, [select])
-
     return (
-        <Pressable onPress={() => {!tapped && select ? setTapped(true) : setTapped(undefined)}} style={styles.media_container}>
+        <Pressable onPress={() => {!tapped ? setTapped(true) : setTapped(undefined)}} style={styles.media_container}>
+            {!tapped && <View style={styles.media_overlay}/>}
             <Image style={styles.media} source={{uri: uri}}/>
-            {select && <View style={[styles.select_circle, tapped && {backgroundColor: '#C2C2C2'}]}/>}
+            <View style={[styles.select_circle, tapped && {backgroundColor: '#C2C2C2'}]}>
+                {tapped && <Image style={styles.select_circle_check} source={check}/>}
+            </View>
         </Pressable>
     )
 }
@@ -28,7 +28,6 @@ export default function Pick({ navigation, route }) {
     const [data, setData] = useState()
     const [count, setCount] = useState(40)
     const [momentum, setMomentum] = useState(false)
-    const [select, setSelect] = useState()
 
     const location = route.params.location
 
@@ -44,7 +43,7 @@ export default function Pick({ navigation, route }) {
     }
     useEffect(() => {
         fetchData()
-    }, [select])
+    })
     const end = () => {
         setMomentum(false)
         setCount(i => i + 40)
@@ -60,8 +59,7 @@ export default function Pick({ navigation, route }) {
             for (let i = 0; i < media.assets.length; i++) {
                 media_arr.push({
                     id: i + 1,
-                    uri: media.assets[i].uri,
-                    select: select
+                    uri: media.assets[i].uri
                 })
             }
             if (!media.cancelled) {
@@ -70,7 +68,7 @@ export default function Pick({ navigation, route }) {
         }
     }
     const media = ({ item }) => {
-        return(<Media uri={item.uri} select={item.select}/>)
+        return(<Media uri={item.uri}/>)
     }
 
     // everything in front of this
@@ -94,16 +92,15 @@ export default function Pick({ navigation, route }) {
                 <SafeAreaView style={styles.pick_container}>
                     <Text style={styles.pick}>pick</Text>
                 </SafeAreaView>
-                <SafeAreaView style={styles.select_container}>
-                    <Pressable onPress={() => {!select ? setSelect(true) : setSelect(undefined)}} style={styles.select_press}>
-                        <Text style={styles.select}>select</Text>
-                    </Pressable>
-                </SafeAreaView>
             </View>
             <View style={styles.gall_container}>
                 {status === true ?
                 <FlatList
                 style={styles.gall_list}
+                initialNumToRender={1}
+                maxToRenderPerBatch={1}
+                disableVirtualization={true}
+                removeClippedSubviews={true}
                 renderItem={media}
                 data={data}
                 numColumns={3}
@@ -126,9 +123,9 @@ export default function Pick({ navigation, route }) {
                 </Pressable>
                 }
             </View>
-            {select && <View style={styles.rout_sub_container}>
-                <Text style={styles.rout_sub_text}>rout</Text>
-            </View>}
+            <View style={styles.rout_sub_container}>
+                <Text style={styles.rout_sub_text}>next</Text>
+            </View>
         </View>
     )
 }
@@ -164,24 +161,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: '#C2C2C2'
     },
-    select_container: {
-        position: 'absolute',
-        alignSelf: 'flex-end'
-    },
-    select_press: {
-        height: 40,
-        width: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-        // backgroundColor: 'blue'
-    },
-    select: {
-        fontFamily: 'Louis',
-        fontSize: 20,
-        color: '#888888'
-    },
-    
-
     alert_safe: {
         height: '100%',
         width: '100%',
@@ -205,12 +184,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 7,
     },
-
     gall_container: {
         overflow: 'hidden',
         flex: 1,
         width: window.width / 1.1,
-        marginVertical: 20,
+        marginTop: 20,
+        marginBottom: 10,
         borderRadius: 21,
         alignSelf: 'center',
         backgroundColor: '#777777'
@@ -219,13 +198,23 @@ const styles = StyleSheet.create({
 
     },
     media_container: {
-        flex: 1
-    },
-    media: {
-        width: '100%',
+        flex: 1,
         height: 170
     },
+    media_overlay: {
+        zIndex: 1,
+        position: 'absolute',
+        height: '100%',
+        width: '100%',
+        opacity: 0.5,
+        backgroundColor: 'black'
+    },
+    media: {
+        height: '100%',
+        width: '100%',
+    },
     select_circle: {
+        zIndex: 2,
         position: 'absolute',
         height: 20,
         width: 20,
@@ -234,6 +223,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 50,
         borderColor: '#C2C2C2',
+        justifyContent: 'center',
+        alignItems: 'center',
         shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.5,
@@ -246,10 +237,14 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         backgroundColor: '#C2C2C2'
     },
+    select_circle_check: {
+        height: 8,
+        width: 11,
+    },
     rout_sub_container: {
         height: 49,
         width: window.width / 1.1,
-        bottom: 21,
+        marginBottom: 21,
         borderRadius: 50,
         alignSelf: 'center',
         justifyContent: 'center',
