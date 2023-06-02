@@ -22,6 +22,7 @@ import Save from './screens/save';
 import Rerout from './screens/rerout';
 import Filter from './screens/filter';
 import Pick from './screens/pick';
+import Alter from './img_upld/alter'
 import Data from './screens/set/data'
 import Feedback from './screens/set/feedback'
 import InterestSet from './screens/set/interest_set'
@@ -83,6 +84,7 @@ export default function App() {
 					<Stack.Screen name='content' component={Content}/>
 					<Stack.Screen name='create_post' component={CreatePost}/>
 					<Stack.Screen name='pick' component={Pick}/>
+					<Stack.Screen name='alter' component={Alter}/>
 					<Stack.Screen name='create' component={Create}/>
 					<Stack.Screen name='filter' component={Filter}/>
 					<Stack.Screen name='rerout' component={Rerout}/>

@@ -8,11 +8,27 @@ const back = require('../assets/img/back.png')
 const alert = require('../assets/img/alert.png')
 const check = require('../assets/img/check.png')
 
-const Media = ({ uri }) => {
+const Media = ({ uri, postList, setPostList }) => {
     const [tapped, setTapped] = useState()
 
+    useEffect(() => {}, [postList])
+
+    /////////////////////// trying to add multipost feature
+    const addPost = (uri, x) => {
+        console.log('uri: ' + uri)
+        setTapped(x)
+        {x === true ?
+        setPostList((arr) => [...arr, uri])
+         :
+        postList.length === 0 || postList.length === 1 ?
+        setPostList([])
+         :
+        setPostList((arr) => arr.filter(v => v !== uri))
+        }
+    }
+
     return (
-        <Pressable onPress={() => {!tapped ? setTapped(true) : setTapped(undefined)}} style={styles.media_container}>
+        <Pressable onPress={() => {!tapped ? addPost(uri, true) : addPost(uri, undefined)}} style={styles.media_container}>
             {!tapped && <View style={styles.media_overlay}/>}
             <Image style={styles.media} source={{uri: uri}}/>
             <View style={[styles.select_circle, tapped && {backgroundColor: '#C2C2C2'}]}>
@@ -23,11 +39,11 @@ const Media = ({ uri }) => {
 }
 
 export default function Pick({ navigation, route }) {
-	
     const [status, setStatus] = useState()
     const [data, setData] = useState()
     const [count, setCount] = useState(40)
     const [momentum, setMomentum] = useState(false)
+    const [postList, setPostList] = useState([])
 
     const location = route.params.location
 
@@ -36,18 +52,23 @@ export default function Pick({ navigation, route }) {
             location: 'home'
         })
     }
-    const navigate = (x) => {
+    
+    const next = (x) => {
         navigation.navigate(x, {
-            location: 'pick'
+            location: 'pick',
+            postList: postList
         })
     }
+    
     useEffect(() => {
         fetchData()
     })
+    
     const end = () => {
         setMomentum(false)
         setCount(i => i + 40)
     }
+    
     const fetchData = async () => {
         const { status } = await MediaLibrary.requestPermissionsAsync()
         if (status !== 'granted') {
@@ -67,8 +88,9 @@ export default function Pick({ navigation, route }) {
             }
         }
     }
+
     const media = ({ item }) => {
-        return(<Media uri={item.uri}/>)
+        return(<Media uri={item.uri} postList={postList} setPostList={setPostList}/>)
     }
 
     // everything in front of this
@@ -123,9 +145,9 @@ export default function Pick({ navigation, route }) {
                 </Pressable>
                 }
             </View>
-            <View style={styles.rout_sub_container}>
+            <Pressable onPress={() => next('alter')} style={styles.rout_sub_container}>
                 <Text style={styles.rout_sub_text}>next</Text>
-            </View>
+            </Pressable>
         </View>
     )
 }
