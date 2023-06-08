@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
 const back = require('../assets/img/back.png')
+const portFile = require('../port.json')
 
 export default function Alter({ navigation, route }) {
     const location = route.params.location
@@ -20,11 +21,52 @@ export default function Alter({ navigation, route }) {
 
     useEffect(() => {
         Image.getSize(postList[0], (w, h) => {
-            setImgRatio((window.width / 1.3) / w)
+            setImgRatio((window.width / 1.1) / w)
             setImgHeight(h)
             console.log(window.height)
         })
     })
+
+    const Upload = async (uri) => {
+        const URL = `http://${portFile.HOST}:${portFile.PORT}/upload`
+
+		const imageExt = uri.split('.').pop()
+
+		let image = await fetch(uri)
+		image = await image.blob()
+
+		await fetch(URL, {
+			method: 'POST',
+			body: image,
+			headers: {
+				Accept: `image/${imageExt}`,
+				'Content-Type': `image/${imageExt}`,
+			}
+		})
+		.then((res) => console.log(JSON.parse(JSON.stringify(res))))
+		.catch((err) => console.error(err))
+
+        // -------------------------------------------------------------------------------------
+        
+        // const URL = `http://${portFile.HOST}:${portFile.PORT}/upload`
+
+		// const imageExt = uri.split('.').pop()
+		// let image = await fetch(uri)
+		// image = await image.blob()
+		
+		// // const imageFile = new File([image], `rout-image00/photo00.${imageExt}`)
+
+		// await fetch(URL, {
+		// 	method: 'PUT',
+		// 	body: image,
+		// 	headers: {
+		// 		Accept: `image/${imageExt}`,
+		// 		'Content-Type': `image/${imageExt}`
+		// 	}
+		// })
+		// .then((res) => console.log(JSON.parse(JSON.stringify(res)).status))
+		// .catch((err) => console.error(err))
+    }
 
     // everything in front of this
 
@@ -52,11 +94,11 @@ export default function Alter({ navigation, route }) {
             <View style={styles.post_safe}>
                 <View style={styles.post_container}>
                     {imgHeight && <Image style={[styles.post_img, 
-                    {height: imgHeight * imgRatio}]} 
+                    {height: '100%'}]} 
                     source={{uri: postList[0]}}/>}
                 </View>
             </View>
-            <Pressable style={styles.post_btn_container}>
+            <Pressable onPress={() => Upload(postList[0])} style={styles.post_btn_container}>
                 <Text style={styles.post_btn_text}>post.</Text>
             </Pressable>
 
@@ -98,14 +140,14 @@ const styles = StyleSheet.create({
     },
     post_safe: {
         flex: 1,
-        width: window.width / 1.3,
+        width: window.width / 1.1,
         marginVertical: 10,
         alignSelf: 'center',
         justifyContent: 'center'
     },
     post_container: {
         overflow: 'hidden',
-        width: window.width / 1.3,
+        width: window.width / 1.1,
         borderRadius: 21,
     },
     post_img: {

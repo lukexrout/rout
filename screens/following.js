@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Louis',
     },
     user_container: {
-        height: 55,
+        height: 50,
         width: window.width / 1.1,
         marginBottom: 4,
         borderRadius: 14,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     user_image_container: {
-        marginLeft: 10
+        marginLeft: 7
     },
     user_image: {
         height: 42,

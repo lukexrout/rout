@@ -38,13 +38,11 @@ const portFile = require('./port.json')
 
 export default function App() {
 
-	const [state, setState] = useState(null)
+	const [state, setState] = useState()
 
 	useEffect(() => {
 		AsyncStorage.getItem('user_id', (err, res) => {
-			if (res === undefined || res === null) {
-				setState('out')
-			} else {
+			if (res) {
 				fetch(`http://${portFile.HOST}:3000/check_user_id`, {
 					method: 'POST',
 					headers: {
@@ -63,7 +61,8 @@ export default function App() {
 						console.log(`state: ${state}`)
 					}
 				})
-				
+			} else {
+				setState('out')
 			}
 		})
 	})
@@ -78,7 +77,7 @@ export default function App() {
 		<NavigationContainer independent={true}>
 			<Stack.Navigator name='main_nav'>
 				<Stack.Group screenOptions={{headerShown: false}}>
-					<Stack.Screen name='state' component={state === 'in' ? Bottom_Nav : state === null ? Loading : Out}/>
+					<Stack.Screen name='state' component={state === 'in' ? Bottom_Nav : !state ? Loading : Out}/>
 					<Stack.Screen name='out' component={Out}/>
 					<Stack.Screen name='bottom_nav' component={Bottom_Nav}/>
 					<Stack.Screen name='content' component={Content}/>
