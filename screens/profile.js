@@ -337,7 +337,7 @@ export default function Profile({ navigation, route }) {
                         onLayout={( event ) => {
                         const {x, y, width, height} = event.nativeEvent.layout
                         setInterestHeight(height)}}>
-                            <Pressable style={styles.edit_container}>
+                            <Pressable onPress={() => navigate('edit_interest')} style={styles.edit_container}>
                                 <Text style={styles.edit}>edit interests.</Text>
                             </Pressable>
                             {data.map((item) => (
@@ -606,9 +606,9 @@ const styles = StyleSheet.create({
     },
     edit_container: {
         width: window.width / 1.1,
-        marginVertical: 7,
-        paddingVertical: 4,
-        borderRadius: 7,
+        marginVertical: 11,
+        paddingVertical: 7,
+        borderRadius: 11,
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',

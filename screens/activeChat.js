@@ -26,8 +26,8 @@ const Chat = ({ pack, edit }) => {
 
     return (
         <View style={[styles.message_container, pack.content.status === 'sender' ? {alignItems: 'flex-end',} : {alignItems: 'flex-start',}]}>
-            <View style={[styles.message_bubble, pack.content.status === 'sender' ? {right: window.width / 30, backgroundColor: '#C2C2C2',} : {left: window.width / 30, backgroundColor: '#424242',}]}>
-                <Text style={[styles.message_text, pack.content.status === 'sender' ? {color: '#424242',} : {color: '#C2C2C2',}]}>{pack.content.message}</Text>
+            <View style={[styles.message_bubble, pack.content.status === 'sender' ? {right: window.width / 30, backgroundColor: '#C2C2C2',} : {left: window.width / 30, backgroundColor: '#494949',}]}>
+                <Text style={[styles.message_text, pack.content.status === 'sender' ? {color: '#494949',} : {color: '#C2C2C2',}]}>{pack.content.message}</Text>
             </View>
         </View>
     )

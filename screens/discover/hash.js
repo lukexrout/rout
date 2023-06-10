@@ -3,9 +3,9 @@ import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image } fr
 import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
-const back = require('../assets/img/back.png')
+const back = require('../../assets/img/back.png')
 
-export default function Temp({ navigation, route }) {
+export default function Hashtag({ navigation, route }) {
 	
     const location = route.params.location
 
@@ -16,7 +16,7 @@ export default function Temp({ navigation, route }) {
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {
@@ -31,8 +31,8 @@ export default function Temp({ navigation, route }) {
                         <Image style={styles.back} source={back}/>
                     </Pressable>
                 </SafeAreaView>
-                <SafeAreaView style={styles.temp_container}>
-                    <Text style={styles.temp}>temp</Text>
+                <SafeAreaView style={styles.hashtag_container}>
+                    <Text style={styles.hashtag}>hashtags</Text>
                 </SafeAreaView>
             </View>
         </View>
@@ -48,10 +48,10 @@ const styles = StyleSheet.create({
     head_safe: {
         // flexDirection: 'row'
     },
-    temp_container: {
+    hashtag_container: {
         alignSelf: 'center'
     },
-    temp: {
+    hashtag: {
         fontFamily: 'Louis',
         fontSize: 30,
         color: '#C2C2C2'

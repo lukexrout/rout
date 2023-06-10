@@ -79,50 +79,23 @@ export default function Create({ navigation, route }) {
 	// }
 
     const handleUpload = async () => {
+		const URL = 'http://192.168.1.86:3000/upload'
 
-		// const URL = 'http://192.168.1.86:3000/upload'
+		const imageExt = uri.split('.').pop()
 
-		// const imageExt = uri.split('.').pop()
+		let image = await fetch(uri)
+		image = await image.blob()
 
-		// let image = await fetch(uri)
-		// image = await image.blob()
-
-		// await fetch(URL, {
-		// 	method: 'PUT',
-		// 	body: image,
-		// 	headers: {
-		// 		Accept: `image/${imageExt}`,
-		// 		'Content-Type': `image/${imageExt}`,
-		// 	}
-		// })
-		// .then((res) => console.log(JSON.parse(JSON.stringify(res))))
-		// .catch((err) => console.error(err))
-
-        const formData = new FormData()
-        formData.append('file', {
-            uri: uri,
-            type: 'image/jpeg',
-            name: 'hello_world.jpeg'
-        })
-
-        fetch ('http://192.168.1.86:3000/upload', {
-        // fetch ('http://104.156.249.69:3000/upload', {
-            method: 'POST',
-            body: formData
-        })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(res.statusText)
-            }
-            return res.json()
-        })
-        .then((data) => {
-            console.log(data)
-        })
-        .catch((err) => {
-            console.error(err)
-        })
-
+		await fetch(URL, {
+			method: 'PUT',
+			body: image,
+			headers: {
+				Accept: `image/${imageExt}`,
+				'Content-Type': `image/${imageExt}`,
+			}
+		})
+		.then((res) => console.log(JSON.parse(JSON.stringify(res))))
+		.catch((err) => console.error(err))
 	}
 
     const location = route.params.location

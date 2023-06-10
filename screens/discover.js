@@ -73,7 +73,7 @@ const Acc = ({ acc }) => {
 		</View>
 	)
 }
-const DiscHead = () => {
+const DiscHead = ({ navigate }) => {
 
 	const [hash, setHash] = useState([
 		{id: 1, hash: '#juice'},
@@ -106,7 +106,7 @@ const DiscHead = () => {
 					<Text style={styles.trending_text}>trending</Text>
 				</View>
 				<View style={styles.interact_container}>
-					<View style={styles.hashtag_container}>
+					<Pressable onPress={() => navigate('hashtag')} style={styles.hashtag_container}>
 						<View style={styles.hashtag_title_container}>
 							<Text style={styles.hashtag_title}>hashtags</Text>
 						</View>
@@ -114,11 +114,11 @@ const DiscHead = () => {
 						<Hash hash={hash[1].hash}/>
 						<Hash hash={hash[2].hash}/>
 						<Hash hash={hash[3].hash}/>
-					</View>
+					</Pressable>
 					<View style={styles.sep_container}>
 						<View style={styles.sep}/>
 					</View>
-					<View style={styles.account_container}>
+					<Pressable onPress={() => navigate('acc')} style={styles.account_container}>
 						<View style={styles.account_title_container}>
 							<Text style={styles.account_title}>accounts</Text>
 						</View>
@@ -126,7 +126,7 @@ const DiscHead = () => {
 						<Acc acc={acc[1].acc}/>
 						<Acc acc={acc[2].acc}/>
 						<Acc acc={acc[3].acc}/>
-					</View>
+					</Pressable>
 				</View>
 			</View>
 			<View style={styles.trend_post}>
@@ -173,6 +173,12 @@ export default function Discover({ navigation }) {
 	const [momentum, setMomentum] = useState(false)
 	const [resultLoading, setResultLoading] = useState(false)
 
+	const navigate = (x) => {
+        navigation.navigate(x, {
+			location: 'discover'
+		})
+    }
+
 	const continuousResult = ({ item }) => {
 		return (
 			<Result 
@@ -180,7 +186,7 @@ export default function Discover({ navigation }) {
 			item={item}/>)
 	}
 	const discHead = ({ item }) => {
-		return (<DiscHead/>)
+		return (<DiscHead navigate={navigate}/>)
 	}
 	const scrollTo = (y) => {
 		listRef.current.scrollToOffset({ animated: true, offset: y })

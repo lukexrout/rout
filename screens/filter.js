@@ -28,14 +28,8 @@ const Interest = ({ interest, description }) => {
                 <View style={styles.interest_title_container}>
                     <Text style={styles.interest_title}>{interest}</Text>
                 </View>
-                <View style={styles.interest_description_container}>
-                    <Text style={styles.interest_description}>{description}</Text>
-                </View>
             </View>
             <View style={styles.interest_button_container}>
-                <Pressable onPress={() => console.log('info')} style={styles.info_container}>
-                    <Image style={styles.info} source={info}/>
-                </Pressable>
                 {starStatus === false ? 
                 <Pressable onPress={() => starPress()} style={styles.star_container}>
                     <Image style={styles.star} source={star}/>
@@ -55,13 +49,13 @@ export default function Filter({ navigation, route }) {
 	const searchRef = useRef().current
 
     const [interests, setInterests] = useState([
-        {id: 0, interest: 'following', description: 'description'},
-        {id: 1, interest: 'recommended', description: 'description'},
-        {id: 2, interest: 'finance', description: 'description'},
-        {id: 3, interest: 'politics', description: 'description'},
-        {id: 4, interest: 'memes', description: 'description'},
-        {id: 5, interest: 'music', description: 'description'},
-        {id: 6, interest: 'startups', description: 'description'},
+        {id: 0, interest: 'following'},
+        {id: 1, interest: 'recommended'},
+        {id: 2, interest: 'finance'},
+        {id: 3, interest: 'politics'},
+        {id: 4, interest: 'memes'},
+        {id: 5, interest: 'music'},
+        {id: 6, interest: 'startups'},
     ])
 
     const location = route.params.location
@@ -201,14 +195,14 @@ const styles = StyleSheet.create({
 		height: 38,
 		width: window.width / 1.1,
 		justifyContent: 'center',
-		borderRadius: window.width / 70,
+		borderRadius: 11,
 		shadowColor: '#121212',
         shadowOffset: {height: 0},
         shadowOpacity: 0.5,
-        shadowRadius: window.width / 70,
+        shadowRadius: 4,
     },
     search: {
-        left: window.width / 40,
+        left: 10,
 		fontFamily: 'Louis',
 		fontSize: 17
     },
@@ -278,19 +272,5 @@ const styles = StyleSheet.create({
     star: {
         height: 21,
 		width: 21
-    },
-    info_container: {
-        flex: 1,
-        height: '100%',
-        width: 50,
-        paddingLeft: 20,
-
-        alignItems: 'center',
-        justifyContent: 'center',
-        // backgroundColor: 'blue'
-    },
-    info: {
-        height: 21,
-		width: 21
-    },
+    }
 })

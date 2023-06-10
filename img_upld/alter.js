@@ -30,42 +30,29 @@ export default function Alter({ navigation, route }) {
     const Upload = async (uri) => {
         const URL = `http://${portFile.HOST}:${portFile.PORT}/upload`
 
-		const imageExt = uri.split('.').pop()
+        const formData = new FormData()
+        formData.append('file', {
+            uri: uri,
+            type: 'image/jpeg',
+            name: 'hello_world.jpeg'
+        })
 
-		let image = await fetch(uri)
-		image = await image.blob()
-
-		await fetch(URL, {
-			method: 'POST',
-			body: image,
-			headers: {
-				Accept: `image/${imageExt}`,
-				'Content-Type': `image/${imageExt}`,
-			}
-		})
-		.then((res) => console.log(JSON.parse(JSON.stringify(res))))
-		.catch((err) => console.error(err))
-
-        // -------------------------------------------------------------------------------------
-        
-        // const URL = `http://${portFile.HOST}:${portFile.PORT}/upload`
-
-		// const imageExt = uri.split('.').pop()
-		// let image = await fetch(uri)
-		// image = await image.blob()
-		
-		// // const imageFile = new File([image], `rout-image00/photo00.${imageExt}`)
-
-		// await fetch(URL, {
-		// 	method: 'PUT',
-		// 	body: image,
-		// 	headers: {
-		// 		Accept: `image/${imageExt}`,
-		// 		'Content-Type': `image/${imageExt}`
-		// 	}
-		// })
-		// .then((res) => console.log(JSON.parse(JSON.stringify(res)).status))
-		// .catch((err) => console.error(err))
+        fetch (URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then((res) => {
+            if (!res.ok) {
+                throw new Error(res.statusText)
+            }
+            return res.json()
+        })
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
     }
 
     // everything in front of this

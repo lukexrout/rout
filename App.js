@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Bottom_Nav from './navs/bottom_nav';
+import Hashtag from './screens/discover/hash';
+import Acc from './screens/discover/acc';
 import Content from './screens/content';
 import CreatePost from './screens/createPost';
 import Create from './screens/create/create';
@@ -11,6 +13,7 @@ import Wallet from './screens/wallet'
 import EditProfile from './screens/editprofile'
 import Following from './screens/following'
 import Followers from './screens/followers'
+import EditInterest from './screens/pofile/edit_interest';
 import DM from './screens/dm';
 import ActiveChat from './screens/activeChat';
 import Settings from './screens/settings';
@@ -82,6 +85,9 @@ export default function App() {
 					<Stack.Screen name='bottom_nav' component={Bottom_Nav}/>
 					<Stack.Screen name='content' component={Content}/>
 					<Stack.Screen name='create_post' component={CreatePost}/>
+					<Stack.Screen name='hashtag' component={Hashtag}/>
+					<Stack.Screen name='acc' component={Acc}/>
+					<Stack.Screen name='edit_interest' component={EditInterest}/>
 					<Stack.Screen name='pick' component={Pick}/>
 					<Stack.Screen name='alter' component={Alter}/>
 					<Stack.Screen name='create' component={Create}/>
@@ -93,7 +99,7 @@ export default function App() {
 					options={{
 						animationTypeForReplace: 'push',
 						gestureDirection: 'horizontal'
-					  }}/>
+					}}/>
 					<Stack.Screen name='password' component={Password}/>
 					<Stack.Screen name='email-phone' component={EmailPhone}/>
 					<Stack.Screen name='data' component={Data}/>
