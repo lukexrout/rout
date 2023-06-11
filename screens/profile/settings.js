@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
-const back = require('../assets/img/back.png')
+const back = require('../../assets/img/back.png')
 
 const Setting = ({ navigation, setting, location }) => {
 
@@ -70,7 +70,7 @@ export default function Save({ navigation, route }) {
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {

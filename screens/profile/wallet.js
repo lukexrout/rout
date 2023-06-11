@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, Ani
 import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
-const back = require('../assets/img/back.png')
-const info = require('../assets/img/info.png')
+const back = require('../../assets/img/back.png')
+const info = require('../../assets/img/info.png')
 
 export default function Wallet({ navigation, route }) {
 	
@@ -125,7 +125,7 @@ export default function Wallet({ navigation, route }) {
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {

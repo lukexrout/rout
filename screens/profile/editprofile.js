@@ -3,12 +3,12 @@ import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, Tex
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const portFile = require('../port.json')
+const portFile = require('../../port.json')
 
 const window = Dimensions.get('window')
 
-const back = require('../assets/img/back.png')
-const profile_img = require('../assets/img/user_profile_template.png')
+const back = require('../../assets/img/back.png')
+const profile_img = require('../../assets/img/user_profile_template.png')
 
 export default function EditProfile({ navigation, route }) {
 	
@@ -150,7 +150,7 @@ export default function EditProfile({ navigation, route }) {
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {

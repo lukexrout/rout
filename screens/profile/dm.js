@@ -3,9 +3,9 @@ import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, Fla
 import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
-const back = require('../assets/img/back.png')
-const plus = require('../assets/img/plus.png')
-const profile = require('../assets/img/user_profile_template.png')
+const back = require('../../assets/img/back.png')
+const plus = require('../../assets/img/plus.png')
+const profile = require('../../assets/img/user_profile_template.png')
 
 const Chat = ({ navigation, navigate, route, status, user, last_dm }) => {
 
@@ -93,7 +93,7 @@ export default function DM({ navigation, route }) {
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {

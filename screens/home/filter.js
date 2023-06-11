@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, Pressable, Dimensions, SafeAreaView, Image, Tex
 import { useFonts } from 'expo-font';
 
 const window = Dimensions.get('window')
-const back = require('../assets/img/back.png')
-const plus = require('../assets/img/plus.png')
-const star = require('../assets/img/star.png')
-const star_filled = require('../assets/img/star_filled.png')
-const info = require('../assets/img/info.png')
+const back = require('../../assets/img/back.png')
+const plus = require('../../assets/img/plus.png')
+const star = require('../../assets/img/star.png')
+const star_filled = require('../../assets/img/star_filled.png')
+const info = require('../../assets/img/info.png')
 
 const InterestHead = () => {
     return(<View style={styles.interest_head}/>)
@@ -75,7 +75,7 @@ export default function Filter({ navigation, route }) {
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {

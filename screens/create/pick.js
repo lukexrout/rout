@@ -4,9 +4,9 @@ import { useFonts } from 'expo-font';
 import * as MediaLibrary from 'expo-media-library';
 
 const window = Dimensions.get('window')
-const back = require('../assets/img/back.png')
-const alert = require('../assets/img/alert.png')
-const check = require('../assets/img/check.png')
+const back = require('../../assets/img/back.png')
+const alert = require('../../assets/img/alert.png')
+const check = require('../../assets/img/check.png')
 
 const Media = ({ uri, postList, setPostList }) => {
     const [tapped, setTapped] = useState()
@@ -96,7 +96,7 @@ export default function Pick({ navigation, route }) {
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {

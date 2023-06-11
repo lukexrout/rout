@@ -18,8 +18,8 @@ const Chat = ({ pack, edit }) => {
     // everything in front of this
 
     const [loaded] = useFonts({
-		'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
-	})
+        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+    })
     if (!loaded) {
 		return null;
 	}

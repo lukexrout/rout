@@ -3,10 +3,10 @@ import { AppState, StyleSheet, View, Image, Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import Home from '../screens/home'
+import Home from '../screens/home/home'
 import Discover_Nav from './discover_nav';
 import Notification from '../screens/notification';
-import Profile from '../screens/profile'
+import Profile from '../screens/profile/profile'
 // import Discover from '../screens/discover';
 // import Notification from '../screens/bell_con';
 // import User from '../screens/_user'

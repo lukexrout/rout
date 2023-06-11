@@ -5,20 +5,15 @@ import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 
-import Content from './content.js'
+import Content from '../content.js'
 
-const img = require('../assets/IMG_0781.jpeg')
+const img = require('../../assets/IMG_0781.jpeg')
 
-const portFile = require('../port.json')
+const portFile = require('../../port.json')
 
 // images
-const plus_img = require('../assets/img/plus_sign.png')
-const slider_icon = require('../assets/img/slider_icon.png')
-
-const aws = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/353A7670-2B3B-4B7E-91CD-29640662A756_4_5005_c.jpeg'
-const aws_2 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/3B7B6670-B919-4C98-A232-9044BA65B022_4_5005_c.jpeg'
-const aws_3 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/image_lol.jpeg'
-const aws_4 = 'https://rout-media-storage.s3.us-east-2.amazonaws.com/rout-image00/new+found.jpeg'
+const plus_img = require('../../assets/img/plus_sign.png')
+const slider_icon = require('../../assets/img/slider_icon.png')
 
 const window = Dimensions.get('window')
 
@@ -116,7 +111,7 @@ function Home({ navigation }) {
 	//// Put everything in front of this ////
 
 	const [loaded] = useFonts({
-		Louis: require('../assets/fonts/Louis_George_Cafe.ttf'),
+		Louis: require('../../assets/fonts/Louis_George_Cafe.ttf'),
 	});
 	
 	if (!loaded) {

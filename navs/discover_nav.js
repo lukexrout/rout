@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import User from '../screens/_user'
-import Discover from '../screens/discover';
+import Discover from '../screens/discover/discover';
 import Message_Nav from './message_nav';
 
 const Stack = createNativeStackNavigator();

@@ -4,8 +4,8 @@ import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient'; 
 
 const window = Dimensions.get('window')
-const back = require('../assets/img/back.png')
-const image = require('../assets/img/user_profile_template.png')
+const back = require('../../assets/img/back.png')
+const image = require('../../assets/img/user_profile_template.png')
 
 const Head = () => {
 
@@ -37,7 +37,7 @@ const Head = () => {
     )
 }
 
-const User = ({ user, follower, following }) => {
+const User = ({ user, followers, following }) => {
     return (
         <View style={styles.user_container}>
             <View style={styles.start_container}>
@@ -54,8 +54,8 @@ const User = ({ user, follower, following }) => {
             <View style={styles.user_stats_safe}>
                 <View style={styles.user_stats_safe2}>
                     <View  style={styles.user_stats_container}>
-                        <View style={styles.stats_followers_num_container}>
-                            <Text style={styles.stats_followers_num}>{follower}</Text>
+                        <View style={styles.stats_following_num_container}>
+                            <Text style={styles.stats_following_num}>{followers}</Text>
                         </View>
                         <View style={styles.sep}/>
                         <View style={styles.stats_following_num_container}>
@@ -69,33 +69,33 @@ const User = ({ user, follower, following }) => {
     )
 }
 
-export default function Followers({ navigation, route }) {
+export default function Following({ navigation, route }) {
 	
     const [data, setData] = useState([
-        {id: 0, user: 'elon musk', follower: '200', following: '777'},
-        {id: 1, user: 'zuck', follower: '400', following: '777'},
-        {id: 2, user: 'bgates', follower: '1.3m', following: '777'},
-        {id: 3, user: 'lexfridman', follower: '150k', following: '777'},
-        {id: 4, user: 'yeet', follower: '732k', following: '777'},
-        {id: 5, user: 'drake', follower: '711k', following: '777'},
-        {id: 6, user: 'elon musk', follower: '45.3m', following: '777'},
-        {id: 7, user: 'zuck', follower: '11', following: '777'},
-        {id: 8, user: 'bgates', follower: '300k', following: '777'},
-        {id: 9, user: 'lexfridman', follower: '240K', following: '777'},
-        {id: 10, user: 'yeet', follower: '1200', following: '777'},
-        {id: 11, user: 'drake', follower: '600K', following: '777'},
-        {id: 12, user: 'elon musk', follower: '777', following: '777'},
-        {id: 13, user: 'zuck', follower: '777', following: '345'},
-        {id: 14, user: 'bgates', follower: '777', following: '800k'},
-        {id: 15, user: 'lexfridman', follower: '777', following: '300k'},
-        {id: 16, user: 'yeet', follower: '777', following: '9643'},
-        {id: 17, user: 'drake', follower: '777', following: '22k'},
-        {id: 18, user: 'elon musk', follower: '777', following: '80k'},
-        {id: 19, user: 'zuck', follower: '777', following: '36k'},
-        {id: 20, user: 'bgates', follower: '777', following: '120m'},
-        {id: 21, user: 'lexfridman', follower: '777', following: '85.6m'},
-        {id: 22, user: 'yeet', follower: '777', following: '12.5m'},
-        {id: 23, user: 'drake', follower: '777', following: '210K'},
+        {id: 0, user: 'elon musk', followers: '200', following: '777'},
+        {id: 1, user: 'zuck', followers: '400', following: '777'},
+        {id: 2, user: 'bgates', followers: '1.3m', following: '777'},
+        {id: 3, user: 'lexfridman', followers: '150k', following: '777'},
+        {id: 4, user: 'yeet', followers: '732k', following: '777'},
+        {id: 5, user: 'drake', followers: '711k', following: '777'},
+        {id: 6, user: 'elon musk', followers: '45.3m', following: '777'},
+        {id: 7, user: 'zuck', followers: '11', following: '777'},
+        {id: 8, user: 'bgates', followers: '300k', following: '777'},
+        {id: 9, user: 'lexfridman', followers: '240K', following: '777'},
+        {id: 10, user: 'yeet', followers: '1200', following: '777'},
+        {id: 11, user: 'drake', followers: '600K', following: '777'},
+        {id: 12, user: 'elon musk', followers: '777', following: '777'},
+        {id: 13, user: 'zuck', followers: '777', following: '345'},
+        {id: 14, user: 'bgates', followers: '777', following: '800k'},
+        {id: 15, user: 'lexfridman', followers: '777', following: '300k'},
+        {id: 16, user: 'yeet', followers: '777', following: '9643'},
+        {id: 17, user: 'drake', followers: '777', following: '22k'},
+        {id: 18, user: 'elon musk', followers: '777', following: '80k'},
+        {id: 19, user: 'zuck', followers: '777', following: '36k'},
+        {id: 20, user: 'bgates', followers: '777', following: '120m'},
+        {id: 21, user: 'lexfridman', followers: '777', following: '85.6m'},
+        {id: 22, user: 'yeet', followers: '777', following: '12.5m'},
+        {id: 23, user: 'drake', followers: '777', following: '210K'},
     ])
 
     const location = route.params.location
@@ -109,13 +109,13 @@ export default function Followers({ navigation, route }) {
     }
 
     const user = ({ item }) => {
-        return (<User user={item.user} follower={item.follower} following={item.following}/>)
+        return (<User user={item.user} following={item.following} followers={item.followers}/>)
     }
 
     // everything in front of this
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
     })
 
     if (!loaded) {
@@ -131,8 +131,8 @@ export default function Followers({ navigation, route }) {
                         <Image style={styles.back} source={back}/>
                     </Pressable>
                 </SafeAreaView>
-                <SafeAreaView style={styles.followers_container}>
-                    <Text style={styles.followers}>followers</Text>
+                <SafeAreaView style={styles.following_container}>
+                    <Text style={styles.following}>following</Text>
                 </SafeAreaView>
             </View>
             
@@ -171,10 +171,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 4,
     },
-    followers_container: {
+    following_container: {
         alignSelf: 'center',
     },
-    followers: {
+    following: {
         padding: 7,
         fontFamily: 'Louis',
         fontSize: 30,
@@ -270,11 +270,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#888888'
     },
-    stats_followers_num_container: {
+    stats_following_num_container: {
         paddingVertical: 7,
         paddingHorizontal: 14,
     },
-    stats_followers_num: {
+    stats_following_num: {
         fontFamily: 'Louis',
         fontSize: 14,
         color: '#222222'

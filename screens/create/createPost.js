@@ -2,24 +2,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useFonts } from 'expo-font';
 import { Camera, CameraType } from 'expo-camera'
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator'
-import { StatusBar } from 'expo-status-bar';
 import { Dimensions, Image, StyleSheet, Text, View, SafeAreaView, Pressable, FlatList, TextInput, KeyboardAvoidingView, Keyboard, Animated } from 'react-native';
-import mime from 'mime'
-import axios from 'axios'
 
-const back = require('../assets/img/back.png')
-const arrow = require('../assets/img/arrow-up.png')
-const profile_img = require('../assets/img/user_profile_template.png')
-const send_icon = require('../assets/img/post_arrow_up.png')
-const x = require('../assets/img/x.png')
-const lightniing_bolt = require('../assets/img/lightning_bolt_icon.png')
-const lightniing_bolt_filled = require('../assets/img/lightning_bolt_icon_filled.png')
-const change_icon = require('../assets/img/change_camera_icon.png')
-const x_icon = require('../assets/img/preview_x_icon.png')
-const edit_icon = require('../assets/img/preview_edit_icon.png')
-const white_arrow = require('../assets/img/white_post_arrow.png')
-const pick = require('../assets/img/pick.png')
-const vertical_fill = require('../assets/img/vertical_fill.jpeg')
+const back = require('../../assets/img/back.png')
+const profile_img = require('../../assets/img/user_profile_template.png')
+const send_icon = require('../../assets/img/post_arrow_up.png')
+const x = require('../../assets/img/x.png')
+const lightniing_bolt = require('../../assets/img/lightning_bolt_icon.png')
+const lightniing_bolt_filled = require('../../assets/img/lightning_bolt_icon_filled.png')
+const change_icon = require('../../assets/img/change_camera_icon.png')
+const pick = require('../../assets/img/pick.png')
 
 const window = Dimensions.get('window')
 
@@ -359,8 +351,7 @@ export default function CreatePost({ navigation, route }) {
 	//// Put everything in front of this ////
 
 	const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
-        'LinLibertime': require('../assets/fonts/LinLibertime.ttf')
+        'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf')
     })
 
     if (!loaded) {

@@ -5,10 +5,10 @@ import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios'
 
-import Content from './content.js';
-const portFile = require('../port.json')
+import Content from '../content.js';
+const portFile = require('../../port.json')
 
-const profile_img = require('../assets/img/user_profile_template.png')
+const profile_img = require('../../assets/img/user_profile_template.png')
 
 const window = Dimensions.get('window')
 
@@ -308,7 +308,7 @@ export default function Discover({ navigation }) {
 	// everything in front of this
 
 	const [loaded] = useFonts({
-		'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
+		'Louis': require('../../assets/fonts/Louis_George_Cafe.ttf'),
 	})
 
 	if (!loaded) {

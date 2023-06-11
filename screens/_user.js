@@ -133,8 +133,7 @@ export default function Profile({ navigation, route }) {
     // console.log(username)
 
     const [loaded] = useFonts({
-        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf'),
-        'LinLibertime': require('../assets/fonts/LinLibertime.ttf')
+        'Louis': require('../assets/fonts/Louis_George_Cafe.ttf')
     })
 
     if (!loaded) {

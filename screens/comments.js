@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
 	comment_content: {
 		fontFamily: 'Louis',
         fontSize: 16,
-        color: '#000000'
+        color: '#171717'
 	},
 	comment_interact_container: {
 		flexDirection: 'row',
