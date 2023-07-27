@@ -74,10 +74,6 @@ YGFloatOptional YGFloatOptionalMax(YGFloatOptional op1, YGFloatOptional op2) {
   return op1.isUndefined() ? op2 : op1;
 }
 
-void yoga::throwLogicalErrorWithMessage(const char* message) {
-#if defined(__cpp_exceptions)
+void throwLogicalErrorWithMessage(const char* message) {
   throw std::logic_error(message);
-#else // !defined(__cpp_exceptions)
-  std::terminate();
-#endif // defined(__cpp_exceptions)
 }
